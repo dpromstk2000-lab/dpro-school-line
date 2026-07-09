@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DPRO 学習塾・習い事 LINE｜System Check｜STEP SCHOOL-5</title>
+  <script src="./config.js"></script>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --brand:#2563eb;
+      --brand2:#0f766e;
+      --ok:#16a34a;
+      --warn:#d97706;
+      --ng:#dc2626;
+      --soft:#eff6ff;
+      --green:#ecfdf5;
+      --red:#fef2f2;
+      --yellow:#fffbeb;
+      --shadow:0 18px 50px rgba(15,23,42,.08);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, #dbeafe 0, transparent 36%),
+        radial-gradient(circle at 92% 8%, #ccfbf1 0, transparent 28%),
+        var(--bg);
+      color:var(--ink);
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    .hero{
+      background:linear-gradient(135deg,#0f172a,#1e3a8a 58%,#0f766e);
+      color:#fff;
+      border-radius:28px;
+      padding:26px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      right:-70px;top:-80px;
+      width:260px;height:260px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+    }
+    .hero h1{margin:0;font-size:clamp(24px,4vw,38px);letter-spacing:-.04em}
+    .hero p{margin:10px 0 0;color:rgba(255,255,255,.86);line-height:1.75;font-weight:700}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 12px;border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
+      font-weight:900;font-size:12px;margin-bottom:12px;
+    }
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:18px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{
+      background:rgba(255,255,255,.88);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(226,232,240,.9);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .card h2{margin:0 0 12px;font-size:19px;letter-spacing:-.03em}
+    .card h3{margin:14px 0 8px;font-size:15px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.65}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .stack{display:grid;gap:10px}
+    .field{display:grid;gap:6px;margin:10px 0}
+    label{font-size:13px;font-weight:900;color:#334155}
+    input,textarea,select{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:12px;
+      font-size:15px;
+      outline:none;
+    }
+    textarea{min-height:150px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.55}
+    input:focus,textarea:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.16)}
+    .btn{
+      border:0;border-radius:14px;
+      padding:12px 14px;
+      font-weight:950;
+      cursor:pointer;
+      background:#e2e8f0;
+      color:#0f172a;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:44px;
+    }
+    .btn:hover{filter:brightness(.98)}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.green{background:var(--brand2);color:#fff}
+    .btn.dark{background:#0f172a;color:#fff}
+    .btn.red{background:#fee2e2;color:#991b1b}
+    .btn.ghost{background:#fff;border:1px solid var(--line)}
+    .btn.full{width:100%}
+    .status{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 11px;border-radius:999px;
+      font-size:12px;font-weight:950;
+      background:#e2e8f0;color:#334155;
+    }
+    .status.ok{background:#dcfce7;color:#166534}
+    .status.warn{background:#fef3c7;color:#92400e}
+    .status.ng{background:#fee2e2;color:#991b1b}
+    .status.info{background:#dbeafe;color:#1d4ed8}
+    .alert{
+      padding:12px 14px;border-radius:16px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:13px;
+      line-height:1.65;
+      font-weight:750;
+    }
+    .alert.ok{border-color:#bbf7d0;background:var(--green);color:#166534}
+    .alert.warn{border-color:#fde68a;background:var(--yellow);color:#92400e}
+    .alert.ng{border-color:#fecaca;background:var(--red);color:#991b1b}
+    .list{display:grid;gap:10px}
+    .item{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:13px;
+      line-height:1.55;
+    }
+    .item b{display:block;font-size:14px;margin-bottom:3px}
+    .item small{display:block;color:var(--muted);font-size:12px}
+    .urlbox{
+      display:grid;gap:8px;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:10px;
+    }
+    .urlbox .title{font-weight:950;font-size:13px}
+    .urlbox .url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#475569;word-break:break-all;margin-top:3px}
+    .kpi{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+    .kpi .num{font-size:27px;font-weight:1000;letter-spacing:-.04em}
+    .kpi .label{font-size:12px;color:var(--muted);font-weight:900}
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#f1f5f9;
+      color:#334155;
+      font-size:12px;
+      font-weight:950;
+      margin:2px;
+    }
+    .toast{
+      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+      background:#0f172a;color:#fff;
+      padding:12px 16px;border-radius:999px;
+      font-size:13px;font-weight:900;
+      box-shadow:0 14px 40px rgba(0,0,0,.22);
+      opacity:0;pointer-events:none;
+      transition:.2s;
+      z-index:99;
+    }
+    .toast.show{opacity:1;bottom:30px}
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    @media(max-width:860px){
+      .wrap{padding:14px}
+      .grid,.grid3{grid-template-columns:1fr}
+      .urlbox{grid-template-columns:1fr}
+      .btn{width:100%}
+      .hero{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="badge">STEP SCHOOL-5 / system-check.html</div>
+      <h1>DPRO 学習塾・習い事 LINE<br>System Check</h1>
+      <p>
+        API接続、管理コード、営業前デモ準備、デモ生徒確認、各画面URLをまとめて確認します。<br>
+        商談前はこの画面から順番に確認すればOKです。
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2>1. API接続確認</h2>
+          <span class="status info" id="healthStatus">未確認</span>
+        </div>
+        <p class="muted">
+          Worker API、Supabase接続、shop_code の状態を確認します。
+        </p>
+        <div class="row">
+          <button class="btn primary" id="healthBtn">API接続を確認</button>
+          <button class="btn ghost" id="copyHealthUrlBtn">health URLコピー</button>
+        </div>
+        <div id="healthResult" class="alert" style="margin-top:12px;">まだ確認していません。</div>
+
+        <div class="divider"></div>
+
+        <h2>2. 管理コード</h2>
+        <p class="muted">
+          営業デモでは管理コード <b>1234</b> を使います。保存すると、このブラウザで管理APIが使えます。
+        </p>
+        <div class="field">
+          <label for="adminCodeInput">管理コード</label>
+          <input id="adminCodeInput" type="password" inputmode="numeric" placeholder="1234">
+        </div>
+        <div class="row">
+          <button class="btn green" id="saveAdminBtn">管理コードを保存</button>
+          <button class="btn red" id="clearAdminBtn">保存コード削除</button>
+        </div>
+        <div id="adminStatus" class="alert" style="margin-top:12px;">管理コードはまだ保存されていません。</div>
+      </section>
+
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2>3. 営業前デモ準備</h2>
+          <span class="status warn" id="demoStatus">未実行</span>
+        </div>
+        <p class="muted">
+          デモ生徒、体験予約、通常授業、欠席連絡、振替希望、チケット/振替残数、今日やることを作成します。
+        </p>
+        <button class="btn primary full" id="prepareDemoBtn">営業前デモ準備を実行</button>
+        <div id="demoResult" class="alert warn" style="margin-top:12px;">
+          商談前に一度実行してください。テストで増えたデータを整理できます。
+        </div>
+
+        <div class="grid3" style="margin-top:12px">
+          <div class="kpi">
+            <div class="num" id="lessonCount">-</div>
+            <div class="label">授業/予約</div>
+          </div>
+          <div class="kpi">
+            <div class="num" id="requestCount">-</div>
+            <div class="label">欠席/振替</div>
+          </div>
+          <div class="kpi">
+            <div class="num" id="taskCount">-</div>
+            <div class="label">今日やること</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2>4. デモ状態確認</h2>
+          <span class="status info" id="dashboardStatus">未確認</span>
+        </div>
+        <p class="muted">
+          今日の授業、欠席/振替、今日やること、チケット残数注意を確認します。
+        </p>
+        <div class="row">
+          <button class="btn green" id="dashboardBtn">ダッシュボード確認</button>
+          <button class="btn ghost" id="publicConfigBtn">教室設定確認</button>
+        </div>
+        <div id="dashboardResult" class="list" style="margin-top:12px;"></div>
+      </section>
+
+      <section class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2>5. デモ生徒確認</h2>
+          <span class="status info" id="memberStatus">未確認</span>
+        </div>
+        <p class="muted">
+          生徒証・授業予定・振替残数確認用の「テスト 太郎」を確認します。
+        </p>
+        <div class="item">
+          <b>テスト 太郎</b>
+          <small>電話番号：090-9999-0000</small>
+          <small>生徒番号：SCHOOL-DEMO-999</small>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn green" id="memberCheckBtn">デモ生徒を確認</button>
+          <button class="btn ghost" id="copyMemberInfoBtn">確認情報コピー</button>
+        </div>
+        <div id="memberResult" class="list" style="margin-top:12px;"></div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="row" style="justify-content:space-between">
+        <h2>6. 営業デモ入口</h2>
+        <button class="btn dark" id="copyAllUrlsBtn">営業用URLまとめコピー</button>
+      </div>
+      <p class="muted">
+        次のSTEPで各画面を作ります。GitHubにファイルを置いた後、このURLから開けます。
+      </p>
+
+      <div class="list" id="urlList"></div>
+
+      <h3>営業で見る順番</h3>
+      <div class="row">
+        <span class="pill">1. system-check</span>
+        <span class="pill">2. お客様体験予約</span>
+        <span class="pill">3. 生徒証</span>
+        <span class="pill">4. PC管理</span>
+        <span class="pill">5. iPad受付/講師</span>
+      </div>
+
+      <div class="field">
+        <label for="urlText">営業用URLまとめ</label>
+        <textarea id="urlText" readonly></textarea>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>7. JSON確認</h2>
+      <p class="muted">
+        エラー時の確認用です。必要な場合だけコピーして使います。
+      </p>
+      <div class="row">
+        <button class="btn ghost" id="copyJsonBtn">表示中JSONコピー</button>
+        <button class="btn ghost" id="clearJsonBtn">JSONクリア</button>
+      </div>
+      <div class="field">
+        <textarea id="jsonBox" readonly placeholder="API結果がここに表示されます。"></textarea>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast">コピーしました</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const CONFIG = window.DPRO_SCHOOL_CONFIG || window.CONFIG || {
+    serviceName:"DPRO 学習塾・習い事 LINE",
+    shopCode:"dpro_school_demo",
+    shopName:"DPROスクール",
+    apiBaseUrl:"https://dpro-school-line-api.dpromstk2000.workers.dev",
+    pagesBaseUrl:"https://dpromstk2000-lab.github.io/dpro-school-line/",
+    adminCodeStorageKey:"dpro_school_admin_code",
+    defaultAdminCodeHint:"1234",
+    demoStudent:{ studentName:"テスト 太郎", studentNo:"SCHOOL-DEMO-999", guardianName:"テスト 保護者", phone:"090-9999-0000" },
+    endpoints:{
+      health:"/api/health",
+      publicConfig:"/api/public/config",
+      memberProfile:"/api/member/profile",
+      adminDemoPrepare:"/api/admin/demo/prepare",
+      adminDashboard:"/api/admin/dashboard"
+    }
+  };
+
+  const U = window.DPRO_SCHOOL_UTILS || {};
+  const $ = (id) => document.getElementById(id);
+
+  const state = {
+    lastJson: null,
+    urls: {}
+  };
+
+  function endpoint(key){
+    return CONFIG.endpoints[key];
+  }
+
+  function apiUrl(path, params = {}){
+    if (U.apiUrl) return U.apiUrl(path, params);
+    const base = String(CONFIG.apiBaseUrl || "").replace(/\/+$/, "");
+    const url = new URL(base + path);
+    Object.entries(params || {}).forEach(([k,v]) => {
+      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
+    });
+    return url.toString();
+  }
+
+  function getAdminCode(){
+    if (U.getAdminCode) return U.getAdminCode();
+    return localStorage.getItem(CONFIG.adminCodeStorageKey) || "";
+  }
+
+  function saveAdminCode(code){
+    if (U.saveAdminCode) return U.saveAdminCode(code);
+    localStorage.setItem(CONFIG.adminCodeStorageKey, String(code || "").trim());
+  }
+
+  function clearAdminCode(){
+    if (U.clearAdminCode) return U.clearAdminCode();
+    localStorage.removeItem(CONFIG.adminCodeStorageKey);
+  }
+
+  function headers(includeAdmin=false){
+    const h = {
+      "Content-Type":"application/json",
+      "X-Shop-Code":CONFIG.shopCode
+    };
+    if (includeAdmin) {
+      const code = getAdminCode();
+      if (code) h["X-Admin-Code"] = code;
+    }
+    return h;
+  }
+
+  async function apiGet(path, params={}, includeAdmin=false){
+    const url = apiUrl(path, { shop_code:CONFIG.shopCode, ...params });
+    const res = await fetch(url, { method:"GET", headers:headers(includeAdmin) });
+    const data = await res.json().catch(() => ({}));
+    state.lastJson = data;
+    renderJson();
+    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
+    return data;
+  }
+
+  async function apiPost(path, body={}, includeAdmin=false){
+    const res = await fetch(apiUrl(path), {
+      method:"POST",
+      headers:headers(includeAdmin),
+      body:JSON.stringify({ shop_code:CONFIG.shopCode, ...body })
+    });
+    const data = await res.json().catch(() => ({}));
+    state.lastJson = data;
+    renderJson();
+    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
+    return data;
+  }
+
+  function pageUrl(path, params={}){
+    if (U.pageUrl) return U.pageUrl(path, params);
+    const base = String(CONFIG.pagesBaseUrl || location.origin + location.pathname.replace(/[^/]*$/, "")).replace(/\/+$/, "/");
+    const url = new URL(path, base);
+    Object.entries(params || {}).forEach(([k,v]) => {
+      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
+    });
+    return url.toString();
+  }
+
+  function escapeHtml(v){
+    if (U.escapeHtml) return U.escapeHtml(v);
+    return String(v ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function dateWithWeekday(v){
+    if (U.dateWithWeekday) return U.dateWithWeekday(v);
+    return v || "";
+  }
+
+  function todayText(){
+    if (U.todayText) return U.todayText();
+    const jst = new Date(Date.now() + 9*60*60*1000);
+    return jst.toISOString().slice(0,10);
+  }
+
+  function setStatus(id, text, type="info"){
+    const el = $(id);
+    if (!el) return;
+    el.className = "status " + type;
+    el.textContent = text;
+  }
+
+  function showToast(text){
+    const el = $("toast");
+    el.textContent = text || "完了しました";
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 1800);
+  }
+
+  async function copyText(text){
+    await navigator.clipboard.writeText(String(text || "")).catch(() => {});
+    showToast("コピーしました");
+  }
+
+  function renderJson(){
+    $("jsonBox").value = state.lastJson ? JSON.stringify(state.lastJson, null, 2) : "";
+  }
+
+  function renderAdminStatus(){
+    const code = getAdminCode();
+    if (code) {
+      $("adminStatus").className = "alert ok";
+      $("adminStatus").innerHTML = `管理コードを保存済みです。<br>保存コード：${escapeHtml("*".repeat(String(code).length))}`;
+      $("adminCodeInput").value = "";
+    } else {
+      $("adminStatus").className = "alert warn";
+      $("adminStatus").textContent = "管理コードはまだ保存されていません。営業前デモ準備には管理コードが必要です。";
+    }
+  }
+
+  function buildUrls(){
+    const demo = CONFIG.demoStudent || {};
+    state.urls = {
+      health: apiUrl(endpoint("health")),
+      systemCheck: pageUrl("system-check.html"),
+      index: pageUrl("index.html"),
+      member: pageUrl("member.html", { phone: demo.phone || "090-9999-0000", student_no: demo.studentNo || "SCHOOL-DEMO-999" }),
+      owner: pageUrl("owner.html"),
+      ipad: pageUrl("owner-ipad.html")
+    };
+  }
+
+  function renderUrls(){
+    buildUrls();
+    const rows = [
+      ["Worker health", state.urls.health],
+      ["system-check", state.urls.systemCheck],
+      ["お客様 体験予約/欠席/振替", state.urls.index],
+      ["生徒証・授業予定", state.urls.member],
+      ["オーナーPC管理", state.urls.owner],
+      ["受付・講師iPad", state.urls.ipad]
+    ];
+
+    $("urlList").innerHTML = rows.map(([title,url]) => `
+      <div class="urlbox">
+        <div>
+          <div class="title">${escapeHtml(title)}</div>
+          <div class="url">${escapeHtml(url)}</div>
+        </div>
+        <div class="row">
+          <a class="btn ghost" href="${escapeHtml(url)}" target="_blank" rel="noopener">開く</a>
+          <button class="btn ghost" data-copy-url="${escapeHtml(url)}">コピー</button>
+        </div>
+      </div>
+    `).join("");
+
+    $("urlText").value = [
+      "DPRO 学習塾・習い事 LINE 営業デモURLまとめ",
+      "",
+      `Worker health：${state.urls.health}`,
+      `system-check：${state.urls.systemCheck}`,
+      `お客様 体験予約/欠席/振替：${state.urls.index}`,
+      `生徒証・授業予定：${state.urls.member}`,
+      `オーナーPC管理：${state.urls.owner}`,
+      `受付・講師iPad：${state.urls.ipad}`,
+      "",
+      "管理コード：1234",
+      "",
+      "デモ生徒：テスト 太郎",
+      "電話番号：090-9999-0000",
+      "生徒番号：SCHOOL-DEMO-999",
+      "",
+      "営業前の順番：",
+      "1. system-check.html を開く",
+      "2. 管理コード 1234 を保存",
+      "3. 営業前デモ準備を実行",
+      "4. お客様体験予約を確認",
+      "5. 生徒証を確認",
+      "6. PC管理画面を確認",
+      "7. iPad受付/講師画面を確認"
+    ].join("\n");
+  }
+
+  async function checkHealth(){
+    setStatus("healthStatus","確認中...","warn");
+    $("healthResult").className = "alert warn";
+    $("healthResult").textContent = "API接続を確認しています。";
+
+    try {
+      const data = await apiGet(endpoint("health"));
+      if (data.db_ok) {
+        setStatus("healthStatus","OK","ok");
+        $("healthResult").className = "alert ok";
+        $("healthResult").innerHTML = `
+          API接続OKです。<br>
+          version：${escapeHtml(data.version)}<br>
+          shop_code：${escapeHtml(data.shop_code)}<br>
+          db_ok：true
+        `;
+      } else {
+        setStatus("healthStatus","DB未確認","warn");
+        $("healthResult").className = "alert warn";
+        $("healthResult").innerHTML = `
+          Workerは動いていますが、DB確認がまだNGです。<br>
+          STEP SCHOOL-2 のSQL実行、または環境変数を確認してください。<br>
+          version：${escapeHtml(data.version || "")}
+        `;
+      }
+    } catch (e) {
+      setStatus("healthStatus","NG","ng");
+      $("healthResult").className = "alert ng";
+      $("healthResult").textContent = e.message;
+    }
+  }
+
+  async function prepareDemo(){
+    if (!getAdminCode()) {
+      $("demoResult").className = "alert ng";
+      $("demoResult").textContent = "先に管理コード 1234 を保存してください。";
+      setStatus("demoStatus","コード未保存","ng");
+      return;
+    }
+
+    setStatus("demoStatus","実行中...","warn");
+    $("demoResult").className = "alert warn";
+    $("demoResult").textContent = "営業前デモ準備を実行しています。";
+
+    try {
+      const data = await apiPost(endpoint("adminDemoPrepare"), { admin_code:getAdminCode() }, true);
+      const result = data.result || {};
+      const counts = result.counts || {};
+      setStatus("demoStatus","完了","ok");
+      $("demoResult").className = "alert ok";
+      $("demoResult").innerHTML = `
+        営業前デモ準備が完了しました。<br>
+        shop_code：${escapeHtml(result.shop_code || CONFIG.shopCode)}<br>
+        テスト生徒：テスト 太郎 / 090-9999-0000 / SCHOOL-DEMO-999
+      `;
+      $("lessonCount").textContent = counts.lessons ?? "-";
+      $("requestCount").textContent = counts.requests ?? "-";
+      $("taskCount").textContent = counts.tasks ?? "-";
+      await checkDashboard(false);
+      await checkMember(false);
+    } catch (e) {
+      setStatus("demoStatus","NG","ng");
+      $("demoResult").className = "alert ng";
+      $("demoResult").textContent = e.message;
+    }
+  }
+
+  async function checkDashboard(showToastFlag=true){
+    if (!getAdminCode()) {
+      $("dashboardResult").innerHTML = `<div class="alert ng">先に管理コードを保存してください。</div>`;
+      setStatus("dashboardStatus","コード未保存","ng");
+      return;
+    }
+
+    setStatus("dashboardStatus","確認中...","warn");
+    $("dashboardResult").innerHTML = `<div class="alert warn">ダッシュボードを確認しています。</div>`;
+
+    try {
+      const data = await apiGet(endpoint("adminDashboard"), { admin_code:getAdminCode(), date:todayText() }, true);
+      const c = data.counts || {};
+      setStatus("dashboardStatus","OK","ok");
+      $("lessonCount").textContent = c.lessons ?? "-";
+      $("requestCount").textContent = c.requests ?? "-";
+      $("taskCount").textContent = c.tasks ?? "-";
+
+      const lessons = (data.lessons || []).slice(0,5).map(l => `
+        <div class="item">
+          <b>${escapeHtml(l.start_time ? String(l.start_time).slice(0,5) : "")} ${escapeHtml(l.student_name || "")} 様</b>
+          <small>${escapeHtml(l.course_name || "")} / ${escapeHtml(l.teacher_name || "")} / ${escapeHtml(l.status || "")}</small>
+        </div>
+      `).join("");
+
+      const tasks = (data.tasks || []).slice(0,5).map(t => `
+        <div class="item">
+          <b>${escapeHtml(t.title || "")}</b>
+          <small>${escapeHtml(t.body || "")}</small>
+        </div>
+      `).join("");
+
+      $("dashboardResult").innerHTML = `
+        <div class="alert ok">
+          ダッシュボード確認OKです。<br>
+          授業/予約：${escapeHtml(c.lessons ?? 0)} 件　
+          欠席/振替：${escapeHtml(c.requests ?? 0)} 件　
+          今日やること：${escapeHtml(c.tasks ?? 0)} 件
+        </div>
+        <h3>本日の授業/予約</h3>
+        ${lessons || '<div class="item"><b>本日の授業はまだありません。</b></div>'}
+        <h3>今日やること</h3>
+        ${tasks || '<div class="item"><b>今日やることはありません。</b></div>'}
+      `;
+      if (showToastFlag) showToast("ダッシュボード確認OK");
+    } catch (e) {
+      setStatus("dashboardStatus","NG","ng");
+      $("dashboardResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  async function checkPublicConfig(){
+    setStatus("dashboardStatus","確認中...","warn");
+    $("dashboardResult").innerHTML = `<div class="alert warn">教室設定を確認しています。</div>`;
+
+    try {
+      const data = await apiGet(endpoint("publicConfig"));
+      const courses = data.courses || [];
+      const teachers = data.teachers || [];
+      const hours = data.hours || [];
+      setStatus("dashboardStatus","OK","ok");
+      $("dashboardResult").innerHTML = `
+        <div class="alert ok">
+          教室設定確認OKです。<br>
+          教室名：${escapeHtml(data.shop?.shop_name || CONFIG.shopName)}<br>
+          コース：${courses.length} 件　
+          講師：${teachers.length} 名　
+          営業日設定：${hours.length} 件
+        </div>
+        <h3>コース</h3>
+        ${courses.slice(0,8).map(c => `<span class="pill">${escapeHtml(c.course_name)}</span>`).join("")}
+        <h3>講師</h3>
+        ${teachers.slice(0,8).map(t => `<span class="pill">${escapeHtml(t.teacher_name)}</span>`).join("")}
+      `;
+    } catch (e) {
+      setStatus("dashboardStatus","NG","ng");
+      $("dashboardResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  async function checkMember(showToastFlag=true){
+    const demo = CONFIG.demoStudent || {};
+    setStatus("memberStatus","確認中...","warn");
+    $("memberResult").innerHTML = `<div class="alert warn">デモ生徒を確認しています。</div>`;
+
+    try {
+      const data = await apiGet(endpoint("memberProfile"), {
+        phone: demo.phone || "090-9999-0000",
+        student_no: demo.studentNo || "SCHOOL-DEMO-999"
+      });
+
+      setStatus("memberStatus","OK","ok");
+      const student = data.student || {};
+      const guardian = data.guardian || {};
+      const plans = data.plans || [];
+      const lessons = data.lessons || [];
+
+      $("memberResult").innerHTML = `
+        <div class="alert ok">
+          デモ生徒確認OKです。<br>
+          生徒：${escapeHtml(student.student_name || "")}<br>
+          保護者：${escapeHtml(guardian.guardian_name || "")}<br>
+          授業予定：${lessons.length} 件　
+          プラン/残数：${plans.length} 件
+        </div>
+        <h3>授業予定</h3>
+        ${lessons.slice(0,5).map(l => `
+          <div class="item">
+            <b>${escapeHtml(l.lesson_date || "")} ${escapeHtml(String(l.start_time || "").slice(0,5))}</b>
+            <small>${escapeHtml(l.course_name || "")} / ${escapeHtml(l.teacher_name || "")}</small>
+          </div>
+        `).join("") || '<div class="item"><b>授業予定なし</b></div>'}
+        <h3>振替/チケット</h3>
+        ${plans.slice(0,5).map(p => `
+          <div class="item">
+            <b>${escapeHtml(p.plan_name || "")}</b>
+            <small>残数：${escapeHtml(p.remaining_count ?? "-")} / 有効期限：${escapeHtml(p.valid_until || "-")}</small>
+          </div>
+        `).join("") || '<div class="item"><b>プランなし</b></div>'}
+      `;
+      if (showToastFlag) showToast("デモ生徒確認OK");
+    } catch (e) {
+      setStatus("memberStatus","NG","ng");
+      $("memberResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  function bind(){
+    $("healthBtn").addEventListener("click", checkHealth);
+    $("copyHealthUrlBtn").addEventListener("click", () => copyText(apiUrl(endpoint("health"))));
+
+    $("saveAdminBtn").addEventListener("click", () => {
+      const code = $("adminCodeInput").value.trim();
+      if (!code) {
+        showToast("管理コードを入力してください");
+        return;
+      }
+      saveAdminCode(code);
+      renderAdminStatus();
+      showToast("管理コードを保存しました");
+    });
+
+    $("clearAdminBtn").addEventListener("click", () => {
+      clearAdminCode();
+      renderAdminStatus();
+      showToast("管理コードを削除しました");
+    });
+
+    $("prepareDemoBtn").addEventListener("click", prepareDemo);
+    $("dashboardBtn").addEventListener("click", () => checkDashboard(true));
+    $("publicConfigBtn").addEventListener("click", checkPublicConfig);
+    $("memberCheckBtn").addEventListener("click", () => checkMember(true));
+
+    $("copyMemberInfoBtn").addEventListener("click", () => {
+      copyText([
+        "DPRO 学習塾・習い事 LINE デモ生徒確認情報",
+        "名前：テスト 太郎",
+        "電話番号：090-9999-0000",
+        "生徒番号：SCHOOL-DEMO-999",
+        `生徒証URL：${state.urls.member}`
+      ].join("\n"));
+    });
+
+    $("copyAllUrlsBtn").addEventListener("click", () => copyText($("urlText").value));
+    $("copyJsonBtn").addEventListener("click", () => copyText($("jsonBox").value));
+    $("clearJsonBtn").addEventListener("click", () => {
+      state.lastJson = null;
+      renderJson();
+      showToast("JSONをクリアしました");
+    });
+
+    $("urlList").addEventListener("click", (ev) => {
+      const btn = ev.target.closest("[data-copy-url]");
+      if (btn) copyText(btn.dataset.copyUrl || "");
+    });
+  }
+
+  function init(){
+    renderAdminStatus();
+    renderUrls();
+    bind();
+    checkHealth();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
