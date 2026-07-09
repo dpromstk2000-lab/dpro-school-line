@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DPRO 学習塾・習い事 LINE｜System Check｜STEP SCHOOL-5</title>
+  <title>DPRO 学習塾・習い事 LINE｜System Check｜STEP SCHOOL-5-R1</title>
   <script src="./config.js"></script>
   <style>
     :root{
@@ -191,7 +191,7 @@
 <body>
   <div class="wrap">
     <section class="hero">
-      <div class="badge">STEP SCHOOL-5 / system-check.html</div>
+      <div class="badge">STEP SCHOOL-5-R1 / system-check.html</div>
       <h1>DPRO 学習塾・習い事 LINE<br>System Check</h1>
       <p>
         API接続、管理コード、営業前デモ準備、デモ生徒確認、各画面URLをまとめて確認します。<br>
@@ -396,8 +396,30 @@
   }
 
   function clearAdminCode(){
-    if (U.clearAdminCode) return U.clearAdminCode();
-    localStorage.removeItem(CONFIG.adminCodeStorageKey);
+    const keys = [
+      CONFIG.adminCodeStorageKey,
+      "dpro_school_admin_code",
+      "school_admin_code",
+      "dpro_admin_code",
+      "admin_code"
+    ].filter(Boolean);
+
+    keys.forEach((key) => {
+      try { localStorage.removeItem(key); } catch(e) {}
+      try { sessionStorage.removeItem(key); } catch(e) {}
+    });
+
+    // config.js 側の削除関数も念のため呼ぶ
+    try {
+      if (U.clearAdminCode) U.clearAdminCode();
+    } catch(e) {}
+
+    // 入力欄の見た目も確実に空にする
+    const input = document.getElementById("adminCodeInput");
+    if (input) {
+      input.value = "";
+      input.setAttribute("value", "");
+    }
   }
 
   function headers(includeAdmin=false){
@@ -775,8 +797,26 @@
 
     $("clearAdminBtn").addEventListener("click", () => {
       clearAdminCode();
+
+      // 削除直後に再確認して、画面表示も確実に未保存へ戻す
+      const codeAfterDelete = getAdminCode();
+      if (codeAfterDelete) {
+        // 万一残る場合に備えて、直接キー削除を再実行
+        try { localStorage.removeItem(CONFIG.adminCodeStorageKey); } catch(e) {}
+        try { sessionStorage.removeItem(CONFIG.adminCodeStorageKey); } catch(e) {}
+      }
+
       renderAdminStatus();
-      showToast("管理コードを削除しました");
+
+      if (getAdminCode()) {
+        $("adminStatus").className = "alert ng";
+        $("adminStatus").innerHTML = "管理コードの削除に失敗しました。<br>ブラウザの再読み込み後、もう一度押してください。";
+        showToast("削除に失敗しました");
+      } else {
+        $("adminStatus").className = "alert warn";
+        $("adminStatus").textContent = "管理コードは削除されました。営業前デモ準備には再度 1234 を保存してください。";
+        showToast("管理コードを削除しました");
+      }
     });
 
     $("prepareDemoBtn").addEventListener("click", prepareDemo);
