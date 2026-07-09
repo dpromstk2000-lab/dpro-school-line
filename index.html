@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DPRO 学習塾・習い事 LINE｜保護者・生徒画面｜STEP SCHOOL-6</title>
+  <title>DPRO 学習塾・習い事 LINE｜保護者・生徒画面｜STEP SCHOOL-6-R1</title>
   <script src="./config.js"></script>
   <style>
     :root{
@@ -296,7 +296,7 @@
   <div class="wrap">
     <section class="hero">
       <div>
-        <div class="badge">STEP SCHOOL-6 / index.html</div>
+        <div class="badge">STEP SCHOOL-6-R1 / index.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>保護者・生徒画面</h1>
         <p>
           体験予約、欠席連絡、振替希望をLINEからかんたん受付。<br>
@@ -912,15 +912,19 @@
     }
   }
 
-  async function findOpenDay(){
+  async function findOpenDay(options = {}){
     if (!state.selectedCourse) {
       showToast("コースを選んでください");
-      return;
+      return null;
     }
 
+    const isAuto = !!options.auto;
     const start = $("trialDate").value || todayText();
+
     $("slotMessage").className = "alert warn";
-    $("slotMessage").textContent = `${dateWithWeekday(start)} 以降で、次に空いている日を探しています。`;
+    $("slotMessage").textContent = isAuto
+      ? `${dateWithWeekday(start)} に空きがないため、次に体験できる日を自動で探しています。`
+      : `${dateWithWeekday(start)} 以降で、次に空いている日を探しています。`;
 
     for (let i=0; i<45; i++){
       const date = addDaysText(start, i);
@@ -937,18 +941,26 @@
           updateDateLabel();
           state.slots = slots;
           state.selectedSlot = null;
+
+          const prefix = isAuto
+            ? "最初に予約できる日を自動表示しました"
+            : "次に空いている日を見つけました";
+
           $("slotMessage").className = "alert ok";
-          $("slotMessage").textContent = `次に空いている日を見つけました：${dateWithWeekday(date)}。下から時間を選んでください。`;
+          $("slotMessage").textContent = `${prefix}：${dateWithWeekday(date)}。下から時間を選んでください。`;
+
           renderSlots();
           updateSummary();
-          showToast(`空き日：${dateWithWeekday(date)}`);
-          return;
+
+          showToast(isAuto ? `予約できる日を表示しました：${dateWithWeekday(date)}` : `空き日：${dateWithWeekday(date)}`);
+          return data;
         }
       } catch(e){}
     }
 
     $("slotMessage").className = "alert ng";
     $("slotMessage").textContent = "45日以内に空き時間が見つかりませんでした。教室へLINEでご相談ください。";
+    return null;
   }
 
   function validateTrial(){
@@ -1245,7 +1257,15 @@ ${$("studentName").value.trim()} 様
 
     try {
       await loadConfig();
-      await loadSlots();
+
+      const first = await loadSlots();
+
+      // 営業デモ向け：
+      // 初期表示日が休講日・満席・体験枠なしの場合でも、
+      // 「次の空き日を探す」を押さずに予約可能日を自動表示する。
+      if (!first || !first.is_available || !state.slots.length) {
+        await findOpenDay({ auto:true });
+      }
     } catch (e) {
       $("slotMessage").className = "alert ng";
       $("slotMessage").innerHTML = `教室設定の読み込みに失敗しました。<br>${escapeHtml(e.message)}<br><br>system-check.html で API接続と営業前デモ準備を確認してください。`;
