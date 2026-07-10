@@ -138,6 +138,11 @@
     .calendar-row .date-box{min-width:210px;}
     .lesson-time{font-size:20px;font-weight:950;letter-spacing:-.03em;}
     .nowrap{white-space:nowrap;}
+
+    .create-type-banner{display:flex;gap:10px;flex-wrap:wrap;margin:-2px 0 16px;}
+    .create-chip{border:1px solid #cfd9e8;background:#fff;border-radius:16px;padding:12px 14px;font-weight:950;color:#334155;box-shadow:none;min-height:48px;}
+    .create-chip.active{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;box-shadow:0 10px 24px rgba(37,99,235,.14);}
+    .quick-note{margin-top:12px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:16px;padding:12px 14px;color:#475569;font-size:13px;line-height:1.75;font-weight:750;}
     @media(max-width:1100px){.hero,.grid{grid-template-columns:1fr;}.stats{grid-template-columns:repeat(2,1fr);}.item{grid-template-columns:1fr;}.item-actions{justify-content:flex-start;min-width:0;}.two-col{grid-template-columns:1fr;}}
     @media(max-width:720px){body{padding:14px;}.hero-main,.hero-side,.card{border-radius:20px;padding:18px;}h1{font-size:32px;}.stats,.form-grid,.form-grid.three,.mini-grid{grid-template-columns:1fr;}.btn{width:100%;}.btn.small{width:auto;}.actions .btn{width:100%;}.top-actions .btn{width:100%;}.tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}.tab{white-space:nowrap;}.item-actions .btn{width:100%;}}
   </style>
@@ -146,9 +151,9 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-8 / owner.html</div>
+        <div class="version">STEP SCHOOL-10 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
-        <p class="lead">体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索をPCで確認する画面です。保護者へ送るLINE文面はその場でコピーできます。</p>
+        <p class="lead">体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索、電話予約・教室受付予約をPCで確認・登録する画面です。保護者へ送るLINE文面はその場でコピーできます。</p>
         <div class="top-actions">
           <a class="btn secondary" href="./system-check.html">system-checkへ</a>
           <a class="btn secondary" href="./index.html">保護者・生徒画面へ</a>
@@ -165,6 +170,7 @@
           <span class="pill">欠席連絡</span>
           <span class="pill">振替希望</span>
           <span class="pill">生徒検索</span>
+          <span class="pill">電話予約</span>
         </div>
       </div>
     </header>
@@ -183,14 +189,96 @@
           <div class="status" id="mainStatus"></div>
         </div>
 
+        <div class="card" id="createLessonCard">
+          <div class="section-title"><span class="num">2</span><h2>電話予約・教室受付予約を登録</h2></div>
+          <p class="hint">電話で受けた体験予約、教室受付で受けた予約、既存生徒の授業予定をPCから登録します。時間は30分単位で選びます。</p>
+          <div class="create-type-banner" id="createTypeTabs">
+            <button class="create-chip active" type="button" data-create-type="phone">電話予約</button>
+            <button class="create-chip" type="button" data-create-type="walkin">教室受付予約</button>
+            <button class="create-chip" type="button" data-create-type="manual">既存生徒の授業追加</button>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="createStudentName">生徒名</label>
+              <input id="createStudentName" type="text" placeholder="例：テスト 太郎" autocomplete="off" />
+            </div>
+            <div>
+              <label for="createGuardianName">保護者名</label>
+              <input id="createGuardianName" type="text" placeholder="例：テスト 保護者" autocomplete="off" />
+            </div>
+            <div>
+              <label for="createPhone">保護者電話番号</label>
+              <input id="createPhone" type="tel" inputmode="tel" placeholder="090-9999-0000 / 09099990000" autocomplete="off" />
+            </div>
+            <div>
+              <label for="createStudentNo">生徒番号 任意</label>
+              <input id="createStudentNo" type="text" placeholder="SCHOOL-DEMO-999" autocomplete="off" />
+            </div>
+          </div>
+          <div class="form-grid three" style="margin-top:14px;">
+            <div>
+              <label for="createCourseName">コース</label>
+              <input id="createCourseName" list="courseOptions" type="text" placeholder="体験授業：小学生算数" />
+              <datalist id="courseOptions">
+                <option value="体験授業：小学生算数"></option>
+                <option value="小学生算数"></option>
+                <option value="小学生国語"></option>
+                <option value="英会話キッズ"></option>
+                <option value="プログラミング基礎"></option>
+                <option value="ピアノ個人レッスン"></option>
+              </datalist>
+            </div>
+            <div>
+              <label for="createTeacherName">担当</label>
+              <input id="createTeacherName" type="text" placeholder="教室長 / 佐藤先生" />
+            </div>
+            <div>
+              <label for="createRoomName">教室</label>
+              <input id="createRoomName" type="text" placeholder="1番教室" />
+            </div>
+          </div>
+          <div class="form-grid three" style="margin-top:14px;">
+            <div>
+              <label for="createDate">予定日</label>
+              <input id="createDate" type="date" />
+            </div>
+            <div>
+              <label for="createStartTime">開始時間</label>
+              <select id="createStartTime"></select>
+            </div>
+            <div>
+              <label for="createDuration">授業時間</label>
+              <select id="createDuration">
+                <option value="30">30分</option>
+                <option value="45">45分</option>
+                <option value="60" selected>60分</option>
+                <option value="90">90分</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <label for="createMemo">メモ・要望</label>
+            <textarea id="createMemo" placeholder="例：電話受付。初めての体験授業を希望します。"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn orange" id="createPhoneBtn" type="button">電話予約として登録</button>
+            <button class="btn green" id="createWalkinBtn" type="button">教室受付として登録</button>
+            <button class="btn purple" id="createManualBtn" type="button">既存生徒の授業を追加</button>
+            <button class="btn secondary" id="fillDemoCreateBtn" type="button">デモ情報を入力</button>
+            <button class="btn secondary" id="clearCreateBtn" type="button">入力をクリア</button>
+          </div>
+          <div class="quick-note">検索結果の「この生徒で予約入力」を押すと、生徒名・保護者名・電話番号・生徒番号をこの欄に反映できます。</div>
+          <div class="status" id="createStatus"></div>
+        </div>
+
         <div class="card" id="tasksCard">
-          <div class="section-title"><span class="num">2</span><h2>今日やること</h2></div>
+          <div class="section-title"><span class="num">3</span><h2>今日やること</h2></div>
           <p class="hint">未対応の欠席返信・振替返信・体験予約確認を集約します。対応が終わったものは「対応済み」にします。</p>
           <div class="list" id="taskList"></div>
         </div>
 
         <div class="card">
-          <div class="section-title"><span class="num">3</span><h2>受付一覧</h2></div>
+          <div class="section-title"><span class="num">4</span><h2>受付一覧</h2></div>
           <div class="tabs" id="requestTabs">
             <button class="tab active" type="button" data-tab="trial">体験予約</button>
             <button class="tab" type="button" data-tab="absence">欠席連絡</button>
@@ -201,7 +289,7 @@
         </div>
 
         <div class="card">
-          <div class="section-title"><span class="num">4</span><h2>本日の授業予定</h2></div>
+          <div class="section-title"><span class="num">5</span><h2>本日の授業予定</h2></div>
           <p class="hint">日付を変えると、その日の授業予定を確認できます。授業状態は「予定」「出席」「授業中」「完了」へ更新できます。</p>
           <div class="calendar-row">
             <div class="date-box">
@@ -263,6 +351,7 @@
           <h2 style="margin-bottom:14px;">運用の流れ</h2>
           <ol class="flow-list">
             <li>営業前デモ準備または更新</li>
+            <li>電話・教室受付予約はPCから登録</li>
             <li>今日やることを見る</li>
             <li>欠席・振替・体験予約へ返信</li>
             <li>文面をコピーしてLINEで送信</li>
@@ -273,7 +362,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-8 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -281,7 +370,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-8';
+      const VERSION = 'STEP SCHOOL-10';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -298,6 +387,7 @@
         dashboard: makeEmptyDashboard(),
         maps: new Map(),
         selectedMessage: '',
+        createType: 'phone',
         usedFallback: false,
         loading: false
       };
@@ -599,7 +689,7 @@
               <div class="item-actions">
                 <button class="btn navy small" data-action="show-message" data-key="${msgKey}" type="button">文面を見る</button>
                 <button class="btn small" data-action="copy-message" data-key="${msgKey}" type="button">文面コピー</button>
-                <button class="btn green small" data-action="complete-task" data-key="${key}" type="button">対応済み</button>
+                <button class="btn green small" data-action="complete-task" data-key="${key}" type="button">対応済みにする</button>
               </div>
             </div>
           `;
@@ -638,7 +728,7 @@
               <div class="item-actions">
                 <button class="btn navy small" data-action="show-message" data-key="${msgKey}" type="button">文面を見る</button>
                 <button class="btn small" data-action="copy-message" data-key="${msgKey}" type="button">文面コピー</button>
-                <button class="btn green small" data-action="complete-request" data-key="${key}" type="button">対応済み</button>
+                <button class="btn green small" data-action="complete-request" data-key="${key}" type="button">対応済みにする</button>
               </div>
             </div>
           `;
@@ -691,7 +781,7 @@
                 <div class="item-title"><span>${escapeHtml(item.studentName || '生徒名未入力')}</span><span class="badge blue">${escapeHtml(item.studentNo || '番号未入力')}</span></div>
                 <div class="item-meta">保護者：${escapeHtml(item.guardianName || '未入力')}　電話：${escapeHtml(formatPhone(item.phone))}<br>コース：${escapeHtml(item.course || '未設定')}　状態：${escapeHtml(item.status || '確認')}</div>
               </div>
-              <div class="item-actions"><button class="btn small" data-action="student-detail" data-key="${key}" type="button">詳細を見る</button></div>
+              <div class="item-actions"><button class="btn small" data-action="student-detail" data-key="${key}" type="button">詳細を見る</button><button class="btn green small" data-action="fill-create" data-key="${key}" type="button">この生徒で予約入力</button></div>
             </div>
           `;
         }).join('');
@@ -713,6 +803,7 @@
           <div class="actions">
             <button class="btn navy small" data-action="show-message" data-key="${msgKey}" type="button">確認文面を見る</button>
             <button class="btn small" data-action="copy-message" data-key="${msgKey}" type="button">コピー</button>
+            <button class="btn green small" data-action="fill-create" data-key="${storeItem('student', detail)}" type="button">この生徒で予約入力</button>
             <a class="btn secondary small" href="./member.html?phone=${encodeURIComponent(detail.phone)}&student_no=${encodeURIComponent(detail.studentNo)}">生徒証を開く</a>
           </div>
         `;
@@ -785,6 +876,161 @@
 
       function buildMessageFromStudent(detail){
         return `${detail.guardianName || '保護者'}様\n${state.config.shopName}です。\n\n${detail.studentName || '生徒'}様の登録情報を確認しました。\n生徒番号：${detail.studentNo || ''}\nコース：${detail.course || ''}\n振替残数：${detail.makeupRemaining}回\nチケット残数：${detail.ticketRemaining}回\n\n授業予定は生徒証・授業予定画面から確認できます。`;
+      }
+
+
+      function generateTimeOptions(){
+        const select = $('createStartTime');
+        if(!select) return;
+        const options = ['<option value="">時間を選択</option>'];
+        for(let h = 9; h <= 21; h++){
+          for(const m of [0, 30]){
+            if(h === 21 && m === 30) continue;
+            const value = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            options.push(`<option value="${value}">${value}</option>`);
+          }
+        }
+        select.innerHTML = options.join('');
+      }
+
+      function setCreateType(type){
+        state.createType = type || 'phone';
+        document.querySelectorAll('#createTypeTabs [data-create-type]').forEach((btn) => btn.classList.toggle('active', btn.dataset.createType === state.createType));
+        const labels = { phone:'電話予約', walkin:'教室受付予約', manual:'既存生徒の授業追加' };
+        setStatus('createStatus', `${labels[state.createType]}として登録できます。必要事項を入力してください。`, 'ok');
+      }
+
+      function clearCreateForm(){
+        ['createStudentName','createGuardianName','createPhone','createStudentNo','createCourseName','createTeacherName','createRoomName','createMemo'].forEach((id) => { const el = $(id); if(el) el.value = ''; });
+        $('createDate').value = todayYmd();
+        $('createStartTime').value = '';
+        $('createDuration').value = '60';
+        setStatus('createStatus', '入力欄をクリアしました。', 'ok');
+      }
+
+      function fillDemoCreate(){
+        $('createStudentName').value = 'テスト 太郎';
+        $('createGuardianName').value = 'テスト 保護者';
+        $('createPhone').value = DEMO_PHONE;
+        $('createStudentNo').value = DEMO_STUDENT_NO;
+        $('createCourseName').value = '体験授業：小学生算数';
+        $('createTeacherName').value = '教室長';
+        $('createRoomName').value = '1番教室';
+        $('createDate').value = addDays(todayYmd(), 1);
+        $('createStartTime').value = '17:00';
+        $('createDuration').value = '60';
+        $('createMemo').value = state.createType === 'phone' ? '電話受付。初めての体験授業を希望します。' : '教室受付で登録。次回授業予定として作成します。';
+        setStatus('createStatus', 'デモ情報を入力しました。内容を確認して登録してください。', 'ok');
+      }
+
+      function fillCreateFormFromStudent(item){
+        if(!item) return;
+        $('createStudentName').value = item.studentName || '';
+        $('createGuardianName').value = item.guardianName || '';
+        $('createPhone').value = formatPhone(item.phone || '');
+        $('createStudentNo').value = item.studentNo || '';
+        $('createCourseName').value = item.course || '体験授業：小学生算数';
+        if(!$('createDate').value) $('createDate').value = todayYmd();
+        if(!$('createDuration').value) $('createDuration').value = '60';
+        setCreateType('manual');
+        $('createLessonCard').scrollIntoView({ behavior:'smooth', block:'start' });
+        setStatus('createStatus', `${item.studentName || '生徒'}さんの情報を予約登録欄に反映しました。日付と時間を選んで登録してください。`, 'ok');
+      }
+
+      function addMinutesToTime(hhmm, minutes){
+        const m = String(hhmm || '').match(/^(\d{1,2}):(\d{2})$/);
+        if(!m) return '';
+        const total = Number(m[1]) * 60 + Number(m[2]) + Number(minutes || 0);
+        const h = Math.floor(total / 60) % 24;
+        const mm = total % 60;
+        return `${String(h).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+      }
+
+      function getCreateForm(kind){
+        const phone = $('createPhone').value.trim();
+        const normalizedPhone = normalizePhone(phone);
+        const date = $('createDate').value;
+        const startTime = $('createStartTime').value;
+        const duration = Number($('createDuration').value || 60);
+        return {
+          create_type: kind,
+          source: kind,
+          reception_type: kind,
+          student_name: $('createStudentName').value.trim(),
+          guardian_name: $('createGuardianName').value.trim(),
+          parent_name: $('createGuardianName').value.trim(),
+          phone,
+          phone_number: normalizedPhone,
+          normalized_phone: normalizedPhone,
+          student_no: $('createStudentNo').value.trim(),
+          student_number: $('createStudentNo').value.trim(),
+          course_name: $('createCourseName').value.trim() || '体験授業：小学生算数',
+          teacher_name: $('createTeacherName').value.trim() || '教室長',
+          room_name: $('createRoomName').value.trim() || '1番教室',
+          date,
+          lesson_date: date,
+          preferred_date: date,
+          start_time: startTime,
+          time: startTime,
+          end_time: addMinutesToTime(startTime, duration),
+          duration_minutes: duration,
+          memo: $('createMemo').value.trim(),
+          note: $('createMemo').value.trim(),
+          status: 'scheduled'
+        };
+      }
+
+      function validateCreateForm(payload, kind){
+        if(!payload.student_name) return '生徒名を入力してください。';
+        if(!payload.guardian_name) return '保護者名を入力してください。';
+        if(kind !== 'manual' && !payload.phone_number) return '保護者電話番号を入力してください。';
+        if(!payload.date) return '予定日を選択してください。';
+        if(payload.date < todayYmd()) return '過去の日付は登録できません。今日以降の日付を選んでください。';
+        if(!payload.start_time) return '開始時間を選択してください。';
+        return '';
+      }
+
+      async function postLessonCreate(kind, payload){
+        const paths = {
+          phone:'/api/admin/lessons/phone-create',
+          walkin:'/api/admin/lessons/walkin-create',
+          manual:'/api/admin/lessons/manual-create'
+        };
+        const primaryPath = paths[kind] || paths.manual;
+        try{
+          return await adminPost(primaryPath, payload);
+        } catch(primaryError){
+          if(primaryPath !== paths.manual){
+            try{ return await adminPost(paths.manual, { ...payload, fallback_from: primaryPath }); } catch(e){ throw primaryError; }
+          }
+          throw primaryError;
+        }
+      }
+
+      async function createLessonFromOwner(kind){
+        setCreateType(kind || state.createType);
+        const payload = getCreateForm(state.createType);
+        const labels = { phone:'電話予約', walkin:'教室受付予約', manual:'既存生徒の授業' };
+        const err = validateCreateForm(payload, state.createType);
+        if(err){ setStatus('createStatus', err, 'err'); return; }
+        const buttonId = state.createType === 'phone' ? 'createPhoneBtn' : state.createType === 'walkin' ? 'createWalkinBtn' : 'createManualBtn';
+        const btn = $(buttonId);
+        const old = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '登録中...';
+        setStatus('createStatus', `${labels[state.createType]}を登録しています。`, '');
+        try{
+          await postLessonCreate(state.createType, payload);
+          setStatus('createStatus', `${labels[state.createType]}を登録しました。${formatDateTime(payload.date, payload.start_time)} / ${payload.student_name}`, 'ok');
+          showToast(`${labels[state.createType]}を登録しました`);
+          $('dayInput').value = payload.date;
+          await loadDashboard();
+        } catch(e){
+          setStatus('createStatus', `登録に失敗しました：${e.message}`, 'err');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = old;
+        }
       }
 
       async function copyText(text, message){
@@ -962,6 +1208,15 @@
         $('loadDayBtn').addEventListener('click', loadDashboard);
         $('todayBtn').addEventListener('click', () => { $('dayInput').value = todayYmd(); loadDashboard(); });
         $('tomorrowBtn').addEventListener('click', () => { $('dayInput').value = addDays(todayYmd(), 1); loadDashboard(); });
+        $('createTypeTabs').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-create-type]');
+          if(btn) setCreateType(btn.dataset.createType);
+        });
+        $('createPhoneBtn').addEventListener('click', () => createLessonFromOwner('phone'));
+        $('createWalkinBtn').addEventListener('click', () => createLessonFromOwner('walkin'));
+        $('createManualBtn').addEventListener('click', () => createLessonFromOwner('manual'));
+        $('fillDemoCreateBtn').addEventListener('click', fillDemoCreate);
+        $('clearCreateBtn').addEventListener('click', clearCreateForm);
         $('searchBtn').addEventListener('click', searchStudents);
         $('searchInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') searchStudents(); });
         $('demoSearchBtn').addEventListener('click', () => { $('searchInput').value = 'テスト 太郎'; searchStudents(); });
@@ -985,12 +1240,17 @@
           if(action === 'complete-request') completeRequest(item);
           if(action === 'lesson-status') updateLessonStatus(item, btn.dataset.status);
           if(action === 'student-detail') loadStudentDetail(item);
+          if(action === 'fill-create') fillCreateFormFromStudent(item);
         });
       }
 
       function boot(){
         $('shopNameHero').textContent = state.config.shopName;
         $('dayInput').value = todayYmd();
+        $('createDate').value = todayYmd();
+        $('createDate').min = todayYmd();
+        generateTimeOptions();
+        setCreateType('phone');
         const savedCode = localStorage.getItem('dpro_school_admin_code');
         if(savedCode) $('adminCodeInput').value = savedCode;
         const savedQ = localStorage.getItem('dpro_school_owner_search_q');
