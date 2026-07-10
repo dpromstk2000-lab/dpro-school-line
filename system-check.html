@@ -1,862 +1,503 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DPRO 学習塾・習い事 LINE｜System Check｜STEP SCHOOL-5-R1</title>
-  <script src="./config.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DPRO 学習塾・習い事 LINE｜営業前デモ確認</title>
   <style>
     :root{
-      --bg:#f6f8fb;
+      --bg1:#eef6ff;
+      --bg2:#e8fff7;
       --card:#ffffff;
       --ink:#0f172a;
-      --muted:#64748b;
-      --line:#e2e8f0;
-      --brand:#2563eb;
-      --brand2:#0f766e;
-      --ok:#16a34a;
-      --warn:#d97706;
-      --ng:#dc2626;
-      --soft:#eff6ff;
-      --green:#ecfdf5;
-      --red:#fef2f2;
-      --yellow:#fffbeb;
-      --shadow:0 18px 50px rgba(15,23,42,.08);
-      --radius:20px;
+      --muted:#526174;
+      --line:#dbe6f1;
+      --blue:#2563eb;
+      --blue2:#0f6ec7;
+      --green:#059669;
+      --teal:#0f8f83;
+      --orange:#f97316;
+      --red:#ef4444;
+      --navy:#0b1328;
+      --softBlue:#eff6ff;
+      --softGreen:#ecfdf5;
+      --softOrange:#fff7ed;
+      --softRed:#fef2f2;
+      --shadow:0 18px 45px rgba(15,23,42,.10);
+      --radius:24px;
     }
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 18% 0%, #dbeafe 0, transparent 36%),
-        radial-gradient(circle at 92% 8%, #ccfbf1 0, transparent 28%),
-        var(--bg);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
       color:var(--ink);
-    }
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:1180px;margin:0 auto;padding:24px}
-    .hero{
-      background:linear-gradient(135deg,#0f172a,#1e3a8a 58%,#0f766e);
-      color:#fff;
-      border-radius:28px;
-      padding:26px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    .hero:after{
-      content:"";
-      position:absolute;
-      right:-70px;top:-80px;
-      width:260px;height:260px;
-      border-radius:999px;
-      background:rgba(255,255,255,.13);
-    }
-    .hero h1{margin:0;font-size:clamp(24px,4vw,38px);letter-spacing:-.04em}
-    .hero p{margin:10px 0 0;color:rgba(255,255,255,.86);line-height:1.75;font-weight:700}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 12px;border-radius:999px;
-      background:rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.22);
-      font-weight:900;font-size:12px;margin-bottom:12px;
-    }
-    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:18px}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .card{
-      background:rgba(255,255,255,.88);
-      backdrop-filter:blur(12px);
-      border:1px solid rgba(226,232,240,.9);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-    .card h2{margin:0 0 12px;font-size:19px;letter-spacing:-.03em}
-    .card h3{margin:14px 0 8px;font-size:15px}
-    .muted{color:var(--muted);font-size:13px;line-height:1.65}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .stack{display:grid;gap:10px}
-    .field{display:grid;gap:6px;margin:10px 0}
-    label{font-size:13px;font-weight:900;color:#334155}
-    input,textarea,select{
-      width:100%;
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:14px;
-      padding:12px;
-      font-size:15px;
-      outline:none;
-    }
-    textarea{min-height:150px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.55}
-    input:focus,textarea:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.16)}
-    .btn{
-      border:0;border-radius:14px;
-      padding:12px 14px;
-      font-weight:950;
-      cursor:pointer;
-      background:#e2e8f0;
-      color:#0f172a;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      min-height:44px;
-    }
-    .btn:hover{filter:brightness(.98)}
-    .btn.primary{background:var(--brand);color:#fff}
-    .btn.green{background:var(--brand2);color:#fff}
-    .btn.dark{background:#0f172a;color:#fff}
-    .btn.red{background:#fee2e2;color:#991b1b}
-    .btn.ghost{background:#fff;border:1px solid var(--line)}
-    .btn.full{width:100%}
-    .status{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 11px;border-radius:999px;
-      font-size:12px;font-weight:950;
-      background:#e2e8f0;color:#334155;
-    }
-    .status.ok{background:#dcfce7;color:#166534}
-    .status.warn{background:#fef3c7;color:#92400e}
-    .status.ng{background:#fee2e2;color:#991b1b}
-    .status.info{background:#dbeafe;color:#1d4ed8}
-    .alert{
-      padding:12px 14px;border-radius:16px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-size:13px;
+      background:
+        radial-gradient(circle at 12% 6%, rgba(37,99,235,.16), transparent 34%),
+        radial-gradient(circle at 90% 2%, rgba(16,185,129,.18), transparent 38%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh;
       line-height:1.65;
-      font-weight:750;
     }
-    .alert.ok{border-color:#bbf7d0;background:var(--green);color:#166534}
-    .alert.warn{border-color:#fde68a;background:var(--yellow);color:#92400e}
-    .alert.ng{border-color:#fecaca;background:var(--red);color:#991b1b}
-    .list{display:grid;gap:10px}
-    .item{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:16px;
-      padding:13px;
-      line-height:1.55;
-    }
-    .item b{display:block;font-size:14px;margin-bottom:3px}
-    .item small{display:block;color:var(--muted);font-size:12px}
-    .urlbox{
-      display:grid;gap:8px;
-      grid-template-columns:1fr auto;
-      align-items:center;
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:16px;
-      padding:10px;
-    }
-    .urlbox .title{font-weight:950;font-size:13px}
-    .urlbox .url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#475569;word-break:break-all;margin-top:3px}
-    .kpi{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-    }
-    .kpi .num{font-size:27px;font-weight:1000;letter-spacing:-.04em}
-    .kpi .label{font-size:12px;color:var(--muted);font-weight:900}
-    .pill{
-      display:inline-flex;
-      padding:6px 10px;
-      border-radius:999px;
-      background:#f1f5f9;
-      color:#334155;
-      font-size:12px;
-      font-weight:950;
-      margin:2px;
-    }
-    .toast{
-      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
-      background:#0f172a;color:#fff;
-      padding:12px 16px;border-radius:999px;
-      font-size:13px;font-weight:900;
-      box-shadow:0 14px 40px rgba(0,0,0,.22);
-      opacity:0;pointer-events:none;
-      transition:.2s;
-      z-index:99;
-    }
-    .toast.show{opacity:1;bottom:30px}
-    .divider{height:1px;background:var(--line);margin:14px 0}
-    @media(max-width:860px){
-      .wrap{padding:14px}
-      .grid,.grid3{grid-template-columns:1fr}
-      .urlbox{grid-template-columns:1fr}
-      .btn{width:100%}
-      .hero{padding:20px}
-    }
+    .wrap{max-width:1180px;margin:0 auto;padding:24px 18px 46px}
+    .hero{display:grid;grid-template-columns:1.6fr .9fr;gap:22px;align-items:stretch;margin-bottom:22px}
+    .panel{background:rgba(255,255,255,.93);border:1px solid rgba(219,230,241,.9);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-main{padding:28px 30px;position:relative;overflow:hidden}
+    .hero-main:after{content:"";position:absolute;right:-45px;bottom:-55px;width:210px;height:210px;border-radius:50%;background:rgba(37,99,235,.08)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:800;letter-spacing:.01em}
+    h1{font-size:38px;line-height:1.08;margin:16px 0 12px;letter-spacing:-.045em}
+    .lead{font-weight:700;color:#334155;margin:0;max-width:780px}
+    .hero-card{padding:28px 30px;color:white;background:linear-gradient(135deg,#1d4ed8,#0f766e);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .hero-card:before,.hero-card:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.12)}
+    .hero-card:before{width:180px;height:180px;right:-70px;top:-60px}.hero-card:after{width:140px;height:140px;left:-58px;bottom:-58px}
+    .hero-card h2{margin:0 0 8px;font-size:24px}.hero-card p{margin:0 0 20px;font-weight:700;opacity:.95}
+    .mini-tags{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1}.mini-tags span{font-size:12px;font-weight:800;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);border-radius:999px;padding:6px 10px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}.stack{display:grid;gap:18px}.card{padding:22px;border-radius:22px;background:rgba(255,255,255,.95);border:1px solid var(--line);box-shadow:var(--shadow)}
+    .section-title{display:flex;gap:10px;align-items:center;margin:0 0 8px}.num,.letter{width:28px;height:28px;border-radius:50%;display:inline-grid;place-items:center;background:var(--blue);color:#fff;font-weight:900;font-size:14px;flex:0 0 auto}.letter{background:#0f766e}.section-title h2{font-size:22px;margin:0;letter-spacing:-.03em}.note{font-size:13px;color:var(--muted);font-weight:700;margin:0 0 16px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;background:#f8fafc;border:1px solid #cbd5e1;color:#0f172a;box-shadow:0 7px 15px rgba(15,23,42,.06);transition:.15s transform,.15s box-shadow,.15s opacity;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}.btn:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(15,23,42,.10)}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--blue);border-color:var(--blue);color:#fff}.green{background:var(--green);border-color:var(--green);color:#fff}.teal{background:var(--teal);border-color:var(--teal);color:#fff}.orange{background:var(--orange);border-color:var(--orange);color:#fff}.dark{background:var(--navy);border-color:var(--navy);color:#fff}.danger{background:var(--red);border-color:var(--red);color:#fff}
+    .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.field label{display:block;font-size:12px;color:#526174;font-weight:900;margin:0 0 5px}.field input,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px 13px;font-size:15px;background:#fff;color:#0f172a}.field textarea{min-height:90px;resize:vertical}.status{margin-top:14px;padding:13px 14px;border-radius:14px;background:var(--softBlue);border:1px solid #bfdbfe;color:#1e40af;font-weight:800;font-size:14px}.ok{background:var(--softGreen);border-color:#bbf7d0;color:#047857}.warn{background:var(--softOrange);border-color:#fed7aa;color:#b45309}.ng{background:var(--softRed);border-color:#fecaca;color:#b91c1c}.status small{display:block;color:inherit;opacity:.85;margin-top:3px;font-weight:700}.metric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.metric{padding:14px;border-radius:16px;border:1px solid #dbe6f1;background:#f8fbff;min-height:86px}.metric strong{display:block;font-size:28px;line-height:1;margin:4px 0}.metric span{font-size:12px;font-weight:900;color:#64748b}.metric.blue{background:#eff6ff}.metric.green{background:#ecfdf5}.metric.orange{background:#fff7ed}.metric.red{background:#fef2f2}.metric.purple{background:#f5f3ff}
+    .link-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.screen{border:1px solid #dbe6f1;background:#fff;border-radius:18px;padding:16px}.screen h3{margin:0 0 6px;font-size:17px}.screen p{font-size:13px;color:#526174;font-weight:700;margin:0 0 12px}.screen .btns .btn{padding:10px 12px;font-size:13px}.checklist{display:grid;gap:10px;margin-top:12px}.check-item{display:flex;gap:10px;align-items:flex-start;border:1px solid #e2e8f0;border-radius:14px;background:#fff;padding:12px}.check-item input{width:20px;height:20px;margin-top:2px}.check-item b{display:block}.check-item small{display:block;color:#64748b;font-weight:700}.jsonbox{background:#0b1328;color:#e5eefc;border-radius:16px;padding:16px;overflow:auto;max-height:360px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap}.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:900;padding:4px 9px;border-radius:999px;background:#e0f2fe;color:#0369a1}.pill.okpill{background:#dcfce7;color:#047857}.pill.warnpill{background:#ffedd5;color:#c2410c}.pill.ngpill{background:#fee2e2;color:#b91c1c}.footer{text-align:center;color:#64748b;font-size:12px;font-weight:800;margin:28px 0 0}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#0b1328;color:#fff;border-radius:999px;padding:12px 18px;font-weight:900;box-shadow:0 15px 35px rgba(15,23,42,.25);opacity:0;pointer-events:none;transition:.22s;z-index:50}.toast.show{opacity:1;bottom:34px}.wide{grid-column:1/-1}.hide{display:none!important}
+    @media(max-width:900px){.hero,.grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.form-grid,.link-grid{grid-template-columns:1fr}h1{font-size:31px}.wrap{padding:14px}.hero-main,.hero-card,.card{padding:20px}.btn{width:100%}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero">
-      <div class="badge">STEP SCHOOL-5-R1 / system-check.html</div>
-      <h1>DPRO 学習塾・習い事 LINE<br>System Check</h1>
-      <p>
-        API接続、管理コード、営業前デモ準備、デモ生徒確認、各画面URLをまとめて確認します。<br>
-        商談前はこの画面から順番に確認すればOKです。
-      </p>
-    </section>
+    <header class="hero">
+      <div class="hero-main panel">
+        <span class="badge">STEP SCHOOL-11 / system-check.html</span>
+        <h1>DPRO 学習塾・習い事 LINE<br>営業前デモ確認画面</h1>
+        <p class="lead">営業前デモ準備、API確認、全画面導線、体験予約・欠席・振替・授業予定の反映をまとめて確認します。</p>
+      </div>
+      <div class="hero-card">
+        <h2>DPROスクール</h2>
+        <p>DPRO 学習塾・習い事 LINE</p>
+        <div class="mini-tags">
+          <span>営業前準備</span><span>API確認</span><span>全画面URL</span><span>デモ生徒確認</span><span>導線確認</span>
+        </div>
+      </div>
+    </header>
 
-    <div class="grid">
-      <section class="card">
-        <div class="row" style="justify-content:space-between">
-          <h2>1. API接続確認</h2>
-          <span class="status info" id="healthStatus">未確認</span>
-        </div>
-        <p class="muted">
-          Worker API、Supabase接続、shop_code の状態を確認します。
-        </p>
-        <div class="row">
-          <button class="btn primary" id="healthBtn">API接続を確認</button>
-          <button class="btn ghost" id="copyHealthUrlBtn">health URLコピー</button>
-        </div>
-        <div id="healthResult" class="alert" style="margin-top:12px;">まだ確認していません。</div>
-
-        <div class="divider"></div>
-
-        <h2>2. 管理コード</h2>
-        <p class="muted">
-          営業デモでは管理コード <b>1234</b> を使います。保存すると、このブラウザで管理APIが使えます。
-        </p>
-        <div class="field">
-          <label for="adminCodeInput">管理コード</label>
-          <input id="adminCodeInput" type="password" inputmode="numeric" placeholder="1234">
-        </div>
-        <div class="row">
-          <button class="btn green" id="saveAdminBtn">管理コードを保存</button>
-          <button class="btn red" id="clearAdminBtn">保存コード削除</button>
-        </div>
-        <div id="adminStatus" class="alert" style="margin-top:12px;">管理コードはまだ保存されていません。</div>
-      </section>
-
-      <section class="card">
-        <div class="row" style="justify-content:space-between">
-          <h2>3. 営業前デモ準備</h2>
-          <span class="status warn" id="demoStatus">未実行</span>
-        </div>
-        <p class="muted">
-          デモ生徒、体験予約、通常授業、欠席連絡、振替希望、チケット/振替残数、今日やることを作成します。
-        </p>
-        <button class="btn primary full" id="prepareDemoBtn">営業前デモ準備を実行</button>
-        <div id="demoResult" class="alert warn" style="margin-top:12px;">
-          商談前に一度実行してください。テストで増えたデータを整理できます。
-        </div>
-
-        <div class="grid3" style="margin-top:12px">
-          <div class="kpi">
-            <div class="num" id="lessonCount">-</div>
-            <div class="label">授業/予約</div>
+    <main class="grid">
+      <div class="stack">
+        <section class="card">
+          <div class="section-title"><span class="num">1</span><h2>営業前の基本確認</h2></div>
+          <p class="note">管理コードを保存し、API接続・営業前デモ準備・ダッシュボード取得をまとめて確認します。</p>
+          <div class="metric-grid">
+            <div class="metric blue"><span>API</span><strong id="mApi">-</strong><span id="mApiText">未確認</span></div>
+            <div class="metric green"><span>DB</span><strong id="mDb">-</strong><span id="mDbText">未確認</span></div>
+            <div class="metric orange"><span>今日やること</span><strong id="mTasks">-</strong><span>未対応</span></div>
+            <div class="metric purple"><span>本日の授業</span><strong id="mLessons">-</strong><span>出席管理</span></div>
+            <div class="metric red"><span>欠席・振替</span><strong id="mRequests">-</strong><span>返信確認</span></div>
           </div>
-          <div class="kpi">
-            <div class="num" id="requestCount">-</div>
-            <div class="label">欠席/振替</div>
+          <div class="btns">
+            <button class="btn primary" id="btnRunAll">まとめて確認</button>
+            <button class="btn green" id="btnPrepare">営業前デモ準備</button>
+            <button class="btn dark" id="btnHealth">API接続確認</button>
+            <button class="btn" id="btnDashboard">ダッシュボード確認</button>
+            <button class="btn" id="btnDay">本日の授業確認</button>
           </div>
-          <div class="kpi">
-            <div class="num" id="taskCount">-</div>
-            <div class="label">今日やること</div>
+          <div id="mainStatus" class="status">まだ確認していません。まず管理コードを保存して「まとめて確認」を押してください。</div>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><span class="num">2</span><h2>全画面導線確認</h2></div>
+          <p class="note">営業で見せる5画面をここから開けます。反映後は必ず各画面のSTEP表記を確認してください。</p>
+          <div class="link-grid">
+            <div class="screen">
+              <h3>system-check.html</h3>
+              <p>営業前デモ準備・全体確認。</p>
+              <div class="btns"><a class="btn primary" id="openSystem" target="_blank" rel="noopener">開く</a><button class="btn" data-copy="system">URLコピー</button></div>
+            </div>
+            <div class="screen">
+              <h3>index.html</h3>
+              <p>保護者・生徒画面。体験予約、欠席連絡、振替希望。</p>
+              <div class="btns"><a class="btn primary" id="openIndex" target="_blank" rel="noopener">開く</a><button class="btn" data-copy="index">URLコピー</button></div>
+            </div>
+            <div class="screen">
+              <h3>member.html</h3>
+              <p>生徒証・授業予定・残数確認。</p>
+              <div class="btns"><a class="btn primary" id="openMember" target="_blank" rel="noopener">開く</a><button class="btn" data-copy="member">URLコピー</button></div>
+            </div>
+            <div class="screen">
+              <h3>owner.html</h3>
+              <p>教室オーナーPC管理画面。</p>
+              <div class="btns"><a class="btn primary" id="openOwner" target="_blank" rel="noopener">開く</a><button class="btn" data-copy="owner">URLコピー</button></div>
+            </div>
+            <div class="screen">
+              <h3>owner-ipad.html</h3>
+              <p>受付・講師iPad画面。</p>
+              <div class="btns"><a class="btn primary" id="openIpad" target="_blank" rel="noopener">開く</a><button class="btn" data-copy="ipad">URLコピー</button></div>
+            </div>
+            <div class="screen">
+              <h3>営業用URLまとめ</h3>
+              <p>商談前にまとめてコピーできます。</p>
+              <div class="btns"><button class="btn green" id="btnCopyAllUrls">URLまとめコピー</button><button class="btn" id="btnOpenAll">全部開く</button></div>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
 
-    <div class="grid">
-      <section class="card">
-        <div class="row" style="justify-content:space-between">
-          <h2>4. デモ状態確認</h2>
-          <span class="status info" id="dashboardStatus">未確認</span>
-        </div>
-        <p class="muted">
-          今日の授業、欠席/振替、今日やること、チケット残数注意を確認します。
-        </p>
-        <div class="row">
-          <button class="btn green" id="dashboardBtn">ダッシュボード確認</button>
-          <button class="btn ghost" id="publicConfigBtn">教室設定確認</button>
-        </div>
-        <div id="dashboardResult" class="list" style="margin-top:12px;"></div>
-      </section>
+        <section class="card">
+          <div class="section-title"><span class="num">3</span><h2>手動チェックリスト</h2></div>
+          <p class="note">実際の画面を開いて、営業デモで見せる流れを上から順番に確認します。チェック状態はこのブラウザに保存されます。</p>
+          <div class="checklist" id="checklist"></div>
+          <div class="btns" style="margin-top:14px">
+            <button class="btn green" id="btnCopyChecklist">チェック結果コピー</button>
+            <button class="btn danger" id="btnClearChecklist">チェックをリセット</button>
+          </div>
+        </section>
 
-      <section class="card">
-        <div class="row" style="justify-content:space-between">
-          <h2>5. デモ生徒確認</h2>
-          <span class="status info" id="memberStatus">未確認</span>
-        </div>
-        <p class="muted">
-          生徒証・授業予定・振替残数確認用の「テスト 太郎」を確認します。
-        </p>
-        <div class="item">
-          <b>テスト 太郎</b>
-          <small>電話番号：090-9999-0000</small>
-          <small>生徒番号：SCHOOL-DEMO-999</small>
-        </div>
-        <div class="row" style="margin-top:10px;">
-          <button class="btn green" id="memberCheckBtn">デモ生徒を確認</button>
-          <button class="btn ghost" id="copyMemberInfoBtn">確認情報コピー</button>
-        </div>
-        <div id="memberResult" class="list" style="margin-top:12px;"></div>
-      </section>
-    </div>
-
-    <section class="card" style="margin-top:18px;">
-      <div class="row" style="justify-content:space-between">
-        <h2>6. 営業デモ入口</h2>
-        <button class="btn dark" id="copyAllUrlsBtn">営業用URLまとめコピー</button>
-      </div>
-      <p class="muted">
-        次のSTEPで各画面を作ります。GitHubにファイルを置いた後、このURLから開けます。
-      </p>
-
-      <div class="list" id="urlList"></div>
-
-      <h3>営業で見る順番</h3>
-      <div class="row">
-        <span class="pill">1. system-check</span>
-        <span class="pill">2. お客様体験予約</span>
-        <span class="pill">3. 生徒証</span>
-        <span class="pill">4. PC管理</span>
-        <span class="pill">5. iPad受付/講師</span>
+        <section class="card">
+          <div class="section-title"><span class="num">4</span><h2>API取得結果</h2></div>
+          <p class="note">エラー時はここにJSONが出ます。確認用なので営業先には見せなくて大丈夫です。</p>
+          <pre class="jsonbox" id="jsonBox">まだ取得していません。</pre>
+        </section>
       </div>
 
-      <div class="field">
-        <label for="urlText">営業用URLまとめ</label>
-        <textarea id="urlText" readonly></textarea>
-      </div>
-    </section>
+      <aside class="stack">
+        <section class="card">
+          <div class="section-title"><span class="letter">A</span><h2>管理コード</h2></div>
+          <p class="note">営業デモでは管理コード「1234」を使います。保存すると次回から自動入力されます。</p>
+          <div class="field"><label>管理コード</label><input id="adminCode" type="password" placeholder="1234" autocomplete="off"></div>
+          <div class="btns" style="margin-top:12px"><button class="btn primary" id="btnSaveAdmin">保存</button><button class="btn" id="btnFillAdmin">1234を入力</button><button class="btn" id="btnClearAdmin">削除</button></div>
+          <div id="adminStatus" class="status ok">管理コードを保存すると、各確認ボタンで利用します。</div>
+        </section>
 
-    <section class="card" style="margin-top:18px;">
-      <h2>7. JSON確認</h2>
-      <p class="muted">
-        エラー時の確認用です。必要な場合だけコピーして使います。
-      </p>
-      <div class="row">
-        <button class="btn ghost" id="copyJsonBtn">表示中JSONコピー</button>
-        <button class="btn ghost" id="clearJsonBtn">JSONクリア</button>
-      </div>
-      <div class="field">
-        <textarea id="jsonBox" readonly placeholder="API結果がここに表示されます。"></textarea>
-      </div>
-    </section>
+        <section class="card">
+          <div class="section-title"><span class="letter">B</span><h2>接続先設定</h2></div>
+          <p class="note">通常は変更不要です。URLは省略せずフルURLで入れます。</p>
+          <div class="form-grid" style="grid-template-columns:1fr">
+            <div class="field"><label>Worker URL</label><input id="apiBase" type="url"></div>
+            <div class="field"><label>shop_code</label><input id="shopCode" type="text"></div>
+            <div class="field"><label>Pages URL</label><input id="pagesBase" type="url"></div>
+          </div>
+          <div class="btns"><button class="btn primary" id="btnSaveConfig">設定保存</button><button class="btn" id="btnResetConfig">初期値に戻す</button></div>
+          <div id="configStatus" class="status">設定を確認してください。</div>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><span class="letter">C</span><h2>デモ生徒確認</h2></div>
+          <p class="note">テスト太郎が検索できるか確認します。電話番号はハイフンあり/なし両方の確認に使えます。</p>
+          <div class="form-grid" style="grid-template-columns:1fr">
+            <div class="field"><label>検索キーワード</label><input id="searchQ" type="text" value="090-9999-0000"></div>
+          </div>
+          <div class="btns"><button class="btn primary" id="btnSearch">デモ生徒検索</button><button class="btn" id="btnSearchNoHyphen">09099990000で検索</button></div>
+          <div id="searchStatus" class="status">未検索です。</div>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><span class="letter">D</span><h2>営業デモ順番</h2></div>
+          <p class="note">商談中はこの順番で見せると説明しやすいです。</p>
+          <ol style="margin:0;padding-left:22px;font-weight:800;color:#334155;font-size:14px">
+            <li>system-checkで営業前デモ準備</li>
+            <li>indexで体験予約・欠席・振替を見せる</li>
+            <li>memberで生徒証・授業予定を見せる</li>
+            <li>ownerで今日やること・返信文面を見せる</li>
+            <li>owner-ipadで出席・授業中・完了を見せる</li>
+            <li>最後にPC/iPad/LINEが連動することを説明</li>
+          </ol>
+        </section>
+
+        <section class="card">
+          <div class="section-title"><span class="letter">E</span><h2>OK判定</h2></div>
+          <p class="note">以下が確認できれば STEP SCHOOL-11 は完了です。</p>
+          <div id="okJudgement" class="status warn">まだ全体確認が完了していません。</div>
+        </section>
+      </aside>
+    </main>
+    <div class="footer">DPRO 学習塾・習い事 LINE / STEP SCHOOL-11 / system-check.html</div>
   </div>
+  <div id="toast" class="toast">コピーしました</div>
 
-  <div class="toast" id="toast">コピーしました</div>
-
-<script>
-(function(){
-  "use strict";
-
-  const CONFIG = window.DPRO_SCHOOL_CONFIG || window.CONFIG || {
-    serviceName:"DPRO 学習塾・習い事 LINE",
-    shopCode:"dpro_school_demo",
-    shopName:"DPROスクール",
-    apiBaseUrl:"https://dpro-school-line-api.dpromstk2000.workers.dev",
-    pagesBaseUrl:"https://dpromstk2000-lab.github.io/dpro-school-line/",
-    adminCodeStorageKey:"dpro_school_admin_code",
-    defaultAdminCodeHint:"1234",
-    demoStudent:{ studentName:"テスト 太郎", studentNo:"SCHOOL-DEMO-999", guardianName:"テスト 保護者", phone:"090-9999-0000" },
-    endpoints:{
-      health:"/api/health",
-      publicConfig:"/api/public/config",
-      memberProfile:"/api/member/profile",
-      adminDemoPrepare:"/api/admin/demo/prepare",
-      adminDashboard:"/api/admin/dashboard"
-    }
-  };
-
-  const U = window.DPRO_SCHOOL_UTILS || {};
-  const $ = (id) => document.getElementById(id);
-
-  const state = {
-    lastJson: null,
-    urls: {}
-  };
-
-  function endpoint(key){
-    return CONFIG.endpoints[key];
-  }
-
-  function apiUrl(path, params = {}){
-    if (U.apiUrl) return U.apiUrl(path, params);
-    const base = String(CONFIG.apiBaseUrl || "").replace(/\/+$/, "");
-    const url = new URL(base + path);
-    Object.entries(params || {}).forEach(([k,v]) => {
-      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
-    });
-    return url.toString();
-  }
-
-  function getAdminCode(){
-    if (U.getAdminCode) return U.getAdminCode();
-    return localStorage.getItem(CONFIG.adminCodeStorageKey) || "";
-  }
-
-  function saveAdminCode(code){
-    if (U.saveAdminCode) return U.saveAdminCode(code);
-    localStorage.setItem(CONFIG.adminCodeStorageKey, String(code || "").trim());
-  }
-
-  function clearAdminCode(){
-    const keys = [
-      CONFIG.adminCodeStorageKey,
-      "dpro_school_admin_code",
-      "school_admin_code",
-      "dpro_admin_code",
-      "admin_code"
-    ].filter(Boolean);
-
-    keys.forEach((key) => {
-      try { localStorage.removeItem(key); } catch(e) {}
-      try { sessionStorage.removeItem(key); } catch(e) {}
-    });
-
-    // config.js 側の削除関数も念のため呼ぶ
-    try {
-      if (U.clearAdminCode) U.clearAdminCode();
-    } catch(e) {}
-
-    // 入力欄の見た目も確実に空にする
-    const input = document.getElementById("adminCodeInput");
-    if (input) {
-      input.value = "";
-      input.setAttribute("value", "");
-    }
-  }
-
-  function headers(includeAdmin=false){
-    const h = {
-      "Content-Type":"application/json",
-      "X-Shop-Code":CONFIG.shopCode
+  <script>
+    const VERSION = 'STEP SCHOOL-11';
+    const DEFAULTS = {
+      apiBaseUrl: 'https://dpro-school-line-api.dpromstk2000.workers.dev',
+      pagesBaseUrl: 'https://dpromstk2000-lab.github.io/dpro-school-line/',
+      shopCode: 'dpro_school_demo',
+      adminCode: '1234',
+      demoPhone: '090-9999-0000',
+      demoPhonePlain: '09099990000',
+      demoStudentNo: 'SCHOOL-DEMO-999'
     };
-    if (includeAdmin) {
-      const code = getAdminCode();
-      if (code) h["X-Admin-Code"] = code;
-    }
-    return h;
-  }
-
-  async function apiGet(path, params={}, includeAdmin=false){
-    const url = apiUrl(path, { shop_code:CONFIG.shopCode, ...params });
-    const res = await fetch(url, { method:"GET", headers:headers(includeAdmin) });
-    const data = await res.json().catch(() => ({}));
-    state.lastJson = data;
-    renderJson();
-    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
-    return data;
-  }
-
-  async function apiPost(path, body={}, includeAdmin=false){
-    const res = await fetch(apiUrl(path), {
-      method:"POST",
-      headers:headers(includeAdmin),
-      body:JSON.stringify({ shop_code:CONFIG.shopCode, ...body })
-    });
-    const data = await res.json().catch(() => ({}));
-    state.lastJson = data;
-    renderJson();
-    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
-    return data;
-  }
-
-  function pageUrl(path, params={}){
-    if (U.pageUrl) return U.pageUrl(path, params);
-    const base = String(CONFIG.pagesBaseUrl || location.origin + location.pathname.replace(/[^/]*$/, "")).replace(/\/+$/, "/");
-    const url = new URL(path, base);
-    Object.entries(params || {}).forEach(([k,v]) => {
-      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
-    });
-    return url.toString();
-  }
-
-  function escapeHtml(v){
-    if (U.escapeHtml) return U.escapeHtml(v);
-    return String(v ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function dateWithWeekday(v){
-    if (U.dateWithWeekday) return U.dateWithWeekday(v);
-    return v || "";
-  }
-
-  function todayText(){
-    if (U.todayText) return U.todayText();
-    const jst = new Date(Date.now() + 9*60*60*1000);
-    return jst.toISOString().slice(0,10);
-  }
-
-  function setStatus(id, text, type="info"){
-    const el = $(id);
-    if (!el) return;
-    el.className = "status " + type;
-    el.textContent = text;
-  }
-
-  function showToast(text){
-    const el = $("toast");
-    el.textContent = text || "完了しました";
-    el.classList.add("show");
-    setTimeout(() => el.classList.remove("show"), 1800);
-  }
-
-  async function copyText(text){
-    await navigator.clipboard.writeText(String(text || "")).catch(() => {});
-    showToast("コピーしました");
-  }
-
-  function renderJson(){
-    $("jsonBox").value = state.lastJson ? JSON.stringify(state.lastJson, null, 2) : "";
-  }
-
-  function renderAdminStatus(){
-    const code = getAdminCode();
-    if (code) {
-      $("adminStatus").className = "alert ok";
-      $("adminStatus").innerHTML = `管理コードを保存済みです。<br>保存コード：${escapeHtml("*".repeat(String(code).length))}`;
-      $("adminCodeInput").value = "";
-    } else {
-      $("adminStatus").className = "alert warn";
-      $("adminStatus").textContent = "管理コードはまだ保存されていません。営業前デモ準備には管理コードが必要です。";
-    }
-  }
-
-  function buildUrls(){
-    const demo = CONFIG.demoStudent || {};
-    state.urls = {
-      health: apiUrl(endpoint("health")),
-      systemCheck: pageUrl("system-check.html"),
-      index: pageUrl("index.html"),
-      member: pageUrl("member.html", { phone: demo.phone || "090-9999-0000", student_no: demo.studentNo || "SCHOOL-DEMO-999" }),
-      owner: pageUrl("owner.html"),
-      ipad: pageUrl("owner-ipad.html")
+    const LS = {
+      admin:'dpro_school_admin_code',
+      api:'dpro_school_api_base_url',
+      pages:'dpro_school_pages_base_url',
+      shop:'dpro_school_shop_code',
+      checklist:'dpro_school_step11_checklist'
     };
-  }
+    let last = {health:null,dashboard:null,day:null,search:null,prepare:null};
 
-  function renderUrls(){
-    buildUrls();
-    const rows = [
-      ["Worker health", state.urls.health],
-      ["system-check", state.urls.systemCheck],
-      ["お客様 体験予約/欠席/振替", state.urls.index],
-      ["生徒証・授業予定", state.urls.member],
-      ["オーナーPC管理", state.urls.owner],
-      ["受付・講師iPad", state.urls.ipad]
+    const $ = (id)=>document.getElementById(id);
+    const today = ()=>{
+      const d = new Date();
+      const z = n=>String(n).padStart(2,'0');
+      return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+    };
+    const nowText = ()=>new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    const cleanBase = (url)=>String(url||'').trim().replace(/\/+$/,'');
+    const pagesBase = ()=>cleanBase($('pagesBase').value || DEFAULTS.pagesBaseUrl) + '/';
+    const apiBase = ()=>cleanBase($('apiBase').value || DEFAULTS.apiBaseUrl);
+    const shopCode = ()=>String($('shopCode').value || DEFAULTS.shopCode).trim();
+    const adminCode = ()=>String($('adminCode').value || '').trim();
+    const qs = (obj)=>new URLSearchParams(obj).toString();
+    const url = (path, params={}) => `${apiBase()}${path}${Object.keys(params).length ? '?' + qs(params) : ''}`;
+    const withCache = (file, v)=> `${pagesBase()}${file}?v=${v}`;
+    const setStatus = (id, msg, type='') => { const el=$(id); el.className='status '+type; el.innerHTML=msg; };
+    const showToast = (msg='コピーしました') => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600); };
+    const printJson = (label, data)=>{ $('jsonBox').textContent = `${label}\n\n` + JSON.stringify(data, null, 2); };
+    async function copyText(text){
+      try{ await navigator.clipboard.writeText(text); showToast('コピーしました'); }
+      catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); showToast('コピーしました'); }
+    }
+    function safeArray(v){ if(Array.isArray(v)) return v; if(v && Array.isArray(v.items)) return v.items; if(v && Array.isArray(v.data)) return v.data; return []; }
+    function findArrays(obj, keyHints){
+      const out=[];
+      const seen=new Set();
+      const walk=(v,path='')=>{
+        if(!v || typeof v !== 'object') return;
+        if(Array.isArray(v)){
+          const p=path.toLowerCase();
+          if(keyHints.some(h=>p.includes(h)) && !seen.has(v)){ seen.add(v); out.push(v); }
+          v.forEach((x,i)=>walk(x, path+'['+i+']'));
+          return;
+        }
+        Object.entries(v).forEach(([k,val])=>walk(val, path ? path+'.'+k : k));
+      };
+      walk(obj);
+      return out;
+    }
+    function longestCount(obj, hints){
+      const arrays=findArrays(obj,hints);
+      if(!arrays.length) return 0;
+      return Math.max(...arrays.map(a=>a.length));
+    }
+    function sumCount(obj, hints){
+      const arrays=findArrays(obj,hints);
+      if(!arrays.length) return 0;
+      const unique = new Set();
+      arrays.flat().forEach((x,i)=>unique.add((x && (x.id || x.request_id || x.lesson_id || x.task_id)) || JSON.stringify(x).slice(0,120)+i));
+      return unique.size;
+    }
+    function updateUrls(){
+      $('openSystem').href = withCache('system-check.html','step-school-11');
+      $('openIndex').href = withCache('index.html','step-school-6-r2');
+      $('openMember').href = withCache('member.html','step-school-7');
+      $('openOwner').href = withCache('owner.html','step-school-10-r4');
+      $('openIpad').href = withCache('owner-ipad.html','step-school-9-r1');
+    }
+    function allUrlsText(){
+      return [
+        'DPRO 学習塾・習い事 LINE 営業用URL',
+        '',
+        '営業前デモ確認:', $('openSystem').href,
+        '保護者・生徒画面:', $('openIndex').href,
+        '生徒証・授業予定:', $('openMember').href,
+        '教室オーナーPC管理画面:', $('openOwner').href,
+        '受付・講師iPad画面:', $('openIpad').href,
+        '',
+        '管理コード: 1234',
+        'デモ生徒: テスト 太郎 / 090-9999-0000 / SCHOOL-DEMO-999'
+      ].join('\n');
+    }
+    async function fetchJson(path, opts={}){
+      const res = await fetch(path, opts);
+      const txt = await res.text();
+      let data;
+      try{ data = JSON.parse(txt); }catch(e){ data = {ok:false, raw:txt}; }
+      if(!res.ok) throw {status:res.status, data};
+      return data;
+    }
+    function requireAdmin(){
+      if(!adminCode()){
+        setStatus('mainStatus','管理コードを入力してください。営業デモでは <b>1234</b> です。','warn');
+        return false;
+      }
+      return true;
+    }
+    async function checkHealth(){
+      setStatus('mainStatus','API接続確認中です...','');
+      try{
+        const data = await fetchJson(url('/api/health'));
+        last.health = data;
+        $('mApi').textContent = data.ok ? 'OK' : 'NG';
+        $('mApiText').textContent = data.worker_version || data.version || '接続確認';
+        $('mDb').textContent = data.db_ok === true ? 'OK' : (data.db_ok === false ? 'NG' : '-');
+        $('mDbText').textContent = data.shop_code || shopCode();
+        setStatus('mainStatus',`API接続OKです。${data.worker_version || data.version || ''} <small>確認時刻 ${nowText()}</small>`,'ok');
+        printJson('API接続確認 結果', data);
+        return data;
+      }catch(e){
+        $('mApi').textContent='NG'; $('mDb').textContent='-';
+        setStatus('mainStatus',`API接続に失敗しました。Worker URLを確認してください。<small>${e.status || ''}</small>`,'ng');
+        printJson('API接続確認 エラー', e);
+        throw e;
+      }
+    }
+    async function prepareDemo(){
+      if(!requireAdmin()) return;
+      setStatus('mainStatus','営業前デモ準備を実行中です...','');
+      try{
+        const data = await fetchJson(url('/api/admin/demo/prepare'),{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({shop_code:shopCode(), admin_code:adminCode()})
+        });
+        last.prepare=data;
+        setStatus('mainStatus',`営業前デモ準備OKです。更新を押して各画面を確認してください。<small>確認時刻 ${nowText()}</small>`,'ok');
+        printJson('営業前デモ準備 結果', data);
+        return data;
+      }catch(e){
+        setStatus('mainStatus','営業前デモ準備に失敗しました。管理コード・Worker・Supabaseを確認してください。','ng');
+        printJson('営業前デモ準備 エラー', e);
+        throw e;
+      }
+    }
+    async function checkDashboard(){
+      if(!requireAdmin()) return;
+      setStatus('mainStatus','ダッシュボード取得中です...','');
+      try{
+        const data = await fetchJson(url('/api/admin/dashboard',{shop_code:shopCode(), admin_code:adminCode()}));
+        last.dashboard=data;
+        const tasks = sumCount(data,['task','todo','today']);
+        const lessons = sumCount(data,['lesson','lessons']);
+        const requests = sumCount(data,['request','absence','makeup']);
+        $('mTasks').textContent = tasks || '-';
+        $('mLessons').textContent = lessons || '-';
+        $('mRequests').textContent = requests || '-';
+        setStatus('mainStatus',`ダッシュボード取得OKです。今日やること・欠席・振替の反映を確認してください。<small>確認時刻 ${nowText()}</small>`,'ok');
+        printJson('ダッシュボード確認 結果', data);
+        updateJudgement();
+        return data;
+      }catch(e){
+        setStatus('mainStatus','ダッシュボード取得に失敗しました。管理コードまたはAPIを確認してください。','ng');
+        printJson('ダッシュボード確認 エラー', e);
+        throw e;
+      }
+    }
+    async function checkDay(){
+      if(!requireAdmin()) return;
+      setStatus('mainStatus','本日の授業予定を取得中です...','');
+      try{
+        const data = await fetchJson(url('/api/admin/day',{shop_code:shopCode(), admin_code:adminCode(), date:today()}));
+        last.day=data;
+        const lessons = sumCount(data,['lesson','lessons']);
+        if(lessons) $('mLessons').textContent = lessons;
+        setStatus('mainStatus',`本日の授業予定を取得しました。授業予定が表示されているか確認してください。<small>確認時刻 ${nowText()}</small>`,'ok');
+        printJson('本日の授業確認 結果', data);
+        updateJudgement();
+        return data;
+      }catch(e){
+        setStatus('mainStatus','本日の授業予定取得に失敗しました。','ng');
+        printJson('本日の授業確認 エラー', e);
+        throw e;
+      }
+    }
+    async function searchDemo(q){
+      if(!requireAdmin()) return;
+      $('searchQ').value = q || $('searchQ').value || DEFAULTS.demoPhone;
+      setStatus('searchStatus','デモ生徒を検索中です...','');
+      try{
+        const data = await fetchJson(url('/api/admin/search',{shop_code:shopCode(), admin_code:adminCode(), q:$('searchQ').value.trim()}));
+        last.search=data;
+        const count = sumCount(data,['student','guardian','result','items','data']) || (JSON.stringify(data).includes('テスト') ? 1 : 0);
+        setStatus('searchStatus', count ? `デモ生徒検索OKです。検索結果を確認してください。<small>確認時刻 ${nowText()}</small>` : '検索は成功しましたが、デモ生徒が見つからない可能性があります。営業前デモ準備を実行してください。', count ? 'ok':'warn');
+        printJson('デモ生徒検索 結果', data);
+        return data;
+      }catch(e){
+        setStatus('searchStatus','デモ生徒検索に失敗しました。','ng');
+        printJson('デモ生徒検索 エラー', e);
+        throw e;
+      }
+    }
+    async function runAll(){
+      $('btnRunAll').disabled=true;
+      try{
+        await checkHealth();
+        if(adminCode()){
+          await prepareDemo();
+          await checkDashboard();
+          await checkDay();
+          await searchDemo(DEFAULTS.demoPhone);
+        }
+        setStatus('mainStatus',`まとめて確認が完了しました。各画面を開いてSTEP表記と導線を確認してください。<small>確認時刻 ${nowText()}</small>`,'ok');
+        updateJudgement();
+      }catch(e){
+        updateJudgement();
+      }finally{ $('btnRunAll').disabled=false; }
+    }
+    const checklistItems = [
+      ['system', 'system-check.html が STEP SCHOOL-11 表示になっている', '営業前デモ準備・API確認・URL一覧が見える'],
+      ['index', 'index.html で体験予約・欠席連絡・振替希望が送れる', '過去日不可、時間は30分単位、受付文面コピーOK'],
+      ['member', 'member.html で生徒証・授業予定・残数が見える', '090-9999-0000 / SCHOOL-DEMO-999 で確認'],
+      ['owner', 'owner.html で今日やること・受付一覧・授業予定が見える', '電話予約・教室受付予約・既存生徒の授業追加も確認'],
+      ['ipad', 'owner-ipad.html で出席・授業中・完了が押せる', '日付表示が yyyy-mm-dd で見切れない'],
+      ['copy', '保護者向け返信文面コピーができる', '文面を見る→コピー→対応済みにするの流れ'],
+      ['search', '電話番号ハイフンあり/なし検索ができる', '090-9999-0000 と 09099990000 の両方'],
+      ['final', '営業デモで空画面・英語ステータス・見切れが目立たない', '未対応、対応済みなど日本語表示を確認']
     ];
-
-    $("urlList").innerHTML = rows.map(([title,url]) => `
-      <div class="urlbox">
-        <div>
-          <div class="title">${escapeHtml(title)}</div>
-          <div class="url">${escapeHtml(url)}</div>
-        </div>
-        <div class="row">
-          <a class="btn ghost" href="${escapeHtml(url)}" target="_blank" rel="noopener">開く</a>
-          <button class="btn ghost" data-copy-url="${escapeHtml(url)}">コピー</button>
-        </div>
-      </div>
-    `).join("");
-
-    $("urlText").value = [
-      "DPRO 学習塾・習い事 LINE 営業デモURLまとめ",
-      "",
-      `Worker health：${state.urls.health}`,
-      `system-check：${state.urls.systemCheck}`,
-      `お客様 体験予約/欠席/振替：${state.urls.index}`,
-      `生徒証・授業予定：${state.urls.member}`,
-      `オーナーPC管理：${state.urls.owner}`,
-      `受付・講師iPad：${state.urls.ipad}`,
-      "",
-      "管理コード：1234",
-      "",
-      "デモ生徒：テスト 太郎",
-      "電話番号：090-9999-0000",
-      "生徒番号：SCHOOL-DEMO-999",
-      "",
-      "営業前の順番：",
-      "1. system-check.html を開く",
-      "2. 管理コード 1234 を保存",
-      "3. 営業前デモ準備を実行",
-      "4. お客様体験予約を確認",
-      "5. 生徒証を確認",
-      "6. PC管理画面を確認",
-      "7. iPad受付/講師画面を確認"
-    ].join("\n");
-  }
-
-  async function checkHealth(){
-    setStatus("healthStatus","確認中...","warn");
-    $("healthResult").className = "alert warn";
-    $("healthResult").textContent = "API接続を確認しています。";
-
-    try {
-      const data = await apiGet(endpoint("health"));
-      if (data.db_ok) {
-        setStatus("healthStatus","OK","ok");
-        $("healthResult").className = "alert ok";
-        $("healthResult").innerHTML = `
-          API接続OKです。<br>
-          version：${escapeHtml(data.version)}<br>
-          shop_code：${escapeHtml(data.shop_code)}<br>
-          db_ok：true
-        `;
-      } else {
-        setStatus("healthStatus","DB未確認","warn");
-        $("healthResult").className = "alert warn";
-        $("healthResult").innerHTML = `
-          Workerは動いていますが、DB確認がまだNGです。<br>
-          STEP SCHOOL-2 のSQL実行、または環境変数を確認してください。<br>
-          version：${escapeHtml(data.version || "")}
-        `;
+    function savedChecks(){ try{return JSON.parse(localStorage.getItem(LS.checklist)||'{}')}catch(e){return {}} }
+    function renderChecklist(){
+      const saved=savedChecks();
+      $('checklist').innerHTML = checklistItems.map(([id,title,desc])=>`
+        <label class="check-item">
+          <input type="checkbox" data-check="${id}" ${saved[id]?'checked':''}>
+          <span><b>${title}</b><small>${desc}</small></span>
+        </label>
+      `).join('');
+      document.querySelectorAll('[data-check]').forEach(cb=>cb.addEventListener('change',()=>{
+        const s=savedChecks(); s[cb.dataset.check]=cb.checked; localStorage.setItem(LS.checklist,JSON.stringify(s)); updateJudgement();
+      }));
+      updateJudgement();
+    }
+    function checklistProgress(){ const s=savedChecks(); return checklistItems.filter(([id])=>s[id]).length; }
+    function updateJudgement(){
+      const done = checklistProgress();
+      const apiOk = last.health && last.health.ok;
+      const dataOk = !!(last.dashboard || last.day);
+      if(apiOk && dataOk && done >= checklistItems.length){
+        setStatus('okJudgement','STEP SCHOOL-11 OKです。営業前デモ準備・全画面導線確認まで完了しています。','ok');
+      }else if(apiOk && done >= 4){
+        setStatus('okJudgement',`かなり進んでいます。チェック ${done}/${checklistItems.length} 完了。残りの画面導線を確認してください。`,'warn');
+      }else{
+        setStatus('okJudgement',`確認途中です。チェック ${done}/${checklistItems.length} 完了。まず「まとめて確認」と各画面チェックを進めてください。`,'warn');
       }
-    } catch (e) {
-      setStatus("healthStatus","NG","ng");
-      $("healthResult").className = "alert ng";
-      $("healthResult").textContent = e.message;
     }
-  }
-
-  async function prepareDemo(){
-    if (!getAdminCode()) {
-      $("demoResult").className = "alert ng";
-      $("demoResult").textContent = "先に管理コード 1234 を保存してください。";
-      setStatus("demoStatus","コード未保存","ng");
-      return;
-    }
-
-    setStatus("demoStatus","実行中...","warn");
-    $("demoResult").className = "alert warn";
-    $("demoResult").textContent = "営業前デモ準備を実行しています。";
-
-    try {
-      const data = await apiPost(endpoint("adminDemoPrepare"), { admin_code:getAdminCode() }, true);
-      const result = data.result || {};
-      const counts = result.counts || {};
-      setStatus("demoStatus","完了","ok");
-      $("demoResult").className = "alert ok";
-      $("demoResult").innerHTML = `
-        営業前デモ準備が完了しました。<br>
-        shop_code：${escapeHtml(result.shop_code || CONFIG.shopCode)}<br>
-        テスト生徒：テスト 太郎 / 090-9999-0000 / SCHOOL-DEMO-999
-      `;
-      $("lessonCount").textContent = counts.lessons ?? "-";
-      $("requestCount").textContent = counts.requests ?? "-";
-      $("taskCount").textContent = counts.tasks ?? "-";
-      await checkDashboard(false);
-      await checkMember(false);
-    } catch (e) {
-      setStatus("demoStatus","NG","ng");
-      $("demoResult").className = "alert ng";
-      $("demoResult").textContent = e.message;
-    }
-  }
-
-  async function checkDashboard(showToastFlag=true){
-    if (!getAdminCode()) {
-      $("dashboardResult").innerHTML = `<div class="alert ng">先に管理コードを保存してください。</div>`;
-      setStatus("dashboardStatus","コード未保存","ng");
-      return;
-    }
-
-    setStatus("dashboardStatus","確認中...","warn");
-    $("dashboardResult").innerHTML = `<div class="alert warn">ダッシュボードを確認しています。</div>`;
-
-    try {
-      const data = await apiGet(endpoint("adminDashboard"), { admin_code:getAdminCode(), date:todayText() }, true);
-      const c = data.counts || {};
-      setStatus("dashboardStatus","OK","ok");
-      $("lessonCount").textContent = c.lessons ?? "-";
-      $("requestCount").textContent = c.requests ?? "-";
-      $("taskCount").textContent = c.tasks ?? "-";
-
-      const lessons = (data.lessons || []).slice(0,5).map(l => `
-        <div class="item">
-          <b>${escapeHtml(l.start_time ? String(l.start_time).slice(0,5) : "")} ${escapeHtml(l.student_name || "")} 様</b>
-          <small>${escapeHtml(l.course_name || "")} / ${escapeHtml(l.teacher_name || "")} / ${escapeHtml(l.status || "")}</small>
-        </div>
-      `).join("");
-
-      const tasks = (data.tasks || []).slice(0,5).map(t => `
-        <div class="item">
-          <b>${escapeHtml(t.title || "")}</b>
-          <small>${escapeHtml(t.body || "")}</small>
-        </div>
-      `).join("");
-
-      $("dashboardResult").innerHTML = `
-        <div class="alert ok">
-          ダッシュボード確認OKです。<br>
-          授業/予約：${escapeHtml(c.lessons ?? 0)} 件　
-          欠席/振替：${escapeHtml(c.requests ?? 0)} 件　
-          今日やること：${escapeHtml(c.tasks ?? 0)} 件
-        </div>
-        <h3>本日の授業/予約</h3>
-        ${lessons || '<div class="item"><b>本日の授業はまだありません。</b></div>'}
-        <h3>今日やること</h3>
-        ${tasks || '<div class="item"><b>今日やることはありません。</b></div>'}
-      `;
-      if (showToastFlag) showToast("ダッシュボード確認OK");
-    } catch (e) {
-      setStatus("dashboardStatus","NG","ng");
-      $("dashboardResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
-    }
-  }
-
-  async function checkPublicConfig(){
-    setStatus("dashboardStatus","確認中...","warn");
-    $("dashboardResult").innerHTML = `<div class="alert warn">教室設定を確認しています。</div>`;
-
-    try {
-      const data = await apiGet(endpoint("publicConfig"));
-      const courses = data.courses || [];
-      const teachers = data.teachers || [];
-      const hours = data.hours || [];
-      setStatus("dashboardStatus","OK","ok");
-      $("dashboardResult").innerHTML = `
-        <div class="alert ok">
-          教室設定確認OKです。<br>
-          教室名：${escapeHtml(data.shop?.shop_name || CONFIG.shopName)}<br>
-          コース：${courses.length} 件　
-          講師：${teachers.length} 名　
-          営業日設定：${hours.length} 件
-        </div>
-        <h3>コース</h3>
-        ${courses.slice(0,8).map(c => `<span class="pill">${escapeHtml(c.course_name)}</span>`).join("")}
-        <h3>講師</h3>
-        ${teachers.slice(0,8).map(t => `<span class="pill">${escapeHtml(t.teacher_name)}</span>`).join("")}
-      `;
-    } catch (e) {
-      setStatus("dashboardStatus","NG","ng");
-      $("dashboardResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
-    }
-  }
-
-  async function checkMember(showToastFlag=true){
-    const demo = CONFIG.demoStudent || {};
-    setStatus("memberStatus","確認中...","warn");
-    $("memberResult").innerHTML = `<div class="alert warn">デモ生徒を確認しています。</div>`;
-
-    try {
-      const data = await apiGet(endpoint("memberProfile"), {
-        phone: demo.phone || "090-9999-0000",
-        student_no: demo.studentNo || "SCHOOL-DEMO-999"
+    function init(){
+      $('apiBase').value = localStorage.getItem(LS.api) || DEFAULTS.apiBaseUrl;
+      $('pagesBase').value = localStorage.getItem(LS.pages) || DEFAULTS.pagesBaseUrl;
+      $('shopCode').value = localStorage.getItem(LS.shop) || DEFAULTS.shopCode;
+      $('adminCode').value = localStorage.getItem(LS.admin) || '';
+      updateUrls();
+      renderChecklist();
+      if($('adminCode').value) setStatus('adminStatus','管理コードを保存済みです。','ok');
+      $('btnFillAdmin').onclick=()=>{$('adminCode').value=DEFAULTS.adminCode;setStatus('adminStatus','1234を入力しました。保存を押してください。','warn')};
+      $('btnSaveAdmin').onclick=()=>{localStorage.setItem(LS.admin,adminCode());setStatus('adminStatus','管理コードを保存しました。','ok')};
+      $('btnClearAdmin').onclick=()=>{localStorage.removeItem(LS.admin);$('adminCode').value='';setStatus('adminStatus','管理コードを削除しました。','warn')};
+      $('btnSaveConfig').onclick=()=>{localStorage.setItem(LS.api,apiBase());localStorage.setItem(LS.pages,pagesBase());localStorage.setItem(LS.shop,shopCode());updateUrls();setStatus('configStatus','接続先設定を保存しました。','ok')};
+      $('btnResetConfig').onclick=()=>{localStorage.removeItem(LS.api);localStorage.removeItem(LS.pages);localStorage.removeItem(LS.shop);$('apiBase').value=DEFAULTS.apiBaseUrl;$('pagesBase').value=DEFAULTS.pagesBaseUrl;$('shopCode').value=DEFAULTS.shopCode;updateUrls();setStatus('configStatus','初期値に戻しました。','ok')};
+      $('btnHealth').onclick=checkHealth;
+      $('btnPrepare').onclick=prepareDemo;
+      $('btnDashboard').onclick=checkDashboard;
+      $('btnDay').onclick=checkDay;
+      $('btnRunAll').onclick=runAll;
+      $('btnSearch').onclick=()=>searchDemo($('searchQ').value);
+      $('btnSearchNoHyphen').onclick=()=>searchDemo(DEFAULTS.demoPhonePlain);
+      $('btnCopyAllUrls').onclick=()=>copyText(allUrlsText());
+      $('btnOpenAll').onclick=()=>[$('openSystem').href,$('openIndex').href,$('openMember').href,$('openOwner').href,$('openIpad').href].forEach(u=>window.open(u,'_blank'));
+      document.querySelectorAll('[data-copy]').forEach(btn=>btn.onclick=()=>{
+        const map={system:$('openSystem').href,index:$('openIndex').href,member:$('openMember').href,owner:$('openOwner').href,ipad:$('openIpad').href};
+        copyText(map[btn.dataset.copy]);
       });
-
-      setStatus("memberStatus","OK","ok");
-      const student = data.student || {};
-      const guardian = data.guardian || {};
-      const plans = data.plans || [];
-      const lessons = data.lessons || [];
-
-      $("memberResult").innerHTML = `
-        <div class="alert ok">
-          デモ生徒確認OKです。<br>
-          生徒：${escapeHtml(student.student_name || "")}<br>
-          保護者：${escapeHtml(guardian.guardian_name || "")}<br>
-          授業予定：${lessons.length} 件　
-          プラン/残数：${plans.length} 件
-        </div>
-        <h3>授業予定</h3>
-        ${lessons.slice(0,5).map(l => `
-          <div class="item">
-            <b>${escapeHtml(l.lesson_date || "")} ${escapeHtml(String(l.start_time || "").slice(0,5))}</b>
-            <small>${escapeHtml(l.course_name || "")} / ${escapeHtml(l.teacher_name || "")}</small>
-          </div>
-        `).join("") || '<div class="item"><b>授業予定なし</b></div>'}
-        <h3>振替/チケット</h3>
-        ${plans.slice(0,5).map(p => `
-          <div class="item">
-            <b>${escapeHtml(p.plan_name || "")}</b>
-            <small>残数：${escapeHtml(p.remaining_count ?? "-")} / 有効期限：${escapeHtml(p.valid_until || "-")}</small>
-          </div>
-        `).join("") || '<div class="item"><b>プランなし</b></div>'}
-      `;
-      if (showToastFlag) showToast("デモ生徒確認OK");
-    } catch (e) {
-      setStatus("memberStatus","NG","ng");
-      $("memberResult").innerHTML = `<div class="alert ng">${escapeHtml(e.message)}</div>`;
+      $('btnCopyChecklist').onclick=()=>{
+        const s=savedChecks();
+        const text = ['DPRO 学習塾・習い事 LINE / STEP SCHOOL-11 チェック結果','',...checklistItems.map(([id,title])=>`${s[id]?'✅':'□'} ${title}`)].join('\n');
+        copyText(text);
+      };
+      $('btnClearChecklist').onclick=()=>{localStorage.removeItem(LS.checklist);renderChecklist();showToast('リセットしました')};
+      setStatus('configStatus','接続先設定を確認しました。通常はこのままでOKです。','ok');
     }
-  }
-
-  function bind(){
-    $("healthBtn").addEventListener("click", checkHealth);
-    $("copyHealthUrlBtn").addEventListener("click", () => copyText(apiUrl(endpoint("health"))));
-
-    $("saveAdminBtn").addEventListener("click", () => {
-      const code = $("adminCodeInput").value.trim();
-      if (!code) {
-        showToast("管理コードを入力してください");
-        return;
-      }
-      saveAdminCode(code);
-      renderAdminStatus();
-      showToast("管理コードを保存しました");
-    });
-
-    $("clearAdminBtn").addEventListener("click", () => {
-      clearAdminCode();
-
-      // 削除直後に再確認して、画面表示も確実に未保存へ戻す
-      const codeAfterDelete = getAdminCode();
-      if (codeAfterDelete) {
-        // 万一残る場合に備えて、直接キー削除を再実行
-        try { localStorage.removeItem(CONFIG.adminCodeStorageKey); } catch(e) {}
-        try { sessionStorage.removeItem(CONFIG.adminCodeStorageKey); } catch(e) {}
-      }
-
-      renderAdminStatus();
-
-      if (getAdminCode()) {
-        $("adminStatus").className = "alert ng";
-        $("adminStatus").innerHTML = "管理コードの削除に失敗しました。<br>ブラウザの再読み込み後、もう一度押してください。";
-        showToast("削除に失敗しました");
-      } else {
-        $("adminStatus").className = "alert warn";
-        $("adminStatus").textContent = "管理コードは削除されました。営業前デモ準備には再度 1234 を保存してください。";
-        showToast("管理コードを削除しました");
-      }
-    });
-
-    $("prepareDemoBtn").addEventListener("click", prepareDemo);
-    $("dashboardBtn").addEventListener("click", () => checkDashboard(true));
-    $("publicConfigBtn").addEventListener("click", checkPublicConfig);
-    $("memberCheckBtn").addEventListener("click", () => checkMember(true));
-
-    $("copyMemberInfoBtn").addEventListener("click", () => {
-      copyText([
-        "DPRO 学習塾・習い事 LINE デモ生徒確認情報",
-        "名前：テスト 太郎",
-        "電話番号：090-9999-0000",
-        "生徒番号：SCHOOL-DEMO-999",
-        `生徒証URL：${state.urls.member}`
-      ].join("\n"));
-    });
-
-    $("copyAllUrlsBtn").addEventListener("click", () => copyText($("urlText").value));
-    $("copyJsonBtn").addEventListener("click", () => copyText($("jsonBox").value));
-    $("clearJsonBtn").addEventListener("click", () => {
-      state.lastJson = null;
-      renderJson();
-      showToast("JSONをクリアしました");
-    });
-
-    $("urlList").addEventListener("click", (ev) => {
-      const btn = ev.target.closest("[data-copy-url]");
-      if (btn) copyText(btn.dataset.copyUrl || "");
-    });
-  }
-
-  function init(){
-    renderAdminStatus();
-    renderUrls();
-    bind();
-    checkHealth();
-  }
-
-  init();
-})();
-</script>
+    init();
+  </script>
 </body>
 </html>
