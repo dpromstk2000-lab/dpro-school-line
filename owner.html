@@ -136,6 +136,8 @@
     .search-results .item{grid-template-columns:1fr auto;}
     .calendar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px;}
     .calendar-row .date-box{min-width:210px;}
+    input[type="date"]{min-width:160px;font-variant-numeric:tabular-nums;line-height:1.2;}
+    select{background:#fff;}
     .lesson-time{font-size:20px;font-weight:950;letter-spacing:-.03em;}
     .nowrap{white-space:nowrap;}
 
@@ -151,7 +153,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-10 / owner.html</div>
+        <div class="version">STEP SCHOOL-10-R1 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索、電話予約・教室受付予約をPCで確認・登録する画面です。保護者へ送るLINE文面はその場でコピーできます。</p>
         <div class="top-actions">
@@ -191,7 +193,7 @@
 
         <div class="card" id="createLessonCard">
           <div class="section-title"><span class="num">2</span><h2>電話予約・教室受付予約を登録</h2></div>
-          <p class="hint">電話で受けた体験予約、教室受付で受けた予約、既存生徒の授業予定をPCから登録します。時間は30分単位で選びます。</p>
+          <p class="hint">電話で受けた体験予約、教室受付で受けた予約、既存生徒の授業予定をPCから登録します。日付は今日以降、時間は30分単位で選びます。</p>
           <div class="create-type-banner" id="createTypeTabs">
             <button class="create-chip active" type="button" data-create-type="phone">電話予約</button>
             <button class="create-chip" type="button" data-create-type="walkin">教室受付予約</button>
@@ -362,7 +364,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R1 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -370,7 +372,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-10';
+      const VERSION = 'STEP SCHOOL-10-R1';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -413,6 +415,32 @@
       function asArray(value){ if(!value) return []; if(Array.isArray(value)) return value; if(Array.isArray(value.items)) return value.items; if(Array.isArray(value.rows)) return value.rows; if(Array.isArray(value.data)) return value.data; return []; }
       function numberOrZero(value){ const n = Number(value); return Number.isFinite(n) ? n : 0; }
       function boolDone(status){ const s = String(status || '').toLowerCase(); return ['done','completed','complete','replied','handled','closed','finished','済','対応済み','完了'].some((x) => s.includes(x)); }
+      function normalizeStatusLabel(status){
+        const raw = String(status || '').trim();
+        const s = raw.toLowerCase();
+        if(!raw) return '未対応';
+        if(['open','new','pending','request','requested','todo'].includes(s)) return '未対応';
+        if(['waiting','waiting_reply','reply_waiting','awaiting_reply'].includes(s)) return '返信待ち';
+        if(['done','completed','complete','replied','handled','closed','finished'].includes(s)) return '対応済み';
+        if(['scheduled','reserved'].includes(s)) return '予定';
+        if(['checked_in','attended'].includes(s)) return '出席';
+        if(['in_progress','lesson_started'].includes(s)) return '授業中';
+        return raw;
+      }
+      function hasVisibleStudentInfo(item){
+        if(!item) return false;
+        return Boolean(first(item.studentName, item.guardianName, item.phone, item.studentNo));
+      }
+      function hasVisibleRequestInfo(item){
+        if(!item) return false;
+        return Boolean(first(item.studentName, item.guardianName, item.phone, item.studentNo, item.date, item.time, item.memo));
+      }
+      function fixPastDateInput(el){
+        if(!el) return;
+        const today = todayYmd();
+        el.min = today;
+        if(!el.value || el.value < today) el.value = today;
+      }
 
       function todayYmd(){ const d = new Date(); return toYmd(d); }
       function addDays(ymd, days){ const d = new Date(`${ymd}T00:00:00`); d.setDate(d.getDate()+days); return toYmd(d); }
@@ -513,9 +541,9 @@
           rawLessons.push(...asArray(root.lessons), ...asArray(root.today_lessons), ...asArray(root.day_lessons), ...asArray(root.school_lessons));
         });
 
-        let tasks = uniqueBy(rawTasks.map(normalizeTask), (x) => x.id).filter((x) => x.title || x.studentName || x.type);
-        let trial = uniqueBy(rawTrial.map((x) => normalizeRequest(x, 'trial')), (x) => x.id).filter((x) => x.studentName || x.date || x.memo);
-        let reqs = uniqueBy(rawRequests.map((x) => normalizeRequest(x)), (x) => x.id).filter((x) => x.studentName || x.date || x.memo || x.type);
+        let tasks = uniqueBy(rawTasks.map(normalizeTask), (x) => x.id).filter(hasVisibleRequestInfo);
+        let trial = uniqueBy(rawTrial.map((x) => normalizeRequest(x, 'trial')), (x) => x.id).filter(hasVisibleRequestInfo);
+        let reqs = uniqueBy(rawRequests.map((x) => normalizeRequest(x)), (x) => x.id).filter(hasVisibleRequestInfo);
         const absence = reqs.filter((x) => isAbsenceType(x.type));
         const makeup = reqs.filter((x) => isMakeupType(x.type));
         const reqTrial = reqs.filter((x) => isTrialType(x.type));
@@ -532,7 +560,7 @@
 
         const statsRoot = roots.map((r) => r.stats || r.counts || r.summary || {}).find((s) => Object.keys(s || {}).length) || {};
         const stats = {
-          tasks:numberOrZero(first(statsRoot.tasks, statsRoot.task_count, statsRoot.today_tasks, tasks.filter((x) => !boolDone(x.status)).length)),
+          tasks:tasks.filter((x) => !boolDone(x.status)).length,
           trial:numberOrZero(first(statsRoot.trial, statsRoot.trials, statsRoot.trial_count, statsRoot.trial_reservations, trial.length)),
           absence:numberOrZero(first(statsRoot.absence, statsRoot.absence_count, absence.length)),
           makeup:numberOrZero(first(statsRoot.makeup, statsRoot.makeup_count, makeup.length)),
@@ -558,7 +586,7 @@
           date:first(t.lesson_date, t.date, t.target_date, t.due_date, t.reservation_date, ''),
           time:first(t.lesson_time, t.time, t.start_time, t.target_time, t.reservation_time, ''),
           memo:normalizeNewlines(first(t.memo, t.note, t.description, t.reason, t.message, t.content, '')),
-          status:first(t.status_label, t.status, t.task_status, '未対応'),
+          status:normalizeStatusLabel(first(t.status_label, t.status, t.task_status, '未対応')),
           priority:first(t.priority, t.priority_label, '')
         };
       }
@@ -582,7 +610,7 @@
           secondDate:first(r.second_choice_date, r.alt_date, r.alternate_date, ''),
           secondTime:first(r.second_choice_time, r.alt_time, r.alternate_time, ''),
           memo:normalizeNewlines(first(r.memo, r.note, r.reason, r.request_memo, r.message, r.content, r.comment, '')),
-          status:first(r.status_label, r.status, r.request_status, '未対応'),
+          status:normalizeStatusLabel(first(r.status_label, r.status, r.request_status, '未対応')),
           createdAt:first(r.created_at, r.requested_at, r.createdAt, '')
         };
       }
@@ -606,7 +634,7 @@
           course:first(l.course_name, l.course, l.menu_name, l.subject, '授業'),
           teacher:first(l.teacher_name, l.teacher, l.staff_name, '担当未定'),
           room:first(l.room_name, l.room, '教室未定'),
-          status:first(l.status_label, l.status, l.lesson_status, '予定'),
+          status:normalizeStatusLabel(first(l.status_label, l.status, l.lesson_status, '予定')),
           memo:normalizeNewlines(first(l.memo, l.note, l.request_memo, ''))
         };
       }
@@ -680,9 +708,9 @@
                   <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || '未対応')}</span>
                 </div>
                 <div class="item-meta">
-                  生徒：<b>${escapeHtml(item.studentName || '未入力')}</b>　保護者：${escapeHtml(item.guardianName || '未入力')}<br>
+                  生徒：<b>${escapeHtml(item.studentName || '生徒名未入力')}</b>　保護者：${escapeHtml(item.guardianName || '保護者名未入力')}<br>
                   対象：${escapeHtml(formatDateTime(item.date, item.time))}　${item.course ? `コース：${escapeHtml(item.course)}` : ''}<br>
-                  電話：${escapeHtml(formatPhone(item.phone))}　生徒番号：${escapeHtml(item.studentNo || '')}
+                  ${item.phone ? `電話：${escapeHtml(formatPhone(item.phone))}` : ''}${item.studentNo ? `　生徒番号：${escapeHtml(item.studentNo)}` : ''}
                 </div>
                 ${item.memo ? `<div class="item-note">${escapeHtml(item.memo)}</div>` : ''}
               </div>
@@ -1208,6 +1236,16 @@
         $('loadDayBtn').addEventListener('click', loadDashboard);
         $('todayBtn').addEventListener('click', () => { $('dayInput').value = todayYmd(); loadDashboard(); });
         $('tomorrowBtn').addEventListener('click', () => { $('dayInput').value = addDays(todayYmd(), 1); loadDashboard(); });
+        ['dayInput','createDate'].forEach((id) => {
+          const el = $(id);
+          if(!el) return;
+          el.addEventListener('change', () => {
+            if(el.value && el.value < todayYmd()){
+              el.value = todayYmd();
+              setStatus(id === 'dayInput' ? 'mainStatus' : 'createStatus', '過去の日付は選べません。今日以降の日付に戻しました。', 'warn');
+            }
+          });
+        });
         $('createTypeTabs').addEventListener('click', (e) => {
           const btn = e.target.closest('[data-create-type]');
           if(btn) setCreateType(btn.dataset.createType);
@@ -1248,7 +1286,8 @@
         $('shopNameHero').textContent = state.config.shopName;
         $('dayInput').value = todayYmd();
         $('createDate').value = todayYmd();
-        $('createDate').min = todayYmd();
+        fixPastDateInput($('dayInput'));
+        fixPastDateInput($('createDate'));
         generateTimeOptions();
         setCreateType('phone');
         const savedCode = localStorage.getItem('dpro_school_admin_code');
