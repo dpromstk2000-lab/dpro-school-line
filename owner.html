@@ -136,7 +136,9 @@
     .search-results .item{grid-template-columns:1fr auto;}
     .calendar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px;}
     .calendar-row .date-box{min-width:210px;}
-    input[type="date"]{min-width:160px;font-variant-numeric:tabular-nums;line-height:1.2;}
+    input[type="date"]{min-width:190px;font-variant-numeric:tabular-nums;line-height:1.2;padding-right:8px;}
+    #createDate,#dayInput{min-width:200px;}
+    .form-grid.three{grid-template-columns:minmax(200px,1fr) minmax(170px,1fr) minmax(120px,.75fr);}
     select{background:#fff;}
     .lesson-time{font-size:20px;font-weight:950;letter-spacing:-.03em;}
     .nowrap{white-space:nowrap;}
@@ -153,7 +155,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-10-R1 / owner.html</div>
+        <div class="version">STEP SCHOOL-10-R2 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索、電話予約・教室受付予約をPCで確認・登録する画面です。保護者へ送るLINE文面はその場でコピーできます。</p>
         <div class="top-actions">
@@ -364,7 +366,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R1 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R2 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -372,7 +374,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-10-R1';
+      const VERSION = 'STEP SCHOOL-10-R2';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -427,13 +429,29 @@
         if(['in_progress','lesson_started'].includes(s)) return '授業中';
         return raw;
       }
+      function isPlaceholderText(value){
+        const s = String(value || '').trim();
+        if(!s) return true;
+        return ['未入力','生徒名未入力','保護者名未入力','対象者未入力','不明','unknown','null','undefined'].includes(s.toLowerCase());
+      }
       function hasVisibleStudentInfo(item){
         if(!item) return false;
-        return Boolean(first(item.studentName, item.guardianName, item.phone, item.studentNo));
+        return [item.studentName, item.guardianName, item.phone, item.studentNo].some((v) => !isPlaceholderText(v));
       }
       function hasVisibleRequestInfo(item){
         if(!item) return false;
-        return Boolean(first(item.studentName, item.guardianName, item.phone, item.studentNo, item.date, item.time, item.memo));
+        return hasVisibleStudentInfo(item) || !isPlaceholderText(item.memo);
+      }
+      function shouldShowTask(item){
+        if(!item || boolDone(item.status)) return false;
+        if(hasVisibleStudentInfo(item)) return true;
+        const title = String(item.title || '').trim();
+        const memo = String(item.memo || '').trim();
+        const sparseSystemTitle = /体験前|チケット|残数|案内|確認/.test(title);
+        return Boolean(memo && !sparseSystemTitle);
+      }
+      function taskUniqueKey(item){
+        return [item.type || '', normalizePhone(item.phone), item.studentNo || '', item.studentName || '', item.date || '', item.time || '', item.title || ''].join('|');
       }
       function fixPastDateInput(el){
         if(!el) return;
@@ -541,22 +559,21 @@
           rawLessons.push(...asArray(root.lessons), ...asArray(root.today_lessons), ...asArray(root.day_lessons), ...asArray(root.school_lessons));
         });
 
-        let tasks = uniqueBy(rawTasks.map(normalizeTask), (x) => x.id).filter(hasVisibleRequestInfo);
         let trial = uniqueBy(rawTrial.map((x) => normalizeRequest(x, 'trial')), (x) => x.id).filter(hasVisibleRequestInfo);
         let reqs = uniqueBy(rawRequests.map((x) => normalizeRequest(x)), (x) => x.id).filter(hasVisibleRequestInfo);
         const absence = reqs.filter((x) => isAbsenceType(x.type));
         const makeup = reqs.filter((x) => isMakeupType(x.type));
         const reqTrial = reqs.filter((x) => isTrialType(x.type));
         trial = uniqueBy([...trial, ...reqTrial], (x) => x.id);
-        const lessons = uniqueBy(rawLessons.map(normalizeLesson), (x) => x.id).filter((x) => x.studentName || x.date || x.time || x.course);
+        const lessons = uniqueBy(rawLessons.map(normalizeLesson), (x) => x.id).filter((x) => hasVisibleStudentInfo(x) || x.date || x.time || x.course);
 
-        if(!tasks.length && (absence.length || makeup.length || trial.length)){
-          tasks = [
-            ...trial.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '体験予約確認')),
-            ...absence.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '欠席返信')),
-            ...makeup.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '振替返信'))
-          ];
-        }
+        const requestTasks = [
+          ...trial.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '体験予約確認')),
+          ...absence.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '欠席返信')),
+          ...makeup.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, '振替返信'))
+        ];
+        const rawCleanTasks = uniqueBy(rawTasks.map(normalizeTask), (x) => x.id).filter(shouldShowTask);
+        let tasks = uniqueBy([...requestTasks, ...rawCleanTasks], taskUniqueKey);
 
         const statsRoot = roots.map((r) => r.stats || r.counts || r.summary || {}).find((s) => Object.keys(s || {}).length) || {};
         const stats = {
@@ -708,7 +725,7 @@
                   <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || '未対応')}</span>
                 </div>
                 <div class="item-meta">
-                  生徒：<b>${escapeHtml(item.studentName || '生徒名未入力')}</b>　保護者：${escapeHtml(item.guardianName || '保護者名未入力')}<br>
+                  生徒：<b>${escapeHtml(item.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(item.guardianName || '保護者確認中')}<br>
                   対象：${escapeHtml(formatDateTime(item.date, item.time))}　${item.course ? `コース：${escapeHtml(item.course)}` : ''}<br>
                   ${item.phone ? `電話：${escapeHtml(formatPhone(item.phone))}` : ''}${item.studentNo ? `　生徒番号：${escapeHtml(item.studentNo)}` : ''}
                 </div>
@@ -746,7 +763,7 @@
                   <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || '未対応')}</span>
                 </div>
                 <div class="item-meta">
-                  生徒：<b>${escapeHtml(item.studentName || '未入力')}</b>　保護者：${escapeHtml(item.guardianName || '未入力')}<br>
+                  生徒：<b>${escapeHtml(item.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(item.guardianName || '保護者確認中')}<br>
                   ${escapeHtml(item.label)}日時：${escapeHtml(formatDateTime(item.date, item.time))}${item.secondDate ? ` / 第2希望：${escapeHtml(formatDateTime(item.secondDate, item.secondTime))}` : ''}<br>
                   ${item.course ? `コース：${escapeHtml(item.course)}　` : ''}${item.teacher ? `担当：${escapeHtml(item.teacher)}　` : ''}<br>
                   電話：${escapeHtml(formatPhone(item.phone))}　生徒番号：${escapeHtml(item.studentNo || '')}
@@ -776,7 +793,7 @@
               <div class="item-main">
                 <div class="item-title">
                   <span class="lesson-time">${escapeHtml(formatTime(item.time))}${item.endTime ? `〜${escapeHtml(formatTime(item.endTime))}` : ''}</span>
-                  <span>${escapeHtml(item.studentName || '生徒未入力')}</span>
+                  <span>${escapeHtml(item.studentName || '対象者確認中')}</span>
                   <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || '予定')}</span>
                 </div>
                 <div class="item-meta">
@@ -806,8 +823,8 @@
           return `
             <div class="item">
               <div class="item-main">
-                <div class="item-title"><span>${escapeHtml(item.studentName || '生徒名未入力')}</span><span class="badge blue">${escapeHtml(item.studentNo || '番号未入力')}</span></div>
-                <div class="item-meta">保護者：${escapeHtml(item.guardianName || '未入力')}　電話：${escapeHtml(formatPhone(item.phone))}<br>コース：${escapeHtml(item.course || '未設定')}　状態：${escapeHtml(item.status || '確認')}</div>
+                <div class="item-title"><span>${escapeHtml(item.studentName || '対象者確認中')}</span><span class="badge blue">${escapeHtml(item.studentNo || '番号未入力')}</span></div>
+                <div class="item-meta">保護者：${escapeHtml(item.guardianName || '保護者確認中')}　電話：${escapeHtml(formatPhone(item.phone))}<br>コース：${escapeHtml(item.course || '未設定')}　状態：${escapeHtml(item.status || '確認')}</div>
               </div>
               <div class="item-actions"><button class="btn small" data-action="student-detail" data-key="${key}" type="button">詳細を見る</button><button class="btn green small" data-action="fill-create" data-key="${key}" type="button">この生徒で予約入力</button></div>
             </div>
