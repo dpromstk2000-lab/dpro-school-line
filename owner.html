@@ -135,10 +135,10 @@
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .search-results .item{grid-template-columns:1fr auto;}
     .calendar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px;}
-    .calendar-row .date-box{min-width:210px;}
-    input[type="date"]{min-width:190px;font-variant-numeric:tabular-nums;line-height:1.2;padding-right:8px;}
-    #createDate,#dayInput{min-width:200px;}
-    .form-grid.three{grid-template-columns:minmax(200px,1fr) minmax(170px,1fr) minmax(120px,.75fr);}
+    .calendar-row .date-box{flex:0 0 270px;min-width:270px;max-width:100%;}
+    input[type="date"]{min-width:0;width:100%;max-width:100%;font-variant-numeric:tabular-nums;line-height:1.25;padding:13px 42px 13px 14px;font-size:15px;letter-spacing:-.02em;}
+    #createDate,#dayInput{min-width:0;width:100%;}
+    .form-grid.three{grid-template-columns:minmax(270px,1.35fr) minmax(170px,.9fr) minmax(130px,.75fr);}
     select{background:#fff;}
     .lesson-time{font-size:20px;font-weight:950;letter-spacing:-.03em;}
     .nowrap{white-space:nowrap;}
@@ -155,7 +155,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-10-R2 / owner.html</div>
+        <div class="version">STEP SCHOOL-10-R3 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索、電話予約・教室受付予約をPCで確認・登録する画面です。保護者へ送るLINE文面はその場でコピーできます。</p>
         <div class="top-actions">
@@ -366,7 +366,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R2 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R3 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
