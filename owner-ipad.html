@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no" />
-  <title>DPRO 学習塾・習い事 LINE｜受付・講師iPad画面｜STEP SCHOOL-9</title>
+  <title>DPRO 学習塾・習い事 LINE｜受付・講師iPad画面｜STEP SCHOOL-9-R1</title>
   <script src="./config.js"></script>
   <style>
     :root{
@@ -158,7 +158,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-9 / owner-ipad.html</div>
+        <div class="version">STEP SCHOOL-9-R1 / owner-ipad.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>受付・講師iPad画面</h1>
         <p class="lead">受付・講師がiPadで使う画面です。本日の授業予定、出席、授業中、完了、欠席連絡、振替希望を大きなボタンで確認・操作できます。</p>
         <div class="nav-row">
@@ -188,8 +188,8 @@
           <div class="stats" id="statsGrid"></div>
           <div class="row">
             <div class="grow">
-              <label for="dayInput">確認する日</label>
-              <input type="date" id="dayInput" />
+              <label for="dayInput">確認する日（yyyy-mm-dd）</label>
+              <input type="text" id="dayInput" inputmode="numeric" placeholder="例：2026-07-10" autocomplete="off" />
             </div>
             <button class="btn big" id="refreshBtn" type="button">更新</button>
             <button class="btn secondary big" id="todayBtn" type="button">今日</button>
@@ -275,7 +275,7 @@
       </aside>
     </main>
 
-    <div class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-9 / owner-ipad.html</div>
+    <div class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-9-R1 / owner-ipad.html</div>
   </div>
 
   <div id="toast" class="toast">完了しました</div>
@@ -339,6 +339,27 @@
     const d = new Date(`${ymd}T00:00:00`);
     d.setDate(d.getDate() + days);
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function normalizeDateValue(value){
+    const s = String(value || "").trim().replace(/[/.]/g, "-");
+    let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+    m = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if(m) return `${m[1]}-${m[2]}-${m[3]}`;
+    return "";
+  }
+  function fixPastDayInput(showMessage){
+    const el = $("dayInput");
+    if(!el) return todayYmd();
+    const before = el.value;
+    const today = todayYmd();
+    let normalized = normalizeDateValue(before) || today;
+    if(normalized < today){
+      normalized = today;
+      if(showMessage) setStatus("mainStatus", "過去の日付は選べません。今日以降の日付に戻しました。", "warn");
+    }
+    el.value = normalized;
+    return normalized;
   }
   function formatDate(ymd){
     if(!ymd) return "日付未定";
@@ -754,7 +775,7 @@
     setStatus("mainStatus", "iPad画面の情報を読み込んでいます。", "");
     resetMap();
     try{
-      const date = $("dayInput").value || todayYmd();
+      const date = fixPastDayInput(true);
       const results = await Promise.allSettled([
         adminGet("/api/admin/dashboard", {}),
         adminGet("/api/admin/day", { date })
@@ -857,6 +878,8 @@
     $("refreshBtn").addEventListener("click", loadDashboard);
     $("todayBtn").addEventListener("click", () => { $("dayInput").value = todayYmd(); loadDashboard(); });
     $("tomorrowBtn").addEventListener("click", () => { $("dayInput").value = addDays(todayYmd(), 1); loadDashboard(); });
+    $("dayInput").addEventListener("blur", () => fixPastDayInput(true));
+    $("dayInput").addEventListener("change", () => fixPastDayInput(false));
     $("prepareDemoBtn").addEventListener("click", prepareDemo);
     $("healthBtn").addEventListener("click", checkHealth);
     $("searchBtn").addEventListener("click", searchStudents);
