@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DPRO 学習塾・習い事 LINE｜保護者・生徒画面｜STEP SCHOOL-6-R1</title>
+  <title>DPRO 学習塾・習い事 LINE｜保護者・生徒画面｜STEP SCHOOL-6-R2</title>
   <script src="./config.js"></script>
   <style>
     :root{
@@ -155,6 +155,8 @@
       font-size:15px;
       outline:none;
     }
+    input[type="date"]{min-height:47px}
+    select{min-height:47px}
     textarea{min-height:98px;resize:vertical;line-height:1.6}
     input:focus,select:focus,textarea:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.16)}
     .choiceGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -273,6 +275,17 @@
       font-weight:800;
       margin-top:12px;
     }
+    .hintBox{
+      border:1px solid #bfdbfe;
+      background:#eff6ff;
+      color:#1e3a8a;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:13px;
+      font-weight:850;
+      line-height:1.7;
+      margin:10px 0 2px;
+    }
     .hide{display:none !important}
     .toast{
       position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
@@ -281,6 +294,8 @@
       font-size:13px;font-weight:900;
       box-shadow:0 14px 40px rgba(0,0,0,.22);
       opacity:0;pointer-events:none;transition:.2s;z-index:99;
+      max-width:calc(100vw - 24px);
+      text-align:center;
     }
     .toast.show{opacity:1;bottom:30px}
     @media(max-width:900px){
@@ -296,11 +311,11 @@
   <div class="wrap">
     <section class="hero">
       <div>
-        <div class="badge">STEP SCHOOL-6-R1 / index.html</div>
+        <div class="badge">STEP SCHOOL-6-R2 / index.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>保護者・生徒画面</h1>
         <p>
           体験予約、欠席連絡、振替希望をLINEからかんたん受付。<br>
-          受付後は確認文面をコピーでき、生徒証・授業予定画面にも進めます。
+          過去日は選べないようにし、欠席・振替の時間は30分単位で選びやすくしました。
         </p>
       </div>
       <div class="shopCard">
@@ -392,10 +407,14 @@
             </div>
           </div>
 
+          <div class="hintBox">
+            過去の日付は送信できません。授業時間は1分単位ではなく、30分単位のリストから選べます。
+          </div>
+
           <div class="grid2">
             <div class="field">
               <label for="absencePhone">保護者電話番号</label>
-              <input id="absencePhone" type="tel" placeholder="090-9999-0000">
+              <input id="absencePhone" type="tel" placeholder="090-9999-0000" autocomplete="tel">
             </div>
             <div class="field">
               <label for="absenceStudentNo">生徒番号 任意</label>
@@ -419,14 +438,15 @@
             </div>
             <div class="field">
               <label for="absenceTime">授業時間 任意</label>
-              <input id="absenceTime" type="time">
+              <select id="absenceTime"></select>
             </div>
           </div>
           <div class="field">
             <label for="absenceText">欠席理由・連絡内容</label>
-            <textarea id="absenceText" placeholder="例：体調不良のため、本日の授業を欠席します。振替希望です。"></textarea>
+            <textarea id="absenceText" placeholder="例：体調不良のため、本日の授業を欠席します。"></textarea>
           </div>
           <button type="button" class="btn orange" id="sendAbsenceBtn">欠席連絡を送る</button>
+          <div id="absenceMessage" class="alert warn hide" style="margin-top:12px;"></div>
         </section>
 
         <section class="card modeBlock hide" id="makeupBlock">
@@ -438,10 +458,14 @@
             </div>
           </div>
 
+          <div class="hintBox">
+            過去の日付は送信できません。希望時間は30分単位で選べるため、保護者が迷いにくくなります。
+          </div>
+
           <div class="grid2">
             <div class="field">
               <label for="makeupPhone">保護者電話番号</label>
-              <input id="makeupPhone" type="tel" placeholder="090-9999-0000">
+              <input id="makeupPhone" type="tel" placeholder="090-9999-0000" autocomplete="tel">
             </div>
             <div class="field">
               <label for="makeupStudentNo">生徒番号 任意</label>
@@ -465,7 +489,7 @@
             </div>
             <div class="field">
               <label for="makeupTime">希望時間 任意</label>
-              <input id="makeupTime" type="time">
+              <select id="makeupTime"></select>
             </div>
           </div>
           <div class="field">
@@ -473,6 +497,7 @@
             <textarea id="makeupText" placeholder="例：来週の火曜か水曜、17時以降で振替を希望します。"></textarea>
           </div>
           <button type="button" class="btn green" id="sendMakeupBtn">振替希望を送る</button>
+          <div id="makeupMessage" class="alert warn hide" style="margin-top:12px;"></div>
         </section>
 
         <section class="card" id="customerBlock">
@@ -501,7 +526,7 @@
             </div>
             <div class="field">
               <label for="phone">電話番号</label>
-              <input id="phone" type="tel" placeholder="090-1111-2222">
+              <input id="phone" type="tel" placeholder="090-1111-2222" autocomplete="tel">
             </div>
           </div>
           <div class="grid2">
@@ -511,14 +536,14 @@
             </div>
             <div class="field">
               <label for="schoolName">学校名 任意</label>
-              <input id="schoolName" placeholder="例：〇〇小学校">
+              <input id="schoolName" placeholder="例：DPRO小学校">
             </div>
           </div>
           <div class="field">
             <label for="trialRequestText">相談内容・気になること</label>
-            <textarea id="trialRequestText" placeholder="例：算数の文章題が苦手です。体験で雰囲気を見たいです。"></textarea>
+            <textarea id="trialRequestText" placeholder="例：算数の文章題が苦手です。体験で学習相談も希望します。"></textarea>
           </div>
-          <button type="button" class="btn dark" id="confirmTrialBtn">体験予約内容を確認する</button>
+          <button type="button" class="btn primary" id="confirmTrialBtn">体験予約内容を確認する</button>
         </section>
 
         <section class="card" id="confirmBlock">
@@ -529,22 +554,20 @@
               <p class="muted">内容に間違いがなければ送信してください。</p>
             </div>
           </div>
-          <div id="confirmBox" class="alert">まだ確認内容がありません。</div>
-          <div class="row" style="margin-top:12px">
-            <button type="button" class="btn primary" id="submitTrialBtn">この内容で体験予約する</button>
+          <div id="confirmBox" class="alert warn">まだ確認内容がありません。</div>
+          <div class="row" style="margin-top:12px;">
+            <button type="button" class="btn green" id="submitTrialBtn">この内容で体験予約する</button>
             <button type="button" class="btn ghost" id="backEditBtn">上に戻って修正</button>
           </div>
         </section>
 
         <section class="complete" id="completeBox">
-          <span class="status ok" id="completeLabel">受付完了</span>
+          <div class="status ok" id="completeLabel">受付完了</div>
           <h2 id="completeTitle">受付しました</h2>
           <p class="muted" id="completeLead">下の文面は、LINEで送る確認文面のイメージです。コピーできます。</p>
           <div class="messageBox" id="messageText"></div>
-          <div class="alert ok" style="margin-top:12px" id="nextActionBox">
-            生徒証・授業予定画面から、次回予定や振替残数を確認できます。
-          </div>
-          <div class="row" style="margin-top:12px">
+          <div class="alert ok" style="margin-top:12px;">生徒証・授業予定画面から、次回予定や振替残数を確認できます。</div>
+          <div class="row" style="margin-top:12px;">
             <button type="button" class="btn primary" id="copyMessageBtn">確認文面をコピー</button>
             <a class="btn dark" id="memberLinkBtn" href="./member.html" target="_blank" rel="noopener">生徒証・授業予定を見る</a>
             <button type="button" class="btn ghost" id="resetBtn">続けて入力する</button>
@@ -555,188 +578,149 @@
       <aside class="side">
         <section class="card">
           <h2>現在の選択</h2>
-          <div class="summaryItem">
-            <small>受付内容</small>
-            <b id="sumMode">体験予約</b>
-          </div>
-          <div class="summaryItem">
-            <small>コース</small>
-            <b id="sumCourse">未選択</b>
-          </div>
-          <div class="summaryItem">
-            <small>先生</small>
-            <b id="sumTeacher">おまかせ</b>
-          </div>
-          <div class="summaryItem">
-            <small>日時</small>
-            <b id="sumDate">未選択</b>
-          </div>
-          <div class="summaryItem">
-            <small>生徒</small>
-            <b id="sumStudent">未入力</b>
-          </div>
-          <span class="status warn" id="sumStatus">入力中</span>
+          <div class="summaryItem"><small>受付内容</small><b id="sumMode">体験予約</b></div>
+          <div class="summaryItem"><small>コース</small><b id="sumCourse">未選択</b></div>
+          <div class="summaryItem"><small>先生</small><b id="sumTeacher">おまかせ</b></div>
+          <div class="summaryItem"><small>日時</small><b id="sumDateTime">未選択</b></div>
+          <div class="summaryItem"><small>生徒</small><b id="sumStudent">未入力</b></div>
+          <div class="status warn" id="sumStatus">入力中</div>
         </section>
 
         <section class="card">
           <h2>デモ確認用</h2>
           <p class="muted">生徒証確認用のデモ情報です。</p>
-          <div class="summaryItem">
-            <small>生徒</small>
-            <b>テスト 太郎</b>
-          </div>
-          <div class="summaryItem">
-            <small>電話番号</small>
-            <b>090-9999-0000</b>
-          </div>
-          <div class="summaryItem">
-            <small>生徒番号</small>
-            <b>SCHOOL-DEMO-999</b>
-          </div>
-          <a class="btn green full" id="demoMemberLink" href="./member.html?phone=090-9999-0000&student_no=SCHOOL-DEMO-999" target="_blank" rel="noopener">デモ生徒証を見る</a>
+          <div class="summaryItem"><small>生徒</small><b id="demoStudentName">テスト 太郎</b></div>
+          <div class="summaryItem"><small>電話番号</small><b id="demoPhone">090-9999-0000</b></div>
+          <div class="summaryItem"><small>生徒番号</small><b id="demoStudentNo">SCHOOL-DEMO-999</b></div>
+          <a class="btn green full" id="demoMemberLink" href="./member.html" target="_blank" rel="noopener">デモ生徒証を見る</a>
         </section>
 
         <section class="card">
           <h2>受付の流れ</h2>
-          <div class="muted">
+          <p class="muted">
             1. 内容を選ぶ<br>
             2. コース・日時を選ぶ<br>
             3. 保護者/生徒情報を入力<br>
             4. 内容を確認<br>
             5. LINE文面をコピー<br>
             6. 生徒証で予定確認
-          </div>
+          </p>
         </section>
       </aside>
     </div>
   </div>
 
-  <div class="toast" id="toast">完了しました</div>
+  <div id="toast" class="toast">完了しました</div>
 
 <script>
-(function(){
+(() => {
   "use strict";
 
-  const CONFIG = window.DPRO_SCHOOL_CONFIG || window.CONFIG || {
-    serviceName:"DPRO 学習塾・習い事 LINE",
-    shopCode:"dpro_school_demo",
-    shopName:"DPROスクール",
-    apiBaseUrl:"https://dpro-school-line-api.dpromstk2000.workers.dev",
-    pagesBaseUrl:"https://dpromstk2000-lab.github.io/dpro-school-line/",
-    demoStudent:{ studentName:"テスト 太郎", studentNo:"SCHOOL-DEMO-999", guardianName:"テスト 保護者", phone:"090-9999-0000" },
-    endpoints:{
-      publicConfig:"/api/public/config",
-      lessonOptions:"/api/public/lesson-options",
-      trialReservations:"/api/public/trial-reservations",
-      absence:"/api/public/absence",
-      makeupRequest:"/api/public/makeup-request"
+  const FALLBACK_CONFIG = {
+    version: "STEP SCHOOL-6-R2",
+    serviceName: "DPRO 学習塾・習い事 LINE",
+    shopCode: "dpro_school_demo",
+    shopName: "DPROスクール",
+    apiBaseUrl: "https://dpro-school-line-api.dpromstk2000.workers.dev",
+    pagesBaseUrl: "https://dpromstk2000-lab.github.io/dpro-school-line/",
+    demoStudent: {
+      studentName: "テスト 太郎",
+      studentNo: "SCHOOL-DEMO-999",
+      guardianName: "テスト 保護者",
+      phone: "090-9999-0000"
+    },
+    endpoints: {
+      publicConfig: "/api/public/config",
+      lessonOptions: "/api/public/lesson-options",
+      trialReservations: "/api/public/trial-reservations",
+      absence: "/api/public/absence",
+      makeupRequest: "/api/public/makeup-request"
     }
   };
 
-  const U = window.DPRO_SCHOOL_UTILS || {};
+  const CONFIG = Object.assign({}, FALLBACK_CONFIG, window.DPRO_SCHOOL_CONFIG || {});
+  CONFIG.endpoints = Object.assign({}, FALLBACK_CONFIG.endpoints, (window.DPRO_SCHOOL_CONFIG || {}).endpoints || {});
+  CONFIG.demoStudent = Object.assign({}, FALLBACK_CONFIG.demoStudent, (window.DPRO_SCHOOL_CONFIG || {}).demoStudent || {});
+
   const $ = (id) => document.getElementById(id);
+  const WEEK = ["日", "月", "火", "水", "木", "金", "土"];
 
   const state = {
-    mode:"trial",
-    shop:null,
-    courses:[],
-    teachers:[],
-    selectedCourse:null,
-    teacherPreference:"any",
-    selectedTeacherCode:"",
-    selectedDate:"",
-    slots:[],
-    selectedSlot:null,
-    lastMessage:"",
-    lastMemberUrl:"./member.html"
+    mode: "trial",
+    shop: {},
+    courses: [],
+    teachers: [],
+    selectedCourse: null,
+    teacherPreference: "any",
+    selectedTeacherCode: "",
+    selectedDate: "",
+    selectedSlot: null,
+    slots: [],
+    lastMessage: ""
   };
 
-  function endpoint(key){ return CONFIG.endpoints[key]; }
+  function endpoint(name){
+    return CONFIG.endpoints?.[name] || FALLBACK_CONFIG.endpoints[name] || name;
+  }
 
-  function apiUrl(path, params={}){
-    if (U.apiUrl) return U.apiUrl(path, params);
-    const base = String(CONFIG.apiBaseUrl || "").replace(/\/+$/, "");
-    const url = new URL(base + path);
-    Object.entries(params || {}).forEach(([k,v]) => {
-      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
+  function buildApiUrl(path, params = {}){
+    const base = String(CONFIG.apiBaseUrl || FALLBACK_CONFIG.apiBaseUrl).replace(/\/$/, "");
+    const url = new URL(path, base);
+    const merged = Object.assign({ shop_code: CONFIG.shopCode || FALLBACK_CONFIG.shopCode }, params || {});
+    Object.entries(merged).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
     });
     return url.toString();
   }
 
-  async function apiGet(path, params={}){
-    if (U.apiGet) return U.apiGet(path, params, false);
-    const url = apiUrl(path, { shop_code:CONFIG.shopCode, ...params });
-    const res = await fetch(url, { headers:{ "X-Shop-Code":CONFIG.shopCode } });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
+  async function apiGet(path, params = {}){
+    const res = await fetch(buildApiUrl(path, params), { method:"GET" });
+    const text = await res.text();
+    let data = {};
+    try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { raw:text }; }
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.message || data.error || `APIエラー status=${res.status}`);
+    }
     return data;
   }
 
-  async function apiPost(path, body={}){
-    if (U.apiPost) return U.apiPost(path, body, false);
-    const res = await fetch(apiUrl(path), {
+  async function apiPost(path, payload = {}){
+    const body = Object.assign({ shop_code: CONFIG.shopCode || FALLBACK_CONFIG.shopCode }, payload || {});
+    const res = await fetch(buildApiUrl(path, {}), {
       method:"POST",
-      headers:{ "Content-Type":"application/json", "X-Shop-Code":CONFIG.shopCode },
-      body:JSON.stringify({ shop_code:CONFIG.shopCode, ...body })
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(body)
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || data.ok === false) throw new Error(data.message || data.error || "APIエラー");
+    const text = await res.text();
+    let data = {};
+    try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { raw:text }; }
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.message || data.error || `API保存エラー status=${res.status}`);
+    }
     return data;
   }
 
-  function escapeHtml(v){
-    if (U.escapeHtml) return U.escapeHtml(v);
-    return String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  function escapeHtml(value){
+    return String(value ?? "").replace(/[&<>"]/g, (s) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[s]));
   }
 
-  function todayText(){
-    if (U.todayText) return U.todayText();
-    const jst = new Date(Date.now() + 9*60*60*1000);
-    return jst.toISOString().slice(0,10);
-  }
-
-  function addDaysText(dateText, days){
-    if (U.addDaysText) return U.addDaysText(dateText, days);
-    const [y,m,d] = String(dateText).split("-").map(Number);
-    const date = new Date(Date.UTC(y,m-1,d));
-    date.setUTCDate(date.getUTCDate() + Number(days || 0));
-    return date.toISOString().slice(0,10);
-  }
-
-  function dateWithWeekday(v){
-    if (U.dateWithWeekday) return U.dateWithWeekday(v);
-    return v || "";
-  }
-
-  function hhmm(v){
-    if (U.hhmm) return U.hhmm(v);
-    return String(v || "").slice(0,5);
-  }
+  function clean(value){ return String(value ?? "").trim(); }
 
   function normalizeLineText(value){
-    if (U.normalizeLineText) return U.normalizeLineText(value);
-    return String(value ?? "").replace(/\\r\\n/g,"\n").replace(/\\n/g,"\n").replace(/\\r/g,"\n").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
-  }
-
-  function pageUrl(path, params={}){
-    if (U.pageUrl) return U.pageUrl(path, params);
-    const base = String(CONFIG.pagesBaseUrl || location.origin + location.pathname.replace(/[^/]*$/, "")).replace(/\/+$/, "/");
-    const url = new URL(path, base);
-    Object.entries(params || {}).forEach(([k,v]) => {
-      if (v !== undefined && v !== null && String(v) !== "") url.searchParams.set(k, String(v));
-    });
-    return url.toString();
+    return String(value ?? "")
+      .replace(/\\r\\n/g, "\n")
+      .replace(/\\n/g, "\n")
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .trim();
   }
 
   function showToast(text){
-    $("toast").textContent = text || "完了しました";
-    $("toast").classList.add("show");
-    setTimeout(() => $("toast").classList.remove("show"), 1700);
-  }
-
-  async function copyText(text){
-    await navigator.clipboard.writeText(String(text || "")).catch(() => {});
-    showToast("コピーしました");
+    const t = $("toast");
+    t.textContent = text || "完了しました";
+    t.classList.add("show");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => t.classList.remove("show"), 1800);
   }
 
   function scrollToId(id){
@@ -744,98 +728,179 @@
     if (el) el.scrollIntoView({ behavior:"smooth", block:"start" });
   }
 
+  function todayText(){
+    const parts = new Intl.DateTimeFormat("ja-JP", {
+      timeZone:"Asia/Tokyo",
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    }).formatToParts(new Date());
+    const obj = Object.fromEntries(parts.map(p => [p.type, p.value]));
+    return `${obj.year}-${obj.month}-${obj.day}`;
+  }
+
+  function addDaysText(ymd, days){
+    const [y,m,d] = String(ymd).split("-").map(Number);
+    const date = new Date(Date.UTC(y, m - 1, d));
+    date.setUTCDate(date.getUTCDate() + Number(days || 0));
+    return date.toISOString().slice(0,10);
+  }
+
+  function isPastDate(ymd){
+    return !!ymd && String(ymd) < todayText();
+  }
+
+  function guardDateInput(id, label){
+    const el = $(id);
+    const today = todayText();
+    el.min = today;
+    if (!el.value || el.value < today) el.value = today;
+    el.addEventListener("change", () => {
+      if (isPastDate(el.value)) {
+        el.value = todayText();
+        showToast(`${label}は過去日を選べません。本日以降を選んでください。`);
+      }
+      updateSummary();
+    });
+  }
+
+  function dateWithWeekday(ymd){
+    if (!ymd) return "未選択";
+    const [y,m,d] = String(ymd).split("-").map(Number);
+    const date = new Date(Date.UTC(y, m - 1, d));
+    const w = WEEK[date.getUTCDay()];
+    return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}（${w}）`;
+  }
+
+  function hhmm(value){
+    if (!value) return "";
+    const m = String(value).match(/(\d{1,2}):(\d{2})/);
+    if (!m) return String(value);
+    return `${m[1].padStart(2,"0")}:${m[2]}`;
+  }
+
+  function pageUrl(path, params = {}){
+    const base = CONFIG.pagesBaseUrl || (location.origin + location.pathname.replace(/[^/]*$/, ""));
+    const url = new URL(path, base);
+    Object.entries(params || {}).forEach(([k,v]) => {
+      if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, String(v));
+    });
+    return url.toString();
+  }
+
+  function fillTimeSelect(selectId, defaultTime){
+    const select = $(selectId);
+    select.innerHTML = '<option value="">時間未選択</option>';
+    const startMinutes = 10 * 60;
+    const endMinutes = 21 * 60;
+    for (let minutes = startMinutes; minutes <= endMinutes; minutes += 30) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      const value = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = value;
+      if (value === defaultTime) opt.selected = true;
+      select.appendChild(opt);
+    }
+  }
+
+  function copyText(text){
+    const value = normalizeLineText(text || "");
+    if (!value) {
+      showToast("コピーする文面がありません");
+      return;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(value).then(() => showToast("確認文面をコピーしました"));
+      return;
+    }
+    const ta = document.createElement("textarea");
+    ta.value = value;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast("確認文面をコピーしました");
+  }
+
   function setMode(mode){
-    state.mode = mode;
-    document.querySelectorAll(".tab").forEach(btn => btn.classList.toggle("active", btn.dataset.mode === mode));
-    $("trialBlock").classList.toggle("hide", mode !== "trial");
-    $("absenceBlock").classList.toggle("hide", mode !== "absence");
-    $("makeupBlock").classList.toggle("hide", mode !== "makeup");
-    $("customerBlock").classList.toggle("hide", mode !== "trial");
-    $("confirmBlock").classList.toggle("hide", mode !== "trial");
-    $("submitTrialBtn").classList.toggle("hide", mode !== "trial");
+    state.mode = mode || "trial";
+    document.querySelectorAll(".tab").forEach(btn => btn.classList.toggle("active", btn.dataset.mode === state.mode));
+    $("trialBlock").classList.toggle("hide", state.mode !== "trial");
+    $("absenceBlock").classList.toggle("hide", state.mode !== "absence");
+    $("makeupBlock").classList.toggle("hide", state.mode !== "makeup");
+    $("customerBlock").classList.toggle("hide", state.mode !== "trial");
+    $("confirmBlock").classList.toggle("hide", state.mode !== "trial");
     updateSummary();
   }
 
   function renderCourses(){
-    const trialCourses = (state.courses || []).filter(c => {
-      const type = String(c.course_type || "");
-      return type === "trial" || type === "event" || type === "regular" || type === "monthly" || type === "ticket";
+    const grid = $("courseGrid");
+    grid.innerHTML = "";
+    if (!state.courses.length) {
+      state.courses = [{ course_code:"trial_math", course_name:"体験授業：小学生算数", duration_minutes:60 }];
+    }
+    if (!state.selectedCourse) state.selectedCourse = state.courses[0];
+    state.courses.forEach(course => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (state.selectedCourse?.course_code === course.course_code ? " active" : "");
+      btn.dataset.courseCode = course.course_code;
+      btn.innerHTML = `<strong>${escapeHtml(course.course_name || course.course_code)}</strong><small>${escapeHtml(course.description || `${course.duration_minutes || 60}分の体験授業`)}</small>`;
+      grid.appendChild(btn);
     });
-
-    $("courseGrid").innerHTML = trialCourses.map((c, idx) => `
-      <button type="button" class="choice ${idx===0 ? "active" : ""}" data-course-code="${escapeHtml(c.course_code)}">
-        <strong>${escapeHtml(c.course_name || c.course_code)}</strong>
-        <small>${escapeHtml(c.target_grade || "")} / ${escapeHtml(c.duration_minutes || "")}分 / ${Number(c.price || 0).toLocaleString()}円</small>
-      </button>
-    `).join("");
-
-    state.selectedCourse = trialCourses[0] || null;
   }
 
   function renderTeacherPrefs(){
-    const options = CONFIG.teacherPreferenceOptions || [
-      { value:"any", label:"おまかせ" },
-      { value:"same", label:"前回と同じ先生" },
-      { value:"specific", label:"先生を選ぶ" }
+    const grid = $("teacherPrefGrid");
+    grid.innerHTML = "";
+    const prefs = [
+      { code:"any", title:"おまかせ", note:"空いている先生で予約" },
+      { code:"specific", title:"先生を選ぶ", note:"希望の先生がいる場合" }
     ];
+    prefs.forEach(pref => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (state.teacherPreference === pref.code ? " active" : "");
+      btn.dataset.teacherPref = pref.code;
+      btn.innerHTML = `<strong>${escapeHtml(pref.title)}</strong><small>${escapeHtml(pref.note)}</small>`;
+      grid.appendChild(btn);
+    });
 
-    $("teacherPrefGrid").innerHTML = options.map((o, idx) => `
-      <button type="button" class="choice ${idx===0 ? "active" : ""}" data-teacher-pref="${escapeHtml(o.value)}">
-        <strong>${escapeHtml(o.label)}</strong>
-        <small>${o.value === "any" ? "空いている先生で予約します" : o.value === "same" ? "既存生徒向けです" : "希望の先生を選べます"}</small>
-      </button>
-    `).join("");
+    const select = $("teacherSelect");
+    select.innerHTML = '<option value="">先生を選択</option>';
+    state.teachers.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t.teacher_code || "";
+      opt.textContent = t.teacher_name || t.teacher_code || "先生";
+      select.appendChild(opt);
+    });
+    $("teacherSelectWrap").classList.toggle("hide", state.teacherPreference !== "specific");
+  }
 
-    $("teacherSelect").innerHTML = `<option value="">先生を選んでください</option>` + (state.teachers || []).map(t => `
-      <option value="${escapeHtml(t.teacher_code)}">${escapeHtml(t.teacher_name)}</option>
-    `).join("");
+  function normalizeSlots(data){
+    return Array.isArray(data.available_slots) ? data.available_slots : [];
   }
 
   function renderSlots(){
-    if (!state.slots.length) {
-      $("slotGrid").innerHTML = "";
-      return;
-    }
-
-    $("slotGrid").innerHTML = state.slots.map(slot => `
-      <button type="button" class="slot ${state.selectedSlot?.time === slot.time ? "active" : ""}" data-slot-time="${escapeHtml(slot.time)}">
-        ${escapeHtml(hhmm(slot.time))}
-        <small>${escapeHtml(slot.teacher_name || "おまかせ")} / ${escapeHtml(slot.room_name || "")}</small>
-        <small>残り${escapeHtml(slot.remaining ?? "-")}枠</small>
-      </button>
-    `).join("");
+    const grid = $("slotGrid");
+    grid.innerHTML = "";
+    state.slots.forEach(slot => {
+      const time = hhmm(slot.time || slot.start_time);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "slot" + (state.selectedSlot && hhmm(state.selectedSlot.time || state.selectedSlot.start_time) === time ? " active" : "");
+      btn.dataset.slotTime = time;
+      btn.innerHTML = `${escapeHtml(time)}<small>${escapeHtml(slot.course_name || state.selectedCourse?.course_name || "体験授業")}<br>${escapeHtml(slot.teacher_name || "おまかせ")} / 残り${Number(slot.remaining ?? 1)}枠</small>`;
+      grid.appendChild(btn);
+    });
   }
 
   function updateDateLabel(){
-    const date = $("trialDate").value;
-    state.selectedDate = date;
-    $("trialDateLabel").textContent = date ? `選択中：${dateWithWeekday(date)}` : "日付を選んでください。";
-  }
-
-  function updateSummary(){
-    const modeLabel = state.mode === "trial" ? "体験予約" : state.mode === "absence" ? "欠席連絡" : "振替希望";
-    $("sumMode").textContent = modeLabel;
-    $("sumCourse").textContent = state.selectedCourse?.course_name || "未選択";
-
-    let teacher = "おまかせ";
-    if (state.teacherPreference === "same") teacher = "前回と同じ先生";
-    if (state.teacherPreference === "specific") {
-      const t = state.teachers.find(x => x.teacher_code === state.selectedTeacherCode);
-      teacher = t?.teacher_name || "先生未選択";
-    }
-    if (state.selectedSlot?.teacher_name) teacher = teacher === "おまかせ" ? state.selectedSlot.teacher_name : teacher;
-
-    $("sumTeacher").textContent = teacher;
-    $("sumDate").textContent = state.selectedSlot ? `${state.selectedDate} ${hhmm(state.selectedSlot.time)}` : (state.selectedDate ? `${state.selectedDate} / 時間未選択` : "未選択");
-    $("sumStudent").textContent = $("studentName").value.trim() || $("absenceStudentName").value.trim() || $("makeupStudentName").value.trim() || "未入力";
-
-    if (state.mode === "trial" && state.selectedCourse && state.selectedSlot && $("studentName").value.trim() && $("guardianName").value.trim() && $("phone").value.trim()) {
-      $("sumStatus").className = "status ok";
-      $("sumStatus").textContent = "予約可能";
-    } else {
-      $("sumStatus").className = "status warn";
-      $("sumStatus").textContent = "入力中";
-    }
+    const v = $("trialDate").value;
+    state.selectedDate = v || "";
+    $("trialDateLabel").textContent = v ? `${dateWithWeekday(v)} を選択中です。` : "日付を選んでください。";
   }
 
   async function loadConfig(){
@@ -844,8 +909,8 @@
 
     const data = await apiGet(endpoint("publicConfig"));
     state.shop = data.shop || {};
-    state.courses = data.courses || [];
-    state.teachers = data.teachers || [];
+    state.courses = Array.isArray(data.courses) ? data.courses : [];
+    state.teachers = Array.isArray(data.teachers) ? data.teachers : [];
 
     $("shopName").textContent = state.shop.shop_name || CONFIG.shopName || "DPROスクール";
     $("shopSub").textContent = state.shop.service_name || CONFIG.serviceName || "DPRO 学習塾・習い事 LINE";
@@ -857,10 +922,6 @@
     $("slotMessage").textContent = "コースと日付を選ぶと、体験できる時間が表示されます。";
   }
 
-  function normalizeSlots(data){
-    return Array.isArray(data.available_slots) ? data.available_slots : [];
-  }
-
   async function loadSlots(dateOverride){
     if (!state.selectedCourse) {
       showToast("コースを選んでください");
@@ -868,10 +929,15 @@
       return null;
     }
 
-    const date = dateOverride || $("trialDate").value;
+    let date = dateOverride || $("trialDate").value;
     if (!date) {
       showToast("日付を選んでください");
       return null;
+    }
+    if (isPastDate(date)) {
+      date = todayText();
+      $("trialDate").value = date;
+      showToast("過去日は選べません。本日以降に変更しました。");
     }
 
     $("trialDate").value = date;
@@ -919,58 +985,37 @@
     }
 
     const isAuto = !!options.auto;
-    const start = $("trialDate").value || todayText();
+    const rawStart = $("trialDate").value || todayText();
+    let start = rawStart < todayText() ? todayText() : rawStart;
+    if (rawStart !== start) $("trialDate").value = start;
 
     $("slotMessage").className = "alert warn";
-    $("slotMessage").textContent = isAuto
-      ? `${dateWithWeekday(start)} に空きがないため、次に体験できる日を自動で探しています。`
-      : `${dateWithWeekday(start)} 以降で、次に空いている日を探しています。`;
+    $("slotMessage").textContent = `${dateWithWeekday(start)} 以降で、次に空いている日を探しています。`;
 
-    for (let i=0; i<45; i++){
+    for (let i = 0; i <= 30; i += 1) {
       const date = addDaysText(start, i);
-      try {
-        const data = await apiGet(endpoint("lessonOptions"), {
-          date,
-          course_code: state.selectedCourse.course_code,
-          teacher_preference: state.teacherPreference,
-          teacher_code: state.teacherPreference === "specific" ? state.selectedTeacherCode : ""
-        });
-        const slots = normalizeSlots(data);
-        if (data.is_available && slots.length) {
-          $("trialDate").value = date;
-          updateDateLabel();
-          state.slots = slots;
-          state.selectedSlot = null;
-
-          const prefix = isAuto
-            ? "最初に予約できる日を自動表示しました"
-            : "次に空いている日を見つけました";
-
-          $("slotMessage").className = "alert ok";
-          $("slotMessage").textContent = `${prefix}：${dateWithWeekday(date)}。下から時間を選んでください。`;
-
-          renderSlots();
-          updateSummary();
-
-          showToast(isAuto ? `予約できる日を表示しました：${dateWithWeekday(date)}` : `空き日：${dateWithWeekday(date)}`);
-          return data;
-        }
-      } catch(e){}
+      const data = await loadSlots(date);
+      if (data && data.is_available && state.slots.length) {
+        if (isAuto) showToast("次の空き日を自動表示しました");
+        else showToast("次の空き日を表示しました");
+        return data;
+      }
     }
 
     $("slotMessage").className = "alert ng";
-    $("slotMessage").textContent = "45日以内に空き時間が見つかりませんでした。教室へLINEでご相談ください。";
+    $("slotMessage").textContent = "30日以内に予約できる体験枠が見つかりませんでした。";
     return null;
   }
 
   function validateTrial(){
     const errors = [];
     if (!state.selectedCourse) errors.push("コースを選んでください。");
-    if (!state.selectedDate) errors.push("日付を選んでください。");
-    if (!state.selectedSlot) errors.push("時間を選んでください。");
-    if (!$("studentName").value.trim()) errors.push("生徒名を入力してください。");
-    if (!$("guardianName").value.trim()) errors.push("保護者名を入力してください。");
-    if (!$("phone").value.trim()) errors.push("電話番号を入力してください。");
+    if (!state.selectedDate) errors.push("希望日を選んでください。");
+    if (isPastDate(state.selectedDate)) errors.push("過去日は予約できません。本日以降の日付を選んでください。");
+    if (!state.selectedSlot) errors.push("空き時間を選んでください。");
+    if (!clean($("studentName").value)) errors.push("生徒名を入力してください。");
+    if (!clean($("guardianName").value)) errors.push("保護者名を入力してください。");
+    if (!clean($("phone").value)) errors.push("電話番号を入力してください。");
     return errors;
   }
 
@@ -990,8 +1035,8 @@
         <div><b>生徒名</b><br>${escapeHtml($("studentName").value.trim())} 様</div>
         <div><b>保護者</b><br>${escapeHtml($("guardianName").value.trim())}</div>
         <div><b>電話番号</b><br>${escapeHtml($("phone").value.trim())}</div>
-        <div><b>コース</b><br>${escapeHtml(state.selectedCourse.course_name)}</div>
-        <div><b>日時</b><br>${escapeHtml(state.selectedDate)} ${escapeHtml(hhmm(state.selectedSlot.time))}</div>
+        <div><b>コース</b><br>${escapeHtml(state.selectedCourse.course_name || state.selectedCourse.course_code)}</div>
+        <div><b>日時</b><br>${escapeHtml(dateWithWeekday(state.selectedDate))} ${escapeHtml(hhmm(state.selectedSlot.time || state.selectedSlot.start_time))}</div>
         <div><b>担当</b><br>${escapeHtml(teacherName)}</div>
       </div>
       <div style="margin-top:10px;"><b>相談内容</b><br>${escapeHtml($("trialRequestText").value.trim() || "なし")}</div>
@@ -1018,30 +1063,28 @@
         grade_label: $("gradeLabel").value.trim(),
         school_name: $("schoolName").value.trim(),
         lesson_date: state.selectedDate,
-        start_time: state.selectedSlot.time,
+        start_time: hhmm(state.selectedSlot.time || state.selectedSlot.start_time),
         course_code: state.selectedCourse.course_code,
         teacher_code: state.selectedSlot.teacher_code || state.selectedTeacherCode || "",
         request_text: $("trialRequestText").value.trim()
       });
 
-      const studentNo = data.student?.student_no || "";
-      const phone = data.guardian?.phone || $("phone").value.trim();
-      state.lastMemberUrl = pageUrl("member.html", { phone, student_no: studentNo });
       openComplete({
-        label:"予約完了",
-        title:"体験予約を受け付けました",
-        lead:"下の文面は、LINEで送る確認文面のイメージです。手動運用用にコピーできます。",
-        message:data.message_text || buildFallbackTrialMessage(),
-        memberUrl:state.lastMemberUrl
+        label:"体験予約受付",
+        title:"体験授業を受け付けました",
+        lead:"教室側の今日やることに体験前案内タスクが作成されます。",
+        message: data.message_text || buildLocalTrialMessage(),
+        memberUrl: memberUrlFrom(data.student?.student_no, $("phone").value.trim())
       });
+      $("sumStatus").className = "status ok";
+      $("sumStatus").textContent = "受付完了";
     } catch (e) {
       openComplete({
-        label:"エラー",
-        title:"体験予約に失敗しました",
-        lead:"内容を確認して、もう一度お試しください。",
+        label:"送信エラー",
+        title:"体験予約を送信できませんでした",
+        lead:"入力内容を確認して、もう一度送信してください。",
         message:e.message,
-        error:true,
-        memberUrl:"./member.html"
+        error:true
       });
     } finally {
       $("submitTrialBtn").disabled = false;
@@ -1049,51 +1092,67 @@
     }
   }
 
-  function buildFallbackTrialMessage(){
-    return `体験授業のご予約ありがとうございます。
+  function validateContactForm(kind){
+    const errors = [];
+    const prefix = kind === "absence" ? "absence" : "makeup";
+    const phone = clean($(prefix + "Phone").value);
+    const studentNo = clean($(prefix + "StudentNo").value);
+    const studentName = clean($(prefix + "StudentName").value);
+    const date = clean($(prefix + "Date").value);
+    const text = clean($(prefix + "Text").value);
 
-${$("studentName").value.trim()} 様
-日時：${state.selectedDate} ${hhmm(state.selectedSlot?.time)}
-コース：${state.selectedCourse?.course_name || ""}
-担当：${state.selectedSlot?.teacher_name || "教室長"}
+    if (!phone && !studentNo) errors.push("電話番号または生徒番号を入力してください。");
+    if (!studentName) errors.push("生徒名を入力してください。");
+    if (!date) errors.push(kind === "absence" ? "欠席する日を選んでください。" : "希望日を選んでください。");
+    if (isPastDate(date)) errors.push("過去の日付は送信できません。本日以降の日付を選んでください。");
+    if (!text) errors.push(kind === "absence" ? "欠席理由・連絡内容を入力してください。" : "希望内容を入力してください。");
+    return errors;
+  }
 
-当日は筆記用具をお持ちください。
-ご都合が変わる場合は、LINEでお知らせください。`;
+  function showInlineMessage(id, type, lines){
+    const el = $(id);
+    el.className = `alert ${type}`;
+    el.innerHTML = Array.isArray(lines) ? lines.map(escapeHtml).join("<br>") : escapeHtml(lines);
+    el.classList.remove("hide");
   }
 
   async function sendAbsence(){
-    const phone = $("absencePhone").value.trim();
-    const studentNo = $("absenceStudentNo").value.trim();
-    const studentName = $("absenceStudentName").value.trim();
-    if (!phone && !studentNo) {
-      showToast("電話番号または生徒番号を入力してください");
+    const errors = validateContactForm("absence");
+    if (errors.length) {
+      showInlineMessage("absenceMessage", "ng", errors);
+      scrollToId("absenceBlock");
       return;
     }
 
     $("sendAbsenceBtn").disabled = true;
     $("sendAbsenceBtn").textContent = "送信中...";
+    showInlineMessage("absenceMessage", "warn", "欠席連絡を送信しています。");
 
     try {
       const data = await apiPost(endpoint("absence"), {
-        phone,
-        student_no: studentNo,
-        student_name: studentName,
+        phone: $("absencePhone").value.trim(),
+        student_no: $("absenceStudentNo").value.trim(),
+        student_name: $("absenceStudentName").value.trim(),
         guardian_name: $("absenceGuardianName").value.trim(),
-        lesson_date: $("absenceDate").value || todayText(),
-        start_time: $("absenceTime").value || "",
-        request_text: $("absenceText").value.trim() || "欠席連絡"
+        lesson_date: $("absenceDate").value,
+        start_time: $("absenceTime").value || null,
+        preferred_text: $("absenceText").value.trim(),
+        request_text: $("absenceText").value.trim()
       });
 
-      state.lastMemberUrl = pageUrl("member.html", { phone, student_no: studentNo });
+      showInlineMessage("absenceMessage", "ok", "欠席連絡を受け付けました。教室側の今日やることに欠席返信タスクが作成されます。");
       openComplete({
         label:"欠席連絡受付",
         title:"欠席連絡を受け付けました",
         lead:"教室側の今日やることに欠席返信タスクが作成されます。",
-        message:data.message_text || "欠席のご連絡を承りました。",
-        memberUrl:state.lastMemberUrl
+        message: data.message_text || buildLocalAbsenceMessage(),
+        memberUrl: memberUrlFrom($("absenceStudentNo").value.trim(), $("absencePhone").value.trim())
       });
+      $("sumStatus").className = "status ok";
+      $("sumStatus").textContent = "受付完了";
     } catch (e) {
-      openComplete({ label:"エラー", title:"欠席連絡に失敗しました", lead:"内容を確認してください。", message:e.message, error:true, memberUrl:"./member.html" });
+      showInlineMessage("absenceMessage", "ng", e.message);
+      openComplete({ label:"送信エラー", title:"欠席連絡を送信できませんでした", lead:"入力内容を確認してください。", message:e.message, error:true });
     } finally {
       $("sendAbsenceBtn").disabled = false;
       $("sendAbsenceBtn").textContent = "欠席連絡を送る";
@@ -1101,43 +1160,90 @@ ${$("studentName").value.trim()} 様
   }
 
   async function sendMakeup(){
-    const phone = $("makeupPhone").value.trim();
-    const studentNo = $("makeupStudentNo").value.trim();
-    const studentName = $("makeupStudentName").value.trim();
-    if (!phone && !studentNo) {
-      showToast("電話番号または生徒番号を入力してください");
+    const errors = validateContactForm("makeup");
+    if (errors.length) {
+      showInlineMessage("makeupMessage", "ng", errors);
+      scrollToId("makeupBlock");
       return;
     }
 
     $("sendMakeupBtn").disabled = true;
     $("sendMakeupBtn").textContent = "送信中...";
+    showInlineMessage("makeupMessage", "warn", "振替希望を送信しています。");
 
     try {
       const data = await apiPost(endpoint("makeupRequest"), {
-        phone,
-        student_no: studentNo,
-        student_name: studentName,
+        phone: $("makeupPhone").value.trim(),
+        student_no: $("makeupStudentNo").value.trim(),
+        student_name: $("makeupStudentName").value.trim(),
         guardian_name: $("makeupGuardianName").value.trim(),
-        preferred_date: $("makeupDate").value || "",
-        preferred_time: $("makeupTime").value || "",
+        preferred_date: $("makeupDate").value,
+        preferred_time: $("makeupTime").value || null,
         preferred_text: $("makeupText").value.trim(),
-        request_text: $("makeupText").value.trim() || "振替希望"
+        request_text: $("makeupText").value.trim()
       });
 
-      state.lastMemberUrl = pageUrl("member.html", { phone, student_no: studentNo });
+      showInlineMessage("makeupMessage", "ok", "振替希望を受け付けました。教室側の今日やることに振替返信タスクが作成されます。");
       openComplete({
         label:"振替希望受付",
         title:"振替希望を受け付けました",
         lead:"教室側の今日やることに振替返信タスクが作成されます。",
-        message:data.message_text || "振替希望を受け付けました。",
-        memberUrl:state.lastMemberUrl
+        message: data.message_text || buildLocalMakeupMessage(),
+        memberUrl: memberUrlFrom($("makeupStudentNo").value.trim(), $("makeupPhone").value.trim())
       });
+      $("sumStatus").className = "status ok";
+      $("sumStatus").textContent = "受付完了";
     } catch (e) {
-      openComplete({ label:"エラー", title:"振替希望に失敗しました", lead:"内容を確認してください。", message:e.message, error:true, memberUrl:"./member.html" });
+      showInlineMessage("makeupMessage", "ng", e.message);
+      openComplete({ label:"送信エラー", title:"振替希望を送信できませんでした", lead:"入力内容を確認してください。", message:e.message, error:true });
     } finally {
       $("sendMakeupBtn").disabled = false;
       $("sendMakeupBtn").textContent = "振替希望を送る";
     }
+  }
+
+  function memberUrlFrom(studentNo, phone){
+    return pageUrl("member.html", {
+      phone: phone || CONFIG.demoStudent.phone,
+      student_no: studentNo || CONFIG.demoStudent.studentNo
+    });
+  }
+
+  function buildLocalTrialMessage(){
+    return [
+      "体験授業のご予約を受け付けました。",
+      "",
+      `${$("studentName").value.trim()} 様`,
+      `対象授業：${dateWithWeekday(state.selectedDate)} ${hhmm(state.selectedSlot?.time || state.selectedSlot?.start_time)}`,
+      `コース：${state.selectedCourse?.course_name || "体験授業"}`,
+      `担当：${state.selectedSlot?.teacher_name || "おまかせ"}`,
+      "",
+      "当日はお気をつけてお越しください。"
+    ].join("\n");
+  }
+
+  function buildLocalAbsenceMessage(){
+    const date = dateWithWeekday($("absenceDate").value);
+    const time = $("absenceTime").value ? ` ${$("absenceTime").value}` : "";
+    return [
+      "欠席のご連絡を承りました。",
+      "",
+      `${$("absenceStudentName").value.trim()} 様`,
+      `対象授業：${date}${time}`,
+      "",
+      "振替をご希望の場合は、候補日をご返信ください。"
+    ].join("\n");
+  }
+
+  function buildLocalMakeupMessage(){
+    return [
+      "振替希望を受け付けました。",
+      "",
+      `${$("makeupStudentName").value.trim()} 様`,
+      "候補日を確認して、教室よりご連絡します。",
+      "",
+      "よろしくお願いいたします。"
+    ].join("\n");
   }
 
   function openComplete({ label, title, lead, message, memberUrl, error=false }){
@@ -1154,26 +1260,61 @@ ${$("studentName").value.trim()} 様
 
   function resetForm(){
     $("completeBox").classList.remove("show");
+    $("absenceMessage").classList.add("hide");
+    $("makeupMessage").classList.add("hide");
     state.lastMessage = "";
     $("messageText").textContent = "";
+    $("sumStatus").className = "status warn";
+    $("sumStatus").textContent = "入力中";
     showToast("続けて入力できます");
   }
 
   function setDemoLinks(){
     const demo = CONFIG.demoStudent || {};
-    const url = pageUrl("member.html", {
-      phone: demo.phone || "090-9999-0000",
-      student_no: demo.studentNo || "SCHOOL-DEMO-999"
-    });
+    $("demoStudentName").textContent = demo.studentName || "テスト 太郎";
+    $("demoPhone").textContent = demo.phone || "090-9999-0000";
+    $("demoStudentNo").textContent = demo.studentNo || "SCHOOL-DEMO-999";
+    const url = memberUrlFrom(demo.studentNo, demo.phone);
     $("memberTopLink").href = url;
     $("demoMemberLink").href = url;
+  }
+
+  function updateSummary(){
+    const modeLabel = state.mode === "trial" ? "体験予約" : state.mode === "absence" ? "欠席連絡" : "振替希望";
+    $("sumMode").textContent = modeLabel;
+
+    if (state.mode === "trial") {
+      $("sumCourse").textContent = state.selectedCourse?.course_name || "未選択";
+      const teacher = state.teacherPreference === "specific"
+        ? (state.teachers.find(t => t.teacher_code === state.selectedTeacherCode)?.teacher_name || "先生未選択")
+        : (state.selectedSlot?.teacher_name || "おまかせ");
+      $("sumTeacher").textContent = teacher;
+      $("sumDateTime").textContent = state.selectedDate
+        ? `${dateWithWeekday(state.selectedDate)} / ${state.selectedSlot ? hhmm(state.selectedSlot.time || state.selectedSlot.start_time) : "時間未選択"}`
+        : "未選択";
+      $("sumStudent").textContent = clean($("studentName")?.value) || "未入力";
+      return;
+    }
+
+    if (state.mode === "absence") {
+      $("sumCourse").textContent = "欠席連絡";
+      $("sumTeacher").textContent = "教室確認";
+      $("sumDateTime").textContent = `${dateWithWeekday($("absenceDate").value)} / ${$("absenceTime").value || "時間未選択"}`;
+      $("sumStudent").textContent = clean($("absenceStudentName").value) || "未入力";
+      return;
+    }
+
+    $("sumCourse").textContent = "振替希望";
+    $("sumTeacher").textContent = "教室確認";
+    $("sumDateTime").textContent = `${dateWithWeekday($("makeupDate").value)} / ${$("makeupTime").value || "時間未選択"}`;
+    $("sumStudent").textContent = clean($("makeupStudentName").value) || "未入力";
   }
 
   function bind(){
     document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
     document.querySelectorAll("[data-switch-mode]").forEach(btn => btn.addEventListener("click", () => {
       setMode(btn.dataset.switchMode);
-      scrollToId("trialBlock");
+      scrollToId(btn.dataset.switchMode === "trial" ? "trialBlock" : btn.dataset.switchMode === "absence" ? "absenceBlock" : "makeupBlock");
     }));
 
     $("courseGrid").addEventListener("click", (ev) => {
@@ -1213,6 +1354,10 @@ ${$("studentName").value.trim()} 様
     });
 
     $("trialDate").addEventListener("change", () => {
+      if (isPastDate($("trialDate").value)) {
+        $("trialDate").value = todayText();
+        showToast("過去日は選べません。本日以降を選んでください。");
+      }
       updateDateLabel();
       loadSlots();
     });
@@ -1222,18 +1367,19 @@ ${$("studentName").value.trim()} 様
     $("slotGrid").addEventListener("click", (ev) => {
       const btn = ev.target.closest("[data-slot-time]");
       if (!btn) return;
-      state.selectedSlot = state.slots.find(s => s.time === btn.dataset.slotTime) || null;
+      state.selectedSlot = state.slots.find(s => hhmm(s.time || s.start_time) === btn.dataset.slotTime) || null;
       renderSlots();
       updateSummary();
       if (state.selectedSlot) {
         $("slotMessage").className = "alert ok";
-        $("slotMessage").textContent = `${dateWithWeekday(state.selectedDate)} ${hhmm(state.selectedSlot.time)} を選択中です。保護者・生徒情報を入力してください。`;
+        $("slotMessage").textContent = `${dateWithWeekday(state.selectedDate)} ${hhmm(state.selectedSlot.time || state.selectedSlot.start_time)} を選択中です。保護者・生徒情報を入力してください。`;
         scrollToId("customerBlock");
       }
     });
 
-    ["studentName","guardianName","phone","absenceStudentName","makeupStudentName"].forEach(id => {
+    ["studentName","guardianName","phone","absenceStudentName","absenceDate","absenceTime","makeupStudentName","makeupDate","makeupTime"].forEach(id => {
       $(id).addEventListener("input", updateSummary);
+      $(id).addEventListener("change", updateSummary);
     });
 
     $("confirmTrialBtn").addEventListener("click", confirmTrial);
@@ -1248,21 +1394,19 @@ ${$("studentName").value.trim()} 様
   async function init(){
     const today = todayText();
     $("trialDate").min = today;
-    $("absenceDate").value = today;
-    $("makeupDate").min = today;
     $("trialDate").value = today;
+    guardDateInput("absenceDate", "欠席する日");
+    guardDateInput("makeupDate", "希望日");
+    fillTimeSelect("absenceTime", "17:00");
+    fillTimeSelect("makeupTime", "17:00");
     updateDateLabel();
     setDemoLinks();
     bind();
+    updateSummary();
 
     try {
       await loadConfig();
-
       const first = await loadSlots();
-
-      // 営業デモ向け：
-      // 初期表示日が休講日・満席・体験枠なしの場合でも、
-      // 「次の空き日を探す」を押さずに予約可能日を自動表示する。
       if (!first || !first.is_available || !state.slots.length) {
         await findOpenDay({ auto:true });
       }
