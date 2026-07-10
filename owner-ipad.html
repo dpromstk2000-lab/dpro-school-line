@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>DPRO 学習塾・習い事 LINE｜受付・講師iPad画面｜STEP SCHOOL-9</title>
+  <script src="./config.js"></script>
+  <style>
+    :root{
+      --bg1:#eef5ff;
+      --bg2:#eafff8;
+      --card:rgba(255,255,255,.94);
+      --card2:rgba(255,255,255,.78);
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#dbe5f2;
+      --blue:#2563eb;
+      --blue2:#1d4ed8;
+      --navy:#0f172a;
+      --green:#0f8b7e;
+      --green2:#10b981;
+      --orange:#f97316;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --purple:#7c3aed;
+      --shadow:0 18px 45px rgba(15,23,42,.12);
+      --radius:24px;
+    }
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 8%,rgba(37,99,235,.14),transparent 30%),
+        radial-gradient(circle at 88% 6%,rgba(16,185,129,.17),transparent 30%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      padding:20px;
+    }
+    button,input,select,textarea{font:inherit;}
+    button{cursor:pointer;}
+    button:disabled{cursor:not-allowed;opacity:.58;}
+    a{color:inherit;text-decoration:none;}
+    .wrap{max-width:1220px;margin:0 auto;}
+    .hero{display:grid;grid-template-columns:1.35fr .75fr;gap:20px;margin-bottom:20px;align-items:stretch;}
+    .hero-main,.hero-side,.card{background:var(--card);border:1px solid rgba(219,229,242,.85);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(16px);}
+    .hero-main{padding:26px;position:relative;overflow:hidden;}
+    .hero-main::after{content:"";position:absolute;right:-95px;bottom:-120px;width:270px;height:270px;border-radius:999px;background:rgba(37,99,235,.08);}
+    .version{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:900;margin-bottom:12px;}
+    h1{margin:0 0 12px;font-size:clamp(30px,4.2vw,48px);line-height:1.08;letter-spacing:-.045em;}
+    .lead{margin:0;color:#334155;font-size:16px;line-height:1.85;font-weight:650;position:relative;z-index:1;}
+    .hero-side{padding:24px;color:white;background:linear-gradient(135deg,#1d4ed8,#0f8b7e);position:relative;overflow:hidden;min-height:172px;}
+    .hero-side::before,.hero-side::after{content:"";position:absolute;border-radius:999px;background:rgba(255,255,255,.12);}
+    .hero-side::before{width:200px;height:200px;right:-70px;top:-85px;}
+    .hero-side::after{width:150px;height:150px;left:-65px;bottom:-70px;}
+    .hero-side h2{position:relative;margin:0 0 6px;font-size:28px;letter-spacing:-.02em;}
+    .hero-side p{position:relative;margin:0 0 18px;opacity:.92;font-weight:800;}
+    .pill-row{display:flex;gap:9px;flex-wrap:wrap;position:relative;}
+    .pill{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.23);color:white;font-weight:900;font-size:12px;white-space:nowrap;}
+    .nav-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center;}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start;}
+    .stack{display:flex;flex-direction:column;gap:18px;}
+    .card{padding:22px;}
+    .section-title{display:flex;align-items:center;gap:10px;margin:0 0 15px;}
+    .num{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;color:white;background:var(--blue);border-radius:999px;font-weight:950;flex:0 0 auto;}
+    h2{margin:0;font-size:23px;letter-spacing:-.02em;}
+    h3{margin:0 0 10px;font-size:17px;letter-spacing:-.01em;}
+    .hint{margin:-4px 0 16px;color:var(--muted);line-height:1.75;font-size:13px;font-weight:700;}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+    .stat{background:#fff;border:1px solid #dbe5f2;border-radius:18px;padding:15px;min-height:92px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+    .stat::after{content:"";position:absolute;right:-26px;top:-26px;width:70px;height:70px;border-radius:999px;background:rgba(37,99,235,.08);}
+    .stat .label{color:#64748b;font-size:12px;font-weight:900;position:relative;z-index:1;}
+    .stat .value{font-size:32px;font-weight:950;letter-spacing:-.04em;line-height:1;position:relative;z-index:1;}
+    .stat .sub{color:#64748b;font-size:12px;font-weight:800;position:relative;z-index:1;}
+    .stat.blue{border-color:#bfdbfe;background:#eff6ff;}
+    .stat.green{border-color:#bbf7d0;background:#ecfdf5;}
+    .stat.orange{border-color:#fed7aa;background:#fff7ed;}
+    .stat.purple{border-color:#ddd6fe;background:#f5f3ff;}
+    label{display:block;font-size:12px;font-weight:900;color:#334155;margin:0 0 7px;}
+    input,select,textarea{width:100%;border:1px solid #cfd9e8;border-radius:16px;background:#fff;color:var(--text);padding:14px 15px;outline:none;min-height:52px;transition:.15s ease;}
+    textarea{min-height:108px;resize:vertical;line-height:1.75;}
+    input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 4px rgba(37,99,235,.12);}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;}
+    .row > .grow{flex:1 1 220px;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;}
+    .btn{appearance:none;border:0;border-radius:16px;padding:13px 17px;min-height:50px;color:white;background:var(--blue);font-weight:950;box-shadow:0 10px 24px rgba(37,99,235,.22);transition:.15s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2;}
+    .btn:hover{transform:translateY(-1px);}
+    .btn.secondary{color:#0f172a;background:#fff;border:1px solid #cfd9e8;box-shadow:none;}
+    .btn.navy{background:var(--navy);box-shadow:0 10px 24px rgba(15,23,42,.18);}
+    .btn.green{background:var(--green);box-shadow:0 10px 24px rgba(15,139,126,.20);}
+    .btn.orange{background:var(--orange);box-shadow:0 10px 24px rgba(249,115,22,.18);}
+    .btn.red{background:var(--red);box-shadow:0 10px 24px rgba(239,68,68,.18);}
+    .btn.purple{background:var(--purple);box-shadow:0 10px 24px rgba(124,58,237,.18);}
+    .btn.small{padding:10px 13px;min-height:42px;font-size:13px;border-radius:13px;}
+    .btn.big{min-height:62px;font-size:17px;border-radius:18px;padding:16px 18px;}
+    .btn.wide{width:100%;}
+    .status{margin-top:14px;padding:13px 14px;border-radius:15px;border:1px solid #dbeafe;background:#eff6ff;color:#1e3a8a;font-size:13px;font-weight:800;line-height:1.7;display:none;}
+    .status.show{display:block;}
+    .status.ok{background:#ecfdf5;border-color:#bbf7d0;color:#047857;}
+    .status.warn{background:#fff7ed;border-color:#fed7aa;color:#c2410c;}
+    .status.err{background:#fef2f2;border-color:#fecaca;color:#b91c1c;}
+    .list{display:flex;flex-direction:column;gap:12px;}
+    .empty{border:1px dashed #cbd5e1;border-radius:18px;padding:18px;color:#64748b;background:#f8fafc;font-weight:800;line-height:1.7;}
+    .lesson-card,.request-card,.student-card{background:#fff;border:1px solid #dbe5f2;border-radius:20px;padding:17px;display:grid;grid-template-columns:1fr auto;gap:15px;align-items:start;}
+    .lesson-card.in-progress{border-color:#fed7aa;background:#fffaf5;}
+    .lesson-card.completed{opacity:.72;background:#f8fafc;}
+    .lesson-card .time{font-size:25px;font-weight:950;letter-spacing:-.04em;line-height:1.1;margin-bottom:8px;}
+    .title-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px;font-size:17px;font-weight:950;letter-spacing:-.01em;}
+    .meta{color:#475569;font-size:13px;line-height:1.85;font-weight:750;}
+    .note{margin-top:8px;color:#0f172a;background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:11px;font-size:13px;line-height:1.75;font-weight:650;white-space:pre-wrap;}
+    .card-actions{display:grid;grid-template-columns:1fr;gap:8px;min-width:190px;}
+    .lesson-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:270px;}
+    .badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:950;border:1px solid transparent;white-space:nowrap;}
+    .badge.blue{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe;}
+    .badge.green{background:#dcfce7;color:#047857;border-color:#bbf7d0;}
+    .badge.orange{background:#ffedd5;color:#c2410c;border-color:#fed7aa;}
+    .badge.red{background:#fee2e2;color:#b91c1c;border-color:#fecaca;}
+    .badge.gray{background:#f1f5f9;color:#475569;border-color:#e2e8f0;}
+    .badge.purple{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe;}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;}
+    .tab{border:1px solid #cfd9e8;background:#fff;border-radius:999px;padding:11px 14px;font-weight:950;color:#334155;box-shadow:none;}
+    .tab.active{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;}
+    .dark-preview{background:#0f172a;color:#fff;border-radius:18px;padding:18px;line-height:1.85;font-size:13px;font-weight:800;white-space:pre-wrap;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);min-height:120px;}
+    .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .mini{border:1px solid #dbe5f2;border-radius:16px;background:#fff;padding:13px;}
+    .mini .k{font-size:11px;color:#64748b;font-weight:900;margin-bottom:6px;}
+    .mini .v{font-size:15px;font-weight:950;word-break:break-word;}
+    .flow-list{margin:0;padding-left:20px;color:#475569;font-size:13px;line-height:1.9;font-weight:750;}
+    .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f172a;color:#fff;border-radius:999px;padding:12px 18px;font-weight:900;box-shadow:0 18px 38px rgba(15,23,42,.24);opacity:0;pointer-events:none;transition:.18s ease;z-index:99;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .footer-note{margin:22px 0 0;text-align:center;color:#64748b;font-size:12px;font-weight:800;}
+    .quick-board{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:980px){
+      body{padding:16px;}
+      .hero,.grid{grid-template-columns:1fr;}
+      .stats{grid-template-columns:repeat(2,1fr);}
+      .lesson-card,.request-card,.student-card{grid-template-columns:1fr;}
+      .lesson-actions,.card-actions{grid-template-columns:1fr 1fr;min-width:0;}
+      .hero-side{min-height:150px;}
+    }
+    @media(max-width:680px){
+      body{padding:12px;}
+      .hero-main,.hero-side,.card{border-radius:20px;padding:18px;}
+      h1{font-size:32px;}
+      .stats,.mini-grid,.quick-board{grid-template-columns:1fr;}
+      .btn{width:100%;}
+      .btn.small{width:auto;}
+      .lesson-actions,.card-actions{grid-template-columns:1fr;}
+      .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}
+      .tab{white-space:nowrap;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-main">
+        <div class="version">STEP SCHOOL-9 / owner-ipad.html</div>
+        <h1>DPRO 学習塾・習い事 LINE<br>受付・講師iPad画面</h1>
+        <p class="lead">受付・講師がiPadで使う画面です。本日の授業予定、出席、授業中、完了、欠席連絡、振替希望を大きなボタンで確認・操作できます。</p>
+        <div class="nav-row">
+          <a class="btn secondary" href="./owner.html">PC管理画面へ戻る</a>
+          <a class="btn secondary" href="./index.html">保護者・生徒画面へ</a>
+          <a class="btn secondary" href="./member.html">生徒証へ</a>
+          <a class="btn secondary" href="./system-check.html">system-checkへ</a>
+        </div>
+      </div>
+      <div class="hero-side">
+        <h2 id="shopNameHero">DPROスクール</h2>
+        <p>DPRO 学習塾・習い事 LINE</p>
+        <div class="pill-row">
+          <span class="pill">本日の授業</span>
+          <span class="pill">出席管理</span>
+          <span class="pill">欠席確認</span>
+          <span class="pill">振替確認</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="stack">
+        <div class="card">
+          <div class="section-title"><span class="num">1</span><h2>今日の受付・授業</h2></div>
+          <p class="hint">管理コードを保存して更新すると、本日の授業予定と未対応の欠席・振替を読み込みます。</p>
+          <div class="stats" id="statsGrid"></div>
+          <div class="row">
+            <div class="grow">
+              <label for="dayInput">確認する日</label>
+              <input type="date" id="dayInput" />
+            </div>
+            <button class="btn big" id="refreshBtn" type="button">更新</button>
+            <button class="btn secondary big" id="todayBtn" type="button">今日</button>
+            <button class="btn secondary big" id="tomorrowBtn" type="button">明日</button>
+          </div>
+          <div class="status" id="mainStatus"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">2</span><h2>本日の授業予定</h2></div>
+          <p class="hint">授業の進行に合わせて「出席」「授業中」「完了」を押します。保護者確認用の文面もすぐ表示できます。</p>
+          <div class="list" id="lessonList"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">3</span><h2>欠席連絡・振替希望</h2></div>
+          <div class="tabs" id="requestTabs">
+            <button class="tab active" type="button" data-tab="pending">未対応</button>
+            <button class="tab" type="button" data-tab="absence">欠席</button>
+            <button class="tab" type="button" data-tab="makeup">振替</button>
+            <button class="tab" type="button" data-tab="all">すべて</button>
+          </div>
+          <div class="list" id="requestList"></div>
+        </div>
+      </section>
+
+      <aside class="stack">
+        <div class="card">
+          <div class="section-title"><span class="num">A</span><h2>管理コード</h2></div>
+          <p class="hint">営業デモでは管理コード「1234」を使います。保存しておくと次回から自動入力されます。</p>
+          <label for="adminCodeInput">管理コード</label>
+          <input type="password" id="adminCodeInput" placeholder="例：1234" autocomplete="off" />
+          <div class="actions">
+            <button class="btn" id="saveAdminBtn" type="button">保存</button>
+            <button class="btn secondary" id="fillAdminBtn" type="button">1234を入力</button>
+            <button class="btn secondary" id="clearAdminBtn" type="button">削除</button>
+          </div>
+          <div class="status" id="adminStatus"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">B</span><h2>営業前確認</h2></div>
+          <div class="quick-board">
+            <button class="btn green big" id="prepareDemoBtn" type="button">営業前デモ準備</button>
+            <button class="btn secondary big" id="healthBtn" type="button">API接続確認</button>
+          </div>
+          <p class="hint" style="margin-top:14px;">営業前にデモ準備を押すと、今日基準のデモ授業・欠席・振替を確認しやすくします。</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">C</span><h2>生徒検索</h2></div>
+          <p class="hint">生徒名、保護者名、電話番号、生徒番号で検索できます。電話番号はハイフンあり/なし両方対応します。</p>
+          <label for="searchInput">検索キーワード</label>
+          <input id="searchInput" placeholder="例：テスト 太郎 / 09099990000 / SCHOOL-DEMO-999" />
+          <div class="actions">
+            <button class="btn" id="searchBtn" type="button">検索</button>
+            <button class="btn secondary" id="demoSearchBtn" type="button">デモ生徒を検索</button>
+          </div>
+          <div class="status" id="searchStatus"></div>
+          <div class="list" id="searchResults" style="margin-top:12px;"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">D</span><h2>保護者向け確認文面</h2></div>
+          <p class="hint">授業予定・欠席・振替の「文面を見る」を押すと、ここに確認文面が表示されます。</p>
+          <div class="dark-preview" id="messagePreview">授業予定・欠席連絡・振替希望の「文面を見る」を押すと、ここに確認文面が表示されます。</div>
+          <div class="actions">
+            <button class="btn navy" id="copyPreviewBtn" type="button">文面をコピー</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><span class="num">E</span><h2>iPad運用の流れ</h2></div>
+          <ol class="flow-list">
+            <li>営業前に管理コードを保存</li>
+            <li>営業前デモ準備または更新</li>
+            <li>来校した生徒を「出席」にする</li>
+            <li>授業開始で「授業中」にする</li>
+            <li>終了後に「完了」にする</li>
+            <li>欠席・振替は文面確認後に対応済みにする</li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+
+    <div class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-9 / owner-ipad.html</div>
+  </div>
+
+  <div id="toast" class="toast">完了しました</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const VERSION = "STEP SCHOOL-9";
+  const DEMO_ADMIN_CODE = "1234";
+  const DEMO_PHONE = "090-9999-0000";
+  const DEMO_STUDENT_NO = "SCHOOL-DEMO-999";
+
+  const FALLBACK_CONFIG = {
+    version: VERSION,
+    serviceName: "DPRO 学習塾・習い事 LINE",
+    shopCode: "dpro_school_demo",
+    shopName: "DPROスクール",
+    apiBaseUrl: "https://dpro-school-line-api.dpromstk2000.workers.dev",
+    pagesBaseUrl: "https://dpromstk2000-lab.github.io/dpro-school-line/",
+    demoStudent: {
+      studentName: "テスト 太郎",
+      studentNo: DEMO_STUDENT_NO,
+      guardianName: "テスト 保護者",
+      phone: DEMO_PHONE
+    }
+  };
+
+  const CONFIG = Object.assign({}, FALLBACK_CONFIG, window.DPRO_SCHOOL_CONFIG || {});
+  CONFIG.demoStudent = Object.assign({}, FALLBACK_CONFIG.demoStudent, (window.DPRO_SCHOOL_CONFIG || {}).demoStudent || {});
+
+  const $ = (id) => document.getElementById(id);
+  const WEEK = ["日","月","火","水","木","金","土"];
+
+  const state = {
+    config: CONFIG,
+    dashboard: makeEmptyDashboard(),
+    selectedTab: "pending",
+    itemMap: new Map(),
+    selectedMessage: "",
+    loading: false,
+    usedFallback: false
+  };
+
+  function escapeHtml(value){
+    return String(value ?? "").replace(/[&<>\"]/g, (s) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[s]));
+  }
+  function normalizeNewlines(value){ return String(value ?? "").replace(/\\n/g,"\n").replace(/\r\n/g,"\n").trim(); }
+  function normalizePhone(value){ return String(value || "").replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0)-0xFEE0)).replace(/[^0-9]/g, ""); }
+  function formatPhone(value){
+    const n = normalizePhone(value);
+    if(n.length === 11) return `${n.slice(0,3)}-${n.slice(3,7)}-${n.slice(7)}`;
+    if(n.length === 10) return `${n.slice(0,2)}-${n.slice(2,6)}-${n.slice(6)}`;
+    return value || "";
+  }
+  function todayYmd(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function addDays(ymd, days){
+    const d = new Date(`${ymd}T00:00:00`);
+    d.setDate(d.getDate() + days);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function formatDate(ymd){
+    if(!ymd) return "日付未定";
+    const s = String(ymd).slice(0,10);
+    const d = new Date(`${s}T00:00:00`);
+    if(Number.isNaN(d.getTime())) return s;
+    return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}（${WEEK[d.getDay()]}）`;
+  }
+  function formatTime(value){
+    const s = String(value || "");
+    const m = s.match(/(\d{1,2}):(\d{2})/);
+    return m ? `${m[1].padStart(2,"0")}:${m[2]}` : (s || "時間未定");
+  }
+  function formatDateTime(date, time){ return `${formatDate(date)} ${formatTime(time)}`; }
+  function asArray(value){ if(Array.isArray(value)) return value; if(value && typeof value === "object" && Array.isArray(value.items)) return value.items; return []; }
+  function first(){ for(const v of arguments){ if(v !== undefined && v !== null && String(v).trim() !== "") return v; } return ""; }
+  function numberOrZero(value){ const n = Number(value); return Number.isFinite(n) ? n : 0; }
+  function boolDone(status){ return ["done","completed","replied","対応済み","完了"].includes(String(status || "").toLowerCase()) || ["対応済み","完了"].includes(String(status || "")); }
+
+  function showToast(message){
+    const el = $("toast");
+    el.textContent = message;
+    el.classList.add("show");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => el.classList.remove("show"), 1900);
+  }
+  function setStatus(id, message, type){
+    const el = $(id);
+    if(!el) return;
+    el.textContent = message;
+    el.className = `status show ${type || ""}`.trim();
+  }
+
+  function buildQuery(params){
+    const q = new URLSearchParams();
+    Object.keys(params || {}).forEach((k) => {
+      const v = params[k];
+      if(v !== undefined && v !== null && String(v).trim() !== "") q.set(k, v);
+    });
+    return q.toString();
+  }
+  function getAdminCode(){ return $("adminCodeInput").value.trim() || localStorage.getItem("dpro_school_admin_code") || ""; }
+  function requireAdminCode(){
+    const code = getAdminCode();
+    if(!code){ setStatus("adminStatus", "管理コードを入力してください。営業デモは 1234 です。", "err"); $("adminCodeInput").focus(); return ""; }
+    return code;
+  }
+  async function fetchJson(url, options){
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    try{
+      const res = await fetch(url, { ...options, signal:controller.signal, headers:{ "Accept":"application/json", ...(options && options.headers ? options.headers : {}) } });
+      const text = await res.text();
+      let json = null;
+      try{ json = text ? JSON.parse(text) : null; } catch(e){ json = { ok:false, raw:text }; }
+      return { res, json };
+    } finally { clearTimeout(timer); }
+  }
+  async function adminGet(path, params){
+    const adminCode = requireAdminCode();
+    if(!adminCode) throw new Error("管理コードが未入力です。");
+    const baseParams = { shop_code:state.config.shopCode, admin_code:adminCode, ...(params || {}) };
+    const url = `${String(state.config.apiBaseUrl).replace(/\/$/,"")}${path}?${buildQuery(baseParams)}`;
+    const { res, json } = await fetchJson(url, { headers:{ "X-Admin-Code":adminCode, "X-Shop-Code":state.config.shopCode } });
+    if(!res.ok || (json && json.ok === false)) throw new Error((json && (json.message || json.error)) || `HTTP ${res.status}`);
+    return json || {};
+  }
+  async function adminPost(path, payload){
+    const adminCode = requireAdminCode();
+    if(!adminCode) throw new Error("管理コードが未入力です。");
+    const body = { shop_code:state.config.shopCode, admin_code:adminCode, ...(payload || {}) };
+    const url = `${String(state.config.apiBaseUrl).replace(/\/$/,"")}${path}`;
+    const { res, json } = await fetchJson(url, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "X-Admin-Code":adminCode, "X-Shop-Code":state.config.shopCode },
+      body:JSON.stringify(body)
+    });
+    if(!res.ok || (json && json.ok === false)) throw new Error((json && (json.message || json.error)) || `HTTP ${res.status}`);
+    return json || {};
+  }
+
+  function getRoot(payload){ return payload && (payload.data || payload.dashboard || payload.result || payload.day || payload.admin || payload) || {}; }
+  function uniqueBy(items, getter){
+    const seen = new Set();
+    const out = [];
+    for(const item of items){
+      const key = getter(item) || JSON.stringify(item);
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+    }
+    return out;
+  }
+  function isAbsenceType(type){ return /absence|absent|欠席/.test(String(type || "").toLowerCase()); }
+  function isMakeupType(type){ return /makeup|transfer|振替/.test(String(type || "").toLowerCase()); }
+  function isTrialType(type){ return /trial|reservation|体験|予約/.test(String(type || "").toLowerCase()); }
+  function requestLabel(type){
+    if(isAbsenceType(type)) return "欠席連絡";
+    if(isMakeupType(type)) return "振替希望";
+    if(isTrialType(type)) return "体験予約";
+    return "受付";
+  }
+  function taskTitleFromType(type){
+    if(isAbsenceType(type)) return "欠席返信";
+    if(isMakeupType(type)) return "振替返信";
+    if(isTrialType(type)) return "体験予約確認";
+    return "確認タスク";
+  }
+  function statusLabel(value){
+    const s = String(value || "").toLowerCase();
+    const map = { scheduled:"予定", checked_in:"出席", checkin:"出席", attended:"出席", in_progress:"授業中", progress:"授業中", completed:"完了", done:"完了", absent:"欠席", cancelled:"取消" };
+    return map[s] || value || "予定";
+  }
+  function badgeClassForStatus(value){
+    const s = String(value || "").toLowerCase();
+    if(/completed|done|完了|対応済み|replied/.test(s)) return "green";
+    if(/in_progress|授業中|返信待ち|未対応/.test(s)) return "orange";
+    if(/absent|欠席|取消|cancel/.test(s)) return "red";
+    if(/checked|出席/.test(s)) return "blue";
+    return "gray";
+  }
+
+  function normalizeLesson(x, index){
+    const id = first(x.id, x.lesson_id, x.reservation_id, `${x.student_no || x.student_number || x.student_name || index}-${x.lesson_date || x.date || ""}-${x.start_time || x.time || ""}`);
+    return {
+      raw:x,
+      id:String(id),
+      studentName:first(x.student_name, x.name, x.child_name, x.student, ""),
+      guardianName:first(x.guardian_name, x.parent_name, x.guardian, ""),
+      phone:first(x.phone, x.phone_number, x.guardian_phone, ""),
+      studentNo:first(x.student_no, x.student_number, x.member_no, ""),
+      course:first(x.course_name, x.course, x.menu_name, x.subject, ""),
+      teacher:first(x.teacher_name, x.teacher, x.staff_name, ""),
+      room:first(x.room_name, x.room, x.classroom, ""),
+      date:first(x.lesson_date, x.date, x.target_date, x.reservation_date, ""),
+      time:first(x.lesson_time, x.time, x.start_time, x.reservation_time, ""),
+      endTime:first(x.end_time, x.finish_time, ""),
+      memo:normalizeNewlines(first(x.memo, x.note, x.description, x.message, "")),
+      status:statusLabel(first(x.status_label, x.lesson_status, x.status, "予定"))
+    };
+  }
+  function normalizeRequest(r, forceType){
+    const type = forceType || first(r.request_type, r.type, r.kind, r.category, r.source, "request");
+    const id = first(r.id, r.request_id, r.reservation_id, r.lesson_id, `${type}-${r.student_no || r.student_number || r.student_name || ""}-${r.lesson_date || r.date || r.request_date || ""}-${r.start_time || r.time || ""}`);
+    return {
+      raw:r,
+      id:String(id),
+      type,
+      label:requestLabel(type),
+      studentName:first(r.student_name, r.name, r.child_name, r.student, ""),
+      guardianName:first(r.guardian_name, r.parent_name, r.guardian, r.parent, ""),
+      phone:first(r.phone, r.phone_number, r.guardian_phone, r.contact_phone, ""),
+      studentNo:first(r.student_no, r.student_number, r.member_no, ""),
+      course:first(r.course_name, r.course, r.menu_name, r.subject, ""),
+      teacher:first(r.teacher_name, r.teacher, r.staff_name, ""),
+      date:first(r.lesson_date, r.date, r.target_date, r.request_date, r.reservation_date, r.preferred_date, r.first_choice_date, ""),
+      time:first(r.lesson_time, r.time, r.start_time, r.target_time, r.reservation_time, r.preferred_time, r.first_choice_time, ""),
+      secondDate:first(r.second_choice_date, r.preferred_date_2, ""),
+      secondTime:first(r.second_choice_time, r.preferred_time_2, ""),
+      memo:normalizeNewlines(first(r.memo, r.note, r.description, r.reason, r.message, r.content, r.request_memo, "")),
+      status:first(r.status_label, r.request_status, r.status, "未対応")
+    };
+  }
+  function normalizeTask(t, index){
+    const type = first(t.task_type, t.type, t.kind, t.category, t.action_type, "task");
+    const id = first(t.id, t.task_id, t.request_id, `${type}-${t.student_no || t.student_number || t.student_name || ""}-${t.lesson_date || t.date || ""}-${index || ""}`);
+    return {
+      raw:t,
+      id:String(id),
+      requestId:first(t.request_id, t.id, ""),
+      type,
+      title:first(t.title, t.subject, taskTitleFromType(type), "確認タスク"),
+      studentName:first(t.student_name, t.name, t.child_name, t.student, ""),
+      guardianName:first(t.guardian_name, t.parent_name, t.guardian, ""),
+      phone:first(t.phone, t.phone_number, t.guardian_phone, ""),
+      studentNo:first(t.student_no, t.student_number, t.member_no, ""),
+      course:first(t.course_name, t.course, t.menu_name, ""),
+      date:first(t.lesson_date, t.date, t.target_date, t.due_date, t.reservation_date, ""),
+      time:first(t.lesson_time, t.time, t.start_time, t.target_time, t.reservation_time, ""),
+      memo:normalizeNewlines(first(t.memo, t.note, t.description, t.reason, t.message, t.content, "")),
+      status:first(t.status_label, t.status, t.task_status, "未対応")
+    };
+  }
+  function requestToTask(req, title){ return { ...req, requestId:req.id, title:title || taskTitleFromType(req.type) }; }
+  function makeEmptyDashboard(){ return { stats:{lessons:0,activeLessons:0,requests:0,tasks:0}, lessons:[], requests:[], tasks:[], searchResults:[], raw:null }; }
+
+  function normalizeDashboard(dashboardPayload, dayPayload){
+    const roots = [getRoot(dashboardPayload), getRoot(dayPayload)].filter(Boolean);
+    const rawTasks = [];
+    const rawRequests = [];
+    const rawTrial = [];
+    const rawLessons = [];
+    roots.forEach((root) => {
+      rawTasks.push(...asArray(root.tasks), ...asArray(root.today_tasks), ...asArray(root.pending_tasks), ...asArray(root.school_tasks));
+      rawRequests.push(...asArray(root.requests), ...asArray(root.pending_requests), ...asArray(root.school_requests), ...asArray(root.request_list));
+      rawTrial.push(...asArray(root.trial_reservations), ...asArray(root.trials), ...asArray(root.reservations), ...asArray(root.trial_lessons));
+      rawLessons.push(...asArray(root.lessons), ...asArray(root.today_lessons), ...asArray(root.day_lessons), ...asArray(root.school_lessons));
+    });
+    const trial = uniqueBy(rawTrial.map((x,i) => normalizeRequest(x, "trial")), (x) => x.id).filter((x) => x.studentName || x.date || x.memo);
+    const reqs = uniqueBy(rawRequests.map((x,i) => normalizeRequest(x)), (x) => x.id).filter((x) => x.studentName || x.date || x.memo || x.type);
+    const requests = uniqueBy([...trial, ...reqs], (x) => x.id);
+    let tasks = uniqueBy(rawTasks.map(normalizeTask), (x) => x.id).filter((x) => x.title || x.studentName || x.type);
+    if(!tasks.length && requests.length){
+      tasks = requests.filter((x) => !boolDone(x.status)).map((x) => requestToTask(x, taskTitleFromType(x.type)));
+    }
+    const lessons = uniqueBy(rawLessons.map(normalizeLesson), (x) => x.id).filter((x) => x.studentName || x.date || x.time || x.course);
+    const statsRoot = roots.map((r) => r.stats || r.counts || r.summary || {}).find((s) => Object.keys(s || {}).length) || {};
+    const stats = {
+      lessons:numberOrZero(first(statsRoot.lessons, statsRoot.lesson_count, statsRoot.today_lessons, lessons.length)),
+      activeLessons:lessons.filter((x) => !/完了|欠席|取消/.test(String(x.status))).length,
+      requests:requests.filter((x) => !boolDone(x.status)).length,
+      tasks:numberOrZero(first(statsRoot.tasks, statsRoot.task_count, tasks.filter((x) => !boolDone(x.status)).length))
+    };
+    return { stats, lessons, requests, tasks, searchResults:[], raw:{dashboardPayload, dayPayload} };
+  }
+
+  function makeDemoDashboard(){
+    const d = $("dayInput").value || todayYmd();
+    const lessons = [
+      normalizeLesson({ id:"demo-lesson-1", student_name:"テスト 太郎", guardian_name:"テスト 保護者", phone:DEMO_PHONE, student_no:DEMO_STUDENT_NO, course_name:"小学生算数", teacher_name:"教室長", room_name:"1番教室", lesson_date:d, start_time:"17:00", end_time:"18:00", status:"予定", memo:"通常授業" }),
+      normalizeLesson({ id:"demo-lesson-2", student_name:"テスト 花子", guardian_name:"テスト 保護者", phone:"090-8888-0000", student_no:"SCHOOL-DEMO-998", course_name:"英会話キッズ", teacher_name:"佐藤先生", room_name:"2番教室", lesson_date:d, start_time:"18:00", end_time:"19:00", status:"予定", memo:"振替授業" })
+    ];
+    const requests = [
+      normalizeRequest({ id:"demo-absence-1", request_type:"absence", student_name:"テスト 太郎", guardian_name:"テスト 保護者", phone:DEMO_PHONE, student_no:DEMO_STUDENT_NO, course_name:"小学生算数", lesson_date:d, lesson_time:"17:00", reason:"体調不良のため、本日の授業を欠席します。", status:"未対応" }),
+      normalizeRequest({ id:"demo-makeup-1", request_type:"makeup", student_name:"テスト 太郎", guardian_name:"テスト 保護者", phone:DEMO_PHONE, student_no:DEMO_STUDENT_NO, course_name:"小学生算数", preferred_date:addDays(d,2), preferred_time:"18:00", message:"欠席分の振替を希望します。", status:"返信待ち" })
+    ];
+    const tasks = requests.map((x) => requestToTask(x, taskTitleFromType(x.type)));
+    return { stats:{lessons:lessons.length, activeLessons:lessons.length, requests:requests.length, tasks:tasks.length}, lessons, requests, tasks, searchResults:[], raw:null };
+  }
+
+  function resetMap(){ state.itemMap.clear(); }
+  function storeItem(type, item){ const key = `${type}-${state.itemMap.size}-${Math.random().toString(36).slice(2)}`; state.itemMap.set(key, item); return key; }
+
+  function renderStats(){
+    const s = state.dashboard.stats || {};
+    $("statsGrid").innerHTML = `
+      <div class="stat blue"><div class="label">本日の授業</div><div class="value">${numberOrZero(s.lessons)}</div><div class="sub">予定</div></div>
+      <div class="stat green"><div class="label">進行中/未完了</div><div class="value">${numberOrZero(s.activeLessons)}</div><div class="sub">出席管理</div></div>
+      <div class="stat orange"><div class="label">未対応連絡</div><div class="value">${numberOrZero(s.requests)}</div><div class="sub">欠席・振替</div></div>
+      <div class="stat purple"><div class="label">今日やること</div><div class="value">${numberOrZero(s.tasks)}</div><div class="sub">返信・確認</div></div>
+    `;
+  }
+  function renderLessons(){
+    const list = $("lessonList");
+    const items = state.dashboard.lessons || [];
+    if(!items.length){ list.innerHTML = '<div class="empty">この日の授業予定はありません。営業前デモ準備を押すとデモ授業が表示されます。</div>'; return; }
+    list.innerHTML = items.map((item) => {
+      const key = storeItem("lesson", item);
+      const msgKey = storeItem("message", { message:buildMessageFromLesson(item), item });
+      const cls = /授業中/.test(item.status) ? " in-progress" : (/完了/.test(item.status) ? " completed" : "");
+      return `
+        <div class="lesson-card${cls}">
+          <div>
+            <div class="time">${escapeHtml(formatTime(item.time))}${item.endTime ? `〜${escapeHtml(formatTime(item.endTime))}` : ""}</div>
+            <div class="title-line">
+              <span>${escapeHtml(item.studentName || "生徒未入力")}</span>
+              <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || "予定")}</span>
+            </div>
+            <div class="meta">
+              ${escapeHtml(formatDate(item.date))}　${escapeHtml(item.course || "授業")}<br>
+              担当：${escapeHtml(item.teacher || "担当未定")}　教室：${escapeHtml(item.room || "教室未定")}<br>
+              保護者：${escapeHtml(item.guardianName || "")}　電話：${escapeHtml(formatPhone(item.phone))}<br>
+              生徒番号：${escapeHtml(item.studentNo || "")}
+            </div>
+            ${item.memo ? `<div class="note">${escapeHtml(item.memo)}</div>` : ""}
+          </div>
+          <div class="lesson-actions">
+            <button class="btn big" data-action="lesson-status" data-status="checked_in" data-key="${key}" type="button">出席</button>
+            <button class="btn orange big" data-action="lesson-status" data-status="in_progress" data-key="${key}" type="button">授業中</button>
+            <button class="btn green big" data-action="lesson-status" data-status="completed" data-key="${key}" type="button">完了</button>
+            <button class="btn navy big" data-action="show-message" data-key="${msgKey}" type="button">文面</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+  function getFilteredRequests(){
+    const items = state.dashboard.requests || [];
+    const tab = state.selectedTab;
+    if(tab === "pending") return items.filter((x) => !boolDone(x.status));
+    if(tab === "absence") return items.filter((x) => isAbsenceType(x.type));
+    if(tab === "makeup") return items.filter((x) => isMakeupType(x.type));
+    return items;
+  }
+  function renderRequests(){
+    const list = $("requestList");
+    const items = getFilteredRequests();
+    if(!items.length){ list.innerHTML = '<div class="empty">表示する欠席連絡・振替希望はありません。</div>'; return; }
+    list.innerHTML = items.map((item) => {
+      const key = storeItem("request", item);
+      const msgKey = storeItem("message", { message:buildMessageFromRequest(item), item });
+      const label = requestLabel(item.type);
+      const labelClass = isAbsenceType(item.type) ? "orange" : (isMakeupType(item.type) ? "green" : "blue");
+      return `
+        <div class="request-card">
+          <div>
+            <div class="title-line">
+              <span>${escapeHtml(label)}</span>
+              <span class="badge ${labelClass}">${escapeHtml(label)}</span>
+              <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || "未対応")}</span>
+            </div>
+            <div class="meta">
+              生徒：${escapeHtml(item.studentName || "未入力")}　保護者：${escapeHtml(item.guardianName || "未入力")}<br>
+              対象：${escapeHtml(formatDateTime(item.date, item.time))}　${escapeHtml(item.course || "")}<br>
+              電話：${escapeHtml(formatPhone(item.phone))}　生徒番号：${escapeHtml(item.studentNo || "")}
+            </div>
+            ${item.memo ? `<div class="note">${escapeHtml(item.memo)}</div>` : ""}
+          </div>
+          <div class="card-actions">
+            <button class="btn navy big" data-action="show-message" data-key="${msgKey}" type="button">文面を見る</button>
+            <button class="btn big" data-action="copy-message" data-key="${msgKey}" type="button">コピー</button>
+            <button class="btn green big" data-action="complete-request" data-key="${key}" type="button">対応済みにする</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+  function renderSearchResults(results){
+    const list = $("searchResults");
+    if(!results.length){ list.innerHTML = '<div class="empty">該当する生徒・保護者が見つかりませんでした。</div>'; return; }
+    list.innerHTML = results.map((item) => {
+      const msgKey = storeItem("message", { message:buildMessageFromStudent(item), item });
+      return `
+        <div class="student-card">
+          <div>
+            <div class="title-line"><span>${escapeHtml(item.studentName || "生徒名未入力")}</span><span class="badge blue">${escapeHtml(item.studentNo || "番号未入力")}</span></div>
+            <div class="meta">保護者：${escapeHtml(item.guardianName || "未入力")}<br>電話：${escapeHtml(formatPhone(item.phone))}<br>コース：${escapeHtml(item.course || "未設定")}　状態：${escapeHtml(item.status || "確認")}</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn navy" data-action="show-message" data-key="${msgKey}" type="button">文面</button>
+            <a class="btn secondary" href="./member.html?phone=${encodeURIComponent(item.phone)}&student_no=${encodeURIComponent(item.studentNo)}">生徒証</a>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+  function renderAll(){
+    resetMap();
+    renderStats();
+    renderLessons();
+    renderRequests();
+  }
+
+  function normalizeSearchResult(item){
+    const student = item.student || item;
+    const guardian = item.guardian || item.parent || item;
+    const plan = item.plan || item.student_plan || item;
+    return {
+      raw:item,
+      id:first(student.id, item.student_id, item.id, student.student_no, student.student_number, ""),
+      studentName:first(student.student_name, student.name, item.student_name, "テスト 太郎"),
+      studentNo:first(student.student_no, student.student_number, item.student_no, DEMO_STUDENT_NO),
+      guardianName:first(guardian.guardian_name, guardian.parent_name, guardian.name, item.guardian_name, "テスト 保護者"),
+      phone:first(guardian.phone, guardian.phone_number, guardian.guardian_phone, item.phone, item.phone_number, DEMO_PHONE),
+      course:first(student.course_name, item.course_name, plan.course_name, "体験授業：小学生算数"),
+      status:first(student.status_label, student.status, item.status, "在籍中"),
+      makeupRemaining:numberOrZero(first(item.makeup_remaining, plan.makeup_remaining, student.makeup_remaining, 2)),
+      ticketRemaining:numberOrZero(first(item.ticket_remaining, plan.ticket_remaining, student.ticket_remaining, 4))
+    };
+  }
+  function normalizeSearchPayload(payload){
+    const root = getRoot(payload);
+    const raw = [...asArray(root.students), ...asArray(root.guardians), ...asArray(root.results), ...asArray(root.items), ...asArray(root.search_results), ...asArray(root)];
+    return uniqueBy(raw.map(normalizeSearchResult), (x) => x.id || x.studentNo).filter((x) => x.studentName || x.studentNo);
+  }
+
+  function buildMessageFromLesson(item){
+    return `${item.guardianName || "保護者"}様\n${state.config.shopName}です。\n\n${item.studentName || "生徒"}様の授業予定の確認です。\n日時：${formatDateTime(item.date, item.time)}${item.endTime ? `〜${formatTime(item.endTime)}` : ""}\nコース：${item.course || "授業"}\n担当：${item.teacher || "担当未定"}\n教室：${item.room || "教室未定"}\n\n欠席や振替をご希望の場合は、LINE画面からご連絡ください。`;
+  }
+  function buildMessageFromRequest(item){
+    const guardian = item.guardianName || "保護者";
+    const student = item.studentName || "生徒";
+    if(isAbsenceType(item.type)){
+      return `${guardian}様\n${state.config.shopName}です。\n\n${student}様の欠席連絡を承りました。\n対象授業：${formatDateTime(item.date, item.time)}\n${item.course ? `コース：${item.course}\n` : ""}\n振替をご希望の場合は、候補日をご連絡ください。`;
+    }
+    if(isMakeupType(item.type)){
+      return `${guardian}様\n${state.config.shopName}です。\n\n${student}様の振替希望を承りました。\n希望日時：${formatDateTime(item.date, item.time)}\n${item.secondDate ? `第2希望：${formatDateTime(item.secondDate, item.secondTime)}\n` : ""}教室側で確認後、確定日時をご連絡いたします。`;
+    }
+    return `${guardian}様\n${state.config.shopName}です。\n\n${student}様の体験授業予約を受け付けました。\n日時：${formatDateTime(item.date, item.time)}\n${item.course ? `コース：${item.course}\n` : ""}${item.teacher ? `担当：${item.teacher}\n` : ""}\n当日はお気をつけてお越しください。`;
+  }
+  function buildMessageFromStudent(detail){
+    return `${detail.guardianName || "保護者"}様\n${state.config.shopName}です。\n\n${detail.studentName || "生徒"}様の登録情報を確認しました。\n生徒番号：${detail.studentNo || ""}\nコース：${detail.course || ""}\n振替残数：${detail.makeupRemaining}回\nチケット残数：${detail.ticketRemaining}回\n\n授業予定は生徒証・授業予定画面から確認できます。`;
+  }
+
+  async function copyText(text, message){
+    const normalized = normalizeNewlines(text);
+    try{ await navigator.clipboard.writeText(normalized); }
+    catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = normalized;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    showToast(message || "コピーしました");
+    try{ await adminPost("/api/admin/messages/log-copy", { message_text:normalized, message:normalized, copied_text:normalized, message_type:"ipad_copy", target_type:"ipad" }); } catch(e){}
+  }
+  function showMessage(obj){
+    const message = normalizeNewlines(obj.message || "");
+    state.selectedMessage = message;
+    $("messagePreview").textContent = message || "文面がありません。";
+    $("messagePreview").scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+
+  async function loadDashboard(){
+    if(state.loading) return;
+    state.loading = true;
+    const btn = $("refreshBtn");
+    const old = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "更新中...";
+    setStatus("mainStatus", "iPad画面の情報を読み込んでいます。", "");
+    resetMap();
+    try{
+      const date = $("dayInput").value || todayYmd();
+      const results = await Promise.allSettled([
+        adminGet("/api/admin/dashboard", {}),
+        adminGet("/api/admin/day", { date })
+      ]);
+      const ok = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+      if(!ok.length) throw new Error(results.map((r) => r.reason && r.reason.message).filter(Boolean).join(" / ") || "APIから取得できませんでした。");
+      state.dashboard = normalizeDashboard(ok[0], ok[1]);
+      state.usedFallback = false;
+      renderAll();
+      setStatus("mainStatus", `更新しました。${new Date().toLocaleTimeString("ja-JP", { hour:"2-digit", minute:"2-digit" })}`, "ok");
+    } catch(e){
+      state.dashboard = makeDemoDashboard();
+      state.usedFallback = true;
+      renderAll();
+      setStatus("mainStatus", `API取得に失敗したため、デモ表示に切り替えました。確認内容：${e.message}`, "warn");
+    } finally {
+      state.loading = false;
+      btn.disabled = false;
+      btn.textContent = old;
+    }
+  }
+  async function prepareDemo(){
+    const btn = $("prepareDemoBtn");
+    const old = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "準備中...";
+    setStatus("mainStatus", "営業前デモデータを準備しています。", "");
+    try{
+      await adminPost("/api/admin/demo/prepare", {});
+      setStatus("mainStatus", "営業前デモ準備が完了しました。画面を再読み込みします。", "ok");
+      await loadDashboard();
+    } catch(e){
+      setStatus("mainStatus", `営業前デモ準備に失敗しました：${e.message}`, "err");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = old;
+    }
+  }
+  async function checkHealth(){
+    setStatus("mainStatus", "API接続を確認しています。", "");
+    try{
+      const { res, json } = await fetchJson(`${String(state.config.apiBaseUrl).replace(/\/$/,"")}/api/health`);
+      if(!res.ok || !json || json.ok === false) throw new Error((json && (json.message || json.error)) || `HTTP ${res.status}`);
+      setStatus("mainStatus", `API接続OK：${json.version || VERSION} / db_ok: ${String(json.db_ok)}`, "ok");
+    } catch(e){ setStatus("mainStatus", `API接続エラー：${e.message}`, "err"); }
+  }
+  async function updateLessonStatus(item, status){
+    const statusName = statusLabel(status);
+    setStatus("mainStatus", "授業状態を更新しています。", "");
+    try{
+      if(state.usedFallback || String(item.id).startsWith("demo")) throw new Error("デモ表示中のためAPI更新は行いません。");
+      await adminPost("/api/admin/lessons/status", { lesson_id:item.id, id:item.id, status, lesson_status:status });
+      setStatus("mainStatus", `授業状態を「${statusName}」に更新しました。`, "ok");
+      await loadDashboard();
+    } catch(e){
+      item.status = statusName;
+      renderAll();
+      setStatus("mainStatus", `画面上では「${statusName}」にしました。API更新確認：${e.message}`, "warn");
+    }
+  }
+  async function completeRequest(item){
+    setStatus("mainStatus", "受付を対応済みにしています。", "");
+    try{
+      if(state.usedFallback || String(item.id).startsWith("demo")) throw new Error("デモ表示中のためAPI更新は行いません。");
+      await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });
+      setStatus("mainStatus", "受付を対応済みにしました。", "ok");
+      await loadDashboard();
+    } catch(e){
+      item.status = "対応済み";
+      renderAll();
+      setStatus("mainStatus", `画面上では対応済みにしました。API更新確認：${e.message}`, "warn");
+    }
+  }
+  async function searchStudents(){
+    const q = $("searchInput").value.trim();
+    if(!q){ setStatus("searchStatus", "検索キーワードを入力してください。", "err"); $("searchInput").focus(); return; }
+    localStorage.setItem("dpro_school_ipad_search_q", q);
+    setStatus("searchStatus", "検索しています。", "");
+    try{
+      const payload = await adminGet("/api/admin/search", { q, keyword:q, phone:normalizePhone(q) });
+      const results = normalizeSearchPayload(payload);
+      renderSearchResults(results);
+      setStatus("searchStatus", `${results.length}件見つかりました。`, results.length ? "ok" : "warn");
+    } catch(e){
+      const demo = normalizeSearchResult({ student_name:"テスト 太郎", guardian_name:"テスト 保護者", phone:DEMO_PHONE, student_no:DEMO_STUDENT_NO, course_name:"体験授業：小学生算数", status:"在籍中", makeup_remaining:2, ticket_remaining:4 });
+      renderSearchResults([demo]);
+      setStatus("searchStatus", `API検索に失敗したためデモ検索結果を表示しました。確認内容：${e.message}`, "warn");
+    }
+  }
+
+  function bindEvents(){
+    $("saveAdminBtn").addEventListener("click", () => {
+      const code = $("adminCodeInput").value.trim();
+      if(!code){ setStatus("adminStatus", "保存する管理コードを入力してください。", "err"); return; }
+      localStorage.setItem("dpro_school_admin_code", code);
+      setStatus("adminStatus", "管理コードを保存しました。", "ok");
+    });
+    $("fillAdminBtn").addEventListener("click", () => { $("adminCodeInput").value = DEMO_ADMIN_CODE; setStatus("adminStatus", "管理コード 1234 を入力しました。保存すると次回も使えます。", "ok"); });
+    $("clearAdminBtn").addEventListener("click", () => { localStorage.removeItem("dpro_school_admin_code"); $("adminCodeInput").value = ""; setStatus("adminStatus", "保存済み管理コードを削除しました。", "ok"); });
+    $("refreshBtn").addEventListener("click", loadDashboard);
+    $("todayBtn").addEventListener("click", () => { $("dayInput").value = todayYmd(); loadDashboard(); });
+    $("tomorrowBtn").addEventListener("click", () => { $("dayInput").value = addDays(todayYmd(), 1); loadDashboard(); });
+    $("prepareDemoBtn").addEventListener("click", prepareDemo);
+    $("healthBtn").addEventListener("click", checkHealth);
+    $("searchBtn").addEventListener("click", searchStudents);
+    $("searchInput").addEventListener("keydown", (e) => { if(e.key === "Enter") searchStudents(); });
+    $("demoSearchBtn").addEventListener("click", () => { $("searchInput").value = "テスト 太郎"; searchStudents(); });
+    $("copyPreviewBtn").addEventListener("click", () => { if(!state.selectedMessage){ showToast("コピーする文面がありません"); return; } copyText(state.selectedMessage, "文面をコピーしました"); });
+    $("requestTabs").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-tab]");
+      if(!btn) return;
+      state.selectedTab = btn.dataset.tab;
+      document.querySelectorAll("#requestTabs .tab").forEach((b) => b.classList.toggle("active", b === btn));
+      renderAll();
+    });
+    document.body.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-action]");
+      if(!btn) return;
+      const key = btn.dataset.key;
+      const item = state.itemMap.get(key);
+      if(!item) return;
+      const action = btn.dataset.action;
+      if(action === "show-message") showMessage(item);
+      if(action === "copy-message") await copyText(item.message, "文面をコピーしました");
+      if(action === "complete-request") await completeRequest(item);
+      if(action === "lesson-status") await updateLessonStatus(item, btn.dataset.status);
+    });
+  }
+  function init(){
+    $("shopNameHero").textContent = state.config.shopName || "DPROスクール";
+    $("dayInput").value = todayYmd();
+    const saved = localStorage.getItem("dpro_school_admin_code") || "";
+    $("adminCodeInput").value = saved;
+    bindEvents();
+    state.dashboard = makeDemoDashboard();
+    renderAll();
+    if(saved){ setStatus("mainStatus", "デモ表示で起動しました。管理コード保存済みです。更新を押すとAPIから取得します。", "ok"); }
+    else { setStatus("mainStatus", "デモ表示で起動しました。まず管理コードを入力・保存してから更新してください。", "warn"); }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
