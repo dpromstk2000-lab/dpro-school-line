@@ -1,0 +1,68 @@
+{
+  "step": "SCHOOL-NEXT-1",
+  "checked_at_jst": "2026-07-23T20:48:14+09:00",
+  "results": [
+    {
+      "key": "worker_health",
+      "label": "Worker",
+      "status": "OK",
+      "detail": "HTTP 200 / service=DPRO 学習塾・習い事 LINE API / version=STEP-SCHOOL-3-WORKER-API-20260709",
+      "blocking": false
+    },
+    {
+      "key": "public_config",
+      "label": "公開設定API",
+      "status": "NG",
+      "detail": "管理用キーを検出: root.shop.admin_code",
+      "blocking": true
+    },
+    {
+      "key": "admin_reject",
+      "label": "管理コード拒否",
+      "status": "OK",
+      "detail": "不正コードをHTTP 401で拒否",
+      "blocking": false
+    },
+    {
+      "key": "page_index.html",
+      "label": "index.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 56,192 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_member.html",
+      "label": "member.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 45,767 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner.html",
+      "label": "owner.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 86,253 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner-ipad.html",
+      "label": "owner-ipad.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 55,914 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_system-check.html",
+      "label": "system-check.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 33,967 bytes",
+      "blocking": false
+    }
+  ],
+  "counts": {
+    "OK": 7,
+    "注意": 0,
+    "NG": 1
+  },
+  "blocking_ng": 1
+}

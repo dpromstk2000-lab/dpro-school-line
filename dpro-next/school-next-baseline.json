@@ -1,0 +1,463 @@
+{
+  "system": "DPRO 学習塾 LINE",
+  "standard": "DPRO NEXT",
+  "step": "SCHOOL-NEXT-1",
+  "result": "NG",
+  "current_step": "SCHOOL-NEXT-1-R1_REQUIRED",
+  "completed_at_jst": "2026-07-23T20:48:14+09:00",
+  "repository": "dpromstk2000-lab/dpro-school-line",
+  "branch": "main",
+  "baseline_sha": "035ba1a0df04cb0b0854d05d3255ff71df20bed0",
+  "backup_tag": "backup-school-next-before-1-20260723",
+  "backup_tag_sha": "035ba1a0df04cb0b0854d05d3255ff71df20bed0",
+  "previous_step": "未作成",
+  "worker_changed": false,
+  "supabase_changed": false,
+  "api_changed": false,
+  "public_urls": {
+    "customer": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html",
+    "member": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+    "owner_pc": "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html",
+    "owner_ipad": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+    "system_check": "https://dpromstk2000-lab.github.io/dpro-school-line/system-check.html",
+    "worker_health": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/health"
+  },
+  "counts": {
+    "OK": 46,
+    "注意": 6,
+    "NG": 1
+  },
+  "blocking_ng": 1,
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "64ebda9a5d49c1a6ddef921e7aca943f26fb23315eba8d772cab55bbc9c66261",
+      "bytes": 56192,
+      "lines": 1424,
+      "step_markers": [
+        "STEP SCHOOL-6-R2"
+      ]
+    },
+    {
+      "path": "member.html",
+      "sha256": "d82709b0e075f0cb2e7950deb5017a7e3d98826c96506bf5c8542d1a3977b041",
+      "bytes": 45767,
+      "lines": 1033,
+      "step_markers": [
+        "STEP SCHOOL-7"
+      ]
+    },
+    {
+      "path": "owner.html",
+      "sha256": "f3090d7401027e3d1412aa87d17501088812ce3f4a66ce8d1ed410501abeeb61",
+      "bytes": 86253,
+      "lines": 1341,
+      "step_markers": [
+        "STEP SCHOOL-10-R2",
+        "STEP SCHOOL-10-R4"
+      ]
+    },
+    {
+      "path": "owner-ipad.html",
+      "sha256": "7dc7586a7ef298fe85580ba528a0982c1fb3c3c1e73329a8897540a5345ff723",
+      "bytes": 55914,
+      "lines": 926,
+      "step_markers": [
+        "STEP SCHOOL-9",
+        "STEP SCHOOL-9-R1"
+      ]
+    },
+    {
+      "path": "system-check.html",
+      "sha256": "bad265f5a55862a9da4d0650c0ab7e15aa87ce48ff04a5688c9fc4746c118f6d",
+      "bytes": 33967,
+      "lines": 504,
+      "step_markers": [
+        "STEP SCHOOL-11"
+      ]
+    },
+    {
+      "path": "config.js",
+      "sha256": "04bf89794dd603cb45b78ce1bfd0b6e944423abfa15174cbbe1ab201e97f40d2",
+      "bytes": 8630,
+      "lines": 295,
+      "step_markers": [
+        "STEP SCHOOL-4"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "key": "size_index.html",
+      "label": "index.html容量",
+      "status": "OK",
+      "detail": "56,192 bytes",
+      "blocking": false
+    },
+    {
+      "key": "size_member.html",
+      "label": "member.html容量",
+      "status": "OK",
+      "detail": "45,767 bytes",
+      "blocking": false
+    },
+    {
+      "key": "size_owner.html",
+      "label": "owner.html容量",
+      "status": "OK",
+      "detail": "86,253 bytes",
+      "blocking": false
+    },
+    {
+      "key": "size_owner-ipad.html",
+      "label": "owner-ipad.html容量",
+      "status": "OK",
+      "detail": "55,914 bytes",
+      "blocking": false
+    },
+    {
+      "key": "size_system-check.html",
+      "label": "system-check.html容量",
+      "status": "OK",
+      "detail": "33,967 bytes",
+      "blocking": false
+    },
+    {
+      "key": "size_config.js",
+      "label": "config.js容量",
+      "status": "OK",
+      "detail": "8,630 bytes",
+      "blocking": false
+    },
+    {
+      "key": "html_index.html",
+      "label": "index.html HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込できました。",
+      "blocking": false
+    },
+    {
+      "key": "ids_index.html",
+      "label": "index.html HTML ID重複",
+      "status": "OK",
+      "detail": "66件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "js_index.html",
+      "label": "index.html JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件を検査",
+      "blocking": false
+    },
+    {
+      "key": "version_index.html",
+      "label": "index.html STEP表記",
+      "status": "OK",
+      "detail": "STEP SCHOOL-6-R2",
+      "blocking": false
+    },
+    {
+      "key": "html_member.html",
+      "label": "member.html HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込できました。",
+      "blocking": false
+    },
+    {
+      "key": "ids_member.html",
+      "label": "member.html HTML ID重複",
+      "status": "OK",
+      "detail": "27件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "js_member.html",
+      "label": "member.html JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件を検査",
+      "blocking": false
+    },
+    {
+      "key": "version_member.html",
+      "label": "member.html STEP表記",
+      "status": "OK",
+      "detail": "STEP SCHOOL-7",
+      "blocking": false
+    },
+    {
+      "key": "html_owner.html",
+      "label": "owner.html HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込できました。",
+      "blocking": false
+    },
+    {
+      "key": "ids_owner.html",
+      "label": "owner.html HTML ID重複",
+      "status": "OK",
+      "detail": "49件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "js_owner.html",
+      "label": "owner.html JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件を検査",
+      "blocking": false
+    },
+    {
+      "key": "version_owner.html",
+      "label": "owner.html STEP表記",
+      "status": "注意",
+      "detail": "複数表記を検出: STEP SCHOOL-10-R2, STEP SCHOOL-10-R4",
+      "blocking": false
+    },
+    {
+      "key": "html_owner-ipad.html",
+      "label": "owner-ipad.html HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込できました。",
+      "blocking": false
+    },
+    {
+      "key": "ids_owner-ipad.html",
+      "label": "owner-ipad.html HTML ID重複",
+      "status": "OK",
+      "detail": "25件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "js_owner-ipad.html",
+      "label": "owner-ipad.html JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件を検査",
+      "blocking": false
+    },
+    {
+      "key": "version_owner-ipad.html",
+      "label": "owner-ipad.html STEP表記",
+      "status": "注意",
+      "detail": "複数表記を検出: STEP SCHOOL-9, STEP SCHOOL-9-R1",
+      "blocking": false
+    },
+    {
+      "key": "html_system-check.html",
+      "label": "system-check.html HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込できました。",
+      "blocking": false
+    },
+    {
+      "key": "ids_system-check.html",
+      "label": "system-check.html HTML ID重複",
+      "status": "OK",
+      "detail": "41件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "js_system-check.html",
+      "label": "system-check.html JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件を検査",
+      "blocking": false
+    },
+    {
+      "key": "version_system-check.html",
+      "label": "system-check.html STEP表記",
+      "status": "OK",
+      "detail": "STEP SCHOOL-11",
+      "blocking": false
+    },
+    {
+      "key": "js_config",
+      "label": "config.js JavaScript構文",
+      "status": "OK",
+      "detail": "node --check PASS",
+      "blocking": false
+    },
+    {
+      "key": "preserve_index.html",
+      "label": "index.html 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 4件を確認",
+      "blocking": false
+    },
+    {
+      "key": "preserve_owner.html",
+      "label": "owner.html 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 11件を確認",
+      "blocking": false
+    },
+    {
+      "key": "preserve_member.html",
+      "label": "member.html 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 9件を確認",
+      "blocking": false
+    },
+    {
+      "key": "preserve_owner-ipad.html",
+      "label": "owner-ipad.html 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 6件を確認",
+      "blocking": false
+    },
+    {
+      "key": "preserve_system-check.html",
+      "label": "system-check.html 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 7件を確認",
+      "blocking": false
+    },
+    {
+      "key": "preserve_config.js",
+      "label": "config.js 既存機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 10件を確認",
+      "blocking": false
+    },
+    {
+      "key": "school_logic",
+      "label": "学習塾業務ロジック",
+      "status": "OK",
+      "detail": "体験・欠席・振替・授業・保護者・生徒・講師・残数・兄弟姉妹を確認",
+      "blocking": false
+    },
+    {
+      "key": "admin_clear",
+      "label": "管理コード削除ボタン",
+      "status": "OK",
+      "detail": "owner.htmlとsystem-check.htmlで確認",
+      "blocking": false
+    },
+    {
+      "key": "phone_normalize",
+      "label": "電話番号正規化",
+      "status": "OK",
+      "detail": "+81・記号除去・全角数字対応を確認",
+      "blocking": false
+    },
+    {
+      "key": "past_datetime_front",
+      "label": "過去日時防止・画面側",
+      "status": "OK",
+      "detail": "owner.htmlで過去日補正を確認",
+      "blocking": false
+    },
+    {
+      "key": "past_datetime_worker",
+      "label": "過去日時防止・Worker側",
+      "status": "注意",
+      "detail": "Worker採用ソースがPagesリポジトリにないためNEXT-1では記録のみ。API側検査はNEXT-9で強化します。",
+      "blocking": false
+    },
+    {
+      "key": "duplicate_guard",
+      "label": "重複登録防止",
+      "status": "注意",
+      "detail": "既存画面・設定は維持。Workerの冪等性と同一生徒・同一日時ガードはNEXT-3以降で確認します。",
+      "blocking": false
+    },
+    {
+      "key": "audit_guard",
+      "label": "操作履歴・監査ログ",
+      "status": "注意",
+      "detail": "既存SQL・Worker採用版は変更しません。採用版ハッシュを別台帳へ登録する対象です。",
+      "blocking": false
+    },
+    {
+      "key": "public_static_secret",
+      "label": "公開画面への管理情報混入・静的検査",
+      "status": "OK",
+      "detail": "顧客画面に秘密鍵・内部メモ名称なし",
+      "blocking": false
+    },
+    {
+      "key": "demo_admin_hint",
+      "label": "公開configのデモ管理コード",
+      "status": "注意",
+      "detail": "公開デモ用ヒントを検出。実店舗版では環境分離し、顧客画面へ表示しないでください。",
+      "blocking": false
+    },
+    {
+      "key": "worker_change",
+      "label": "Worker変更記録",
+      "status": "OK",
+      "detail": "変更なし。Pagesリポジトリ内Workerソース: なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase_change",
+      "label": "Supabase変更記録",
+      "status": "OK",
+      "detail": "変更なし。Pagesリポジトリ内SQL: なし",
+      "blocking": false
+    },
+    {
+      "key": "api_change",
+      "label": "API変更記録",
+      "status": "OK",
+      "detail": "変更なし。現行エンドポイントを基準として保存",
+      "blocking": false
+    },
+    {
+      "key": "worker_health",
+      "label": "Worker",
+      "status": "OK",
+      "detail": "HTTP 200 / service=DPRO 学習塾・習い事 LINE API / version=STEP-SCHOOL-3-WORKER-API-20260709",
+      "blocking": false
+    },
+    {
+      "key": "public_config",
+      "label": "公開設定API",
+      "status": "NG",
+      "detail": "管理用キーを検出: root.shop.admin_code",
+      "blocking": true
+    },
+    {
+      "key": "admin_reject",
+      "label": "管理コード拒否",
+      "status": "OK",
+      "detail": "不正コードをHTTP 401で拒否",
+      "blocking": false
+    },
+    {
+      "key": "page_index.html",
+      "label": "index.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 56,192 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_member.html",
+      "label": "member.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 45,767 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner.html",
+      "label": "owner.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 86,253 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner-ipad.html",
+      "label": "owner-ipad.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 55,914 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_system-check.html",
+      "label": "system-check.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 33,967 bytes",
+      "blocking": false
+    }
+  ],
+  "next_action": "NG項目を修正するSCHOOL-NEXT-1-R1を作成"
+}

@@ -1,0 +1,13 @@
+step: "SCHOOL-NEXT-1"
+worker:
+  changed: false
+  reason: "正常版保護と現状検査のみ。Worker本体は変更していません。"
+supabase:
+  changed: false
+  reason: "正常版保護と現状検査のみ。SQLは実行していません。"
+api:
+  changed: false
+  reason: "既存APIを検査対象として使用しただけです。"
+rollback:
+  tag: "backup-school-next-before-1-20260723"
+  sha: "035ba1a0df04cb0b0854d05d3255ff71df20bed0"
