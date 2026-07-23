@@ -1,0 +1,914 @@
+name: "STEP SCHOOL-NEXT-2-R2 | PCオーナー今日やること最適化修正2"
+run-name: "SCHOOL-NEXT-2-R2 owner today dashboard flow fix by ${{ github.actor }}"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/step-school-next-2-r2-owner-today.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-next-2-r2-owner-today
+  cancel-in-progress: false
+
+env:
+  STEP_NAME: SCHOOL-NEXT-2-R2
+  WORKFLOW_FILE: .github/workflows/step-school-next-2-r2-owner-today.yml
+  ORIGINAL_WORKFLOW_FILE: .github/workflows/step-school-next-2-owner-today.yml
+  R1_WORKFLOW_FILE: .github/workflows/step-school-next-2-r1-owner-today.yml
+  STATE_DIR: dpro-next
+  TARGET_FILE: owner.html
+  BASELINE_TAG: backup-school-next-before-2-20260723
+  EXPECTED_CURRENT_STEP: SCHOOL-NEXT-2-R2_REQUIRED
+  NEXT_STEP: SCHOOL-NEXT-3
+  PAGES_URL: https://dpromstk2000-lab.github.io/dpro-school-line/owner.html
+  API_BASE: https://dpro-school-line-api.dpromstk2000.workers.dev
+  EXPECTED_WORKER_VERSION: STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723
+
+jobs:
+  owner-next:
+    name: PCオーナー画面・今日やること整理 R2
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 1. リポジトリ取得
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 2. 前STEP完了・正常版保護
+        id: preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          test "${GITHUB_REF_NAME}" = "main"
+          test -f "${WORKFLOW_FILE}"
+          test -f "${ORIGINAL_WORKFLOW_FILE}"
+          test -f "${R1_WORKFLOW_FILE}"
+          test -f "${TARGET_FILE}"
+          test -f config.js
+          test -f "${STATE_DIR}/current-step.yml"
+
+          CURRENT_STEP="$(grep -E '^current_step:' "${STATE_DIR}/current-step.yml" | head -1 | cut -d: -f2- | tr -d '"' | xargs)"
+          if [ "${CURRENT_STEP}" != "${EXPECTED_CURRENT_STEP}" ]; then
+            echo "::error::前STEP未完了または台帳不一致です。current_step=${CURRENT_STEP}, expected=${EXPECTED_CURRENT_STEP}"
+            exit 1
+          fi
+
+          ruby -e 'require "yaml"; YAML.load_file(ARGV[0], aliases: true); puts "YAML syntax OK"' "${WORKFLOW_FILE}"
+
+          BEFORE_SHA256="$(sha256sum "${TARGET_FILE}" | awk '{print $1}')"
+          BEFORE_BYTES="$(wc -c < "${TARGET_FILE}" | tr -d ' ')"
+          BEFORE_GIT_SHA="$(git rev-parse HEAD)"
+          echo "before_sha256=${BEFORE_SHA256}" >> "${GITHUB_OUTPUT}"
+          echo "before_bytes=${BEFORE_BYTES}" >> "${GITHUB_OUTPUT}"
+          echo "before_git_sha=${BEFORE_GIT_SHA}" >> "${GITHUB_OUTPUT}"
+
+          cp "${TARGET_FILE}" "${RUNNER_TEMP}/owner-before-school-next-2.html"
+
+          if git rev-parse "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            echo "::notice::既存バックアップタグを維持します: ${BASELINE_TAG}"
+          elif git ls-remote --exit-code --tags origin "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/${BASELINE_TAG}:refs/tags/${BASELINE_TAG}"
+            echo "::notice::リモートのバックアップタグを取得しました: ${BASELINE_TAG}"
+          else
+            git tag -a "${BASELINE_TAG}" "${BEFORE_GIT_SHA}" -m "DPRO 学習塾 LINE / SCHOOL-NEXT-2 変更前正常版"
+            git push origin "refs/tags/${BASELINE_TAG}"
+            echo "::notice::バックアップタグを作成しました: ${BASELINE_TAG}"
+          fi
+
+      - name: 3. owner.htmlをDPRO NEXT型へ再編
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path("owner.html")
+          text = path.read_text(encoding="utf-8")
+          original = text
+
+          def require(marker, label):
+              if marker not in text:
+                  raise RuntimeError(f"{label}が見つかりません: {marker[:100]}")
+
+          def replace_once(source, old, new, label):
+              count = source.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{label}の一致数が1ではありません: {count}")
+              return source.replace(old, new, 1)
+
+          if "STEP SCHOOL-NEXT-2 / owner.html" in text:
+              print("owner.htmlは既にSCHOOL-NEXT-2です。再変更せず検査へ進みます。")
+              sys.exit(0)
+
+          required_markers = {
+              "旧画面バージョン": "STEP SCHOOL-10-R4 / owner.html",
+              "旧JSバージョン": "const VERSION = 'STEP SCHOOL-10-R2';",
+              "概要カード": '<div class="stats" id="statsGrid"></div>',
+              "予約登録カード": '<div class="card" id="createLessonCard">',
+              "今日やることカード": '<div class="card" id="tasksCard">',
+              "受付一覧カード": '<div class="section-title"><span class="num">4</span><h2>受付一覧</h2>',
+              "授業予定カード": '<div class="section-title"><span class="num">5</span><h2>本日の授業予定</h2>',
+              "renderAll": "      function renderAll(){",
+              "renderTasks": "      function renderTasks(){",
+              "renderRequests": "      function renderRequests(){",
+              "bindEvents": "      function bindEvents(){",
+              "boot": "      function boot(){",
+          }
+          for label, marker in required_markers.items():
+              require(marker, label)
+
+          unique_version_markers = {
+              "画面上部バージョン": '<div class="version">STEP SCHOOL-10-R4 / owner.html</div>',
+              "フッターバージョン": '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R4 / owner.html</p>',
+          }
+          for label, marker in unique_version_markers.items():
+              count = text.count(marker)
+              if count != 1:
+                  raise RuntimeError(f"{label}の一致数が1ではありません: {count}")
+
+          text = replace_once(
+              text,
+              '<div class="version">STEP SCHOOL-10-R4 / owner.html</div>',
+              '<div class="version">STEP SCHOOL-NEXT-2 / owner.html</div>',
+              "画面上部バージョン更新",
+          )
+          text = replace_once(
+              text,
+              '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-10-R4 / owner.html</p>',
+              '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-2 / owner.html</p>',
+              "フッターバージョン更新",
+          )
+          text = replace_once(
+              text,
+              "const VERSION = 'STEP SCHOOL-10-R2';",
+              "const VERSION = 'STEP SCHOOL-NEXT-2';",
+              "JavaScriptバージョン更新",
+          )
+
+          old_lead = (
+              "体験予約、欠席連絡、振替希望、今日やること、本日の授業予定、生徒・保護者検索、"
+              "電話予約・教室受付予約をPCで確認・登録する画面です。保護者へ送るLINE文面はその場でコピーできます。"
+          )
+          new_lead = (
+              "未対応、今日の授業、体験・欠席・振替の受付を優先順に確認できます。"
+              "普段は「今日やること」から対応し、予約・授業の追加は必要な時だけ開くDPRO NEXT型の管理画面です。"
+          )
+          text = replace_once(text, old_lead, new_lead, "リード文更新")
+
+          css_anchor = "    @media(max-width:1100px){"
+          next_css = r'''
+          /* SCHOOL-NEXT-2: 今日やること中心のPCオーナー画面 */
+          .next-priority-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px;}
+          .next-priority-card{appearance:none;width:100%;text-align:left;border:1px solid #dbe5f2;background:#fff;border-radius:18px;padding:15px 16px;min-height:112px;color:var(--text);box-shadow:none;transition:.16s ease;}
+          .next-priority-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,23,42,.10);}
+          .next-priority-card:focus-visible{outline:3px solid rgba(37,99,235,.24);outline-offset:2px;}
+          .next-priority-card .next-order{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 8px;border-radius:999px;background:#0f172a;color:#fff;font-size:12px;font-weight:950;margin-bottom:10px;}
+          .next-priority-card b{display:block;font-size:17px;line-height:1.35;margin-bottom:5px;}
+          .next-priority-card small{display:block;color:#64748b;font-size:12px;line-height:1.65;font-weight:750;}
+          .next-priority-card strong{float:right;font-size:30px;line-height:1;color:#1d4ed8;letter-spacing:-.04em;}
+          .next-priority-card.urgent{border-color:#fdba74;background:#fff7ed;}
+          .next-priority-card.lessons{border-color:#bfdbfe;background:#eff6ff;}
+          .next-priority-card.requests{border-color:#bbf7d0;background:#ecfdf5;}
+          .next-collapsed{display:none!important;}
+          #tasksCard{border-color:#fdba74;background:rgba(255,250,245,.96);}
+          #todayLessonsCard{border-color:#bfdbfe;}
+          #requestsCard{border-color:#bbf7d0;}
+          #createLessonCard{border-color:#ddd6fe;}
+          .next-secondary-title{display:inline-flex;align-items:center;gap:7px;margin-left:auto;color:#64748b;font-size:12px;font-weight:850;}
+          .next-task-priority{margin-left:auto;}
+          @media(max-width:900px){
+          .next-priority-grid{grid-template-columns:1fr;}
+          .next-priority-card{min-height:96px;}
+          }
+          '''
+          text = replace_once(text, css_anchor, next_css + "\n" + css_anchor, "NEXT用CSS追加")
+
+          overview_old = (
+              '        <div class="card">\n'
+              '          <div class="section-title"><span class="num">1</span><h2>本日の確認</h2></div>\n'
+              '          <p class="hint">管理コードを保存して「更新」を押すと、体験予約・欠席・振替・今日やることを読み込みます。</p>'
+          )
+          overview_new = (
+              '        <div class="card" id="todayOverviewCard">\n'
+              '          <div class="section-title"><span class="num">1</span><h2>今日の優先確認</h2>'
+              '<span class="next-secondary-title" id="todayDateLabel">本日</span></div>\n'
+              '          <p class="hint">上から順に確認すれば、未対応・授業・受付を迷わず処理できます。'
+              '主要な日常操作は「対象を開く → 文面確認・コピー → 対応済み」の3操作以内です。</p>'
+          )
+          text = replace_once(text, overview_old, overview_new, "概要カード更新")
+
+          priority_html = r'''
+          <div class="next-priority-grid" id="nextPriorityGrid" aria-label="今日の優先操作">
+            <button class="next-priority-card urgent" type="button" data-next-scroll="tasksCard">
+              <span class="next-order">1</span><strong id="nextTaskCount">0</strong>
+              <b>未対応を確認</b><small>欠席返信・振替返信・体験確認を優先順に表示</small>
+            </button>
+            <button class="next-priority-card lessons" type="button" data-next-scroll="todayLessonsCard">
+              <span class="next-order">2</span><strong id="nextLessonCount">0</strong>
+              <b>今日の授業</b><small>出席・授業中・完了をその場で更新</small>
+            </button>
+            <button class="next-priority-card requests" type="button" data-next-scroll="requestsCard">
+              <span class="next-order">3</span><strong id="nextRequestCount">0</strong>
+              <b>受付を確認</b><small>体験・欠席・振替の内容と返信状況を確認</small>
+            </button>
+          </div>'''
+          text = replace_once(
+              text,
+              '          <div class="stats" id="statsGrid"></div>',
+              '          <div class="stats" id="statsGrid"></div>\n' + priority_html,
+              "優先操作カード追加",
+          )
+
+          actions_old = (
+              '            <button class="btn" id="refreshBtn" type="button">更新</button>\n'
+              '            <button class="btn green" id="prepareDemoBtn" type="button">営業前デモ準備</button>\n'
+              '            <button class="btn secondary" id="healthBtn" type="button">API接続確認</button>'
+          )
+          actions_new = (
+              '            <button class="btn" id="refreshBtn" type="button">今日の情報を更新</button>\n'
+              '            <button class="btn purple" id="openCreateCardBtn" type="button">予約・授業を追加</button>\n'
+              '            <button class="btn secondary" type="button" data-next-scroll="tasksCard">今日やることへ</button>\n'
+              '            <button class="btn green" id="prepareDemoBtn" type="button">営業前デモ準備</button>\n'
+              '            <button class="btn secondary" id="healthBtn" type="button">API接続確認</button>'
+          )
+          text = replace_once(text, actions_old, actions_new, "概要操作ボタン更新")
+
+          create_start = text.index('        <div class="card" id="createLessonCard">')
+          tasks_start = text.index('        <div class="card" id="tasksCard">', create_start)
+          request_start = text.index(
+              '        <div class="card">\n'
+              '          <div class="section-title"><span class="num">4</span><h2>受付一覧</h2>',
+              tasks_start,
+          )
+          lesson_start = text.index(
+              '        <div class="card">\n'
+              '          <div class="section-title"><span class="num">5</span><h2>本日の授業予定</h2>',
+              request_start,
+          )
+          left_end = text.index('      </section>\n\n      <aside class="stack">', lesson_start)
+
+          prefix = text[:create_start]
+          create_block = text[create_start:tasks_start]
+          tasks_block = text[tasks_start:request_start]
+          request_block = text[request_start:lesson_start]
+          lesson_block = text[lesson_start:left_end]
+          suffix = text[left_end:]
+
+          create_block = replace_once(
+              create_block,
+              '<div class="card" id="createLessonCard">',
+              '<div class="card next-collapsed" id="createLessonCard">',
+              "予約登録カード初期折りたたみ",
+          )
+          create_block = replace_once(
+              create_block,
+              '<span class="num">2</span><h2>電話予約・教室受付予約を登録</h2>',
+              '<span class="num">5</span><h2>予約・授業を追加</h2>',
+              "予約登録見出し更新",
+          )
+          create_block = replace_once(
+              create_block,
+              '電話で受けた体験予約、教室受付で受けた予約、既存生徒の授業予定をPCから登録します。日付は今日以降、時間は30分単位で選びます。',
+              'この欄は必要な時だけ開きます。電話受付・教室受付・既存生徒の授業追加を行い、日付は今日以降、時間は30分単位で登録します。',
+              "予約登録説明更新",
+          )
+          create_block = replace_once(
+              create_block,
+              '<button class="btn secondary" id="clearCreateBtn" type="button">入力をクリア</button>',
+              '<button class="btn secondary" id="clearCreateBtn" type="button">入力をクリア</button>\n'
+              '            <button class="btn secondary" id="closeCreateCardBtn" type="button">入力欄を閉じる</button>',
+              "予約登録を閉じるボタン追加",
+          )
+
+          tasks_block = replace_once(
+              tasks_block,
+              '<span class="num">3</span><h2>今日やること</h2>',
+              '<span class="num">2</span><h2>今日やること</h2>',
+              "今日やること番号更新",
+          )
+          tasks_block = replace_once(
+              tasks_block,
+              '未対応の欠席返信・振替返信・体験予約確認を集約します。対応が終わったものは「対応済み」にします。',
+              '期限・優先度・受付内容から重要な順に並べます。文面を確認・コピーし、終わったものを「対応済み」にします。',
+              "今日やること説明更新",
+          )
+
+          lesson_block = replace_once(
+              lesson_block,
+              '        <div class="card">\n'
+              '          <div class="section-title"><span class="num">5</span><h2>本日の授業予定</h2>',
+              '        <div class="card" id="todayLessonsCard">\n'
+              '          <div class="section-title"><span class="num">3</span><h2>本日の授業予定</h2>',
+              "授業カードID・番号更新",
+          )
+
+          request_block = replace_once(
+              request_block,
+              '        <div class="card">\n'
+              '          <div class="section-title"><span class="num">4</span><h2>受付一覧</h2>',
+              '        <div class="card" id="requestsCard">\n'
+              '          <div class="section-title"><span class="num">4</span><h2>受付一覧</h2>',
+              "受付カードID追加",
+          )
+
+          text = prefix + tasks_block + lesson_block + request_block + create_block + suffix
+
+          flow_replacements = [
+              (
+                  '<li>営業前デモ準備または更新</li>',
+                  '__DPRO_SCHOOL_FLOW_1__',
+                  '<li>「今日の情報を更新」を押す</li>',
+                  "運用フロー1",
+              ),
+              (
+                  '<li>電話・教室受付予約はPCから登録</li>',
+                  '__DPRO_SCHOOL_FLOW_2__',
+                  '<li>今日やることを上から確認</li>',
+                  "運用フロー2",
+              ),
+              (
+                  '<li>今日やることを見る</li>',
+                  '__DPRO_SCHOOL_FLOW_3__',
+                  '<li>文面を確認・コピーしてLINEで送信</li>',
+                  "運用フロー3",
+              ),
+              (
+                  '<li>欠席・振替・体験予約へ返信</li>',
+                  '__DPRO_SCHOOL_FLOW_4__',
+                  '<li>対応済みにして一覧を整理</li>',
+                  "運用フロー4",
+              ),
+              (
+                  '<li>文面をコピーしてLINEで送信</li>',
+                  '__DPRO_SCHOOL_FLOW_5__',
+                  '<li>本日の授業を出席・授業中・完了へ更新</li>',
+                  "運用フロー5",
+              ),
+              (
+                  '<li>対応済みにして一覧を整理</li>',
+                  '__DPRO_SCHOOL_FLOW_6__',
+                  '<li>必要な時だけ予約・授業追加を開く</li>',
+                  "運用フロー6",
+              ),
+          ]
+
+          for old_item, token, new_item, label in flow_replacements:
+              text = replace_once(text, old_item, token, label + "仮置換")
+
+          for old_item, token, new_item, label in flow_replacements:
+              text = replace_once(text, token, new_item, label + "確定")
+
+          if text.count('<li>必要なら生徒検索で詳細確認</li>') != 1:
+              raise RuntimeError("運用フロー7の一致数が1ではありません。")
+
+          function_anchor = "      function renderAll(){"
+          next_functions = r'''      function nextTaskScore(item){
+          let score = 0;
+          const priority = String(item && item.priority || '').toLowerCase();
+          const date = String(item && item.date || '').slice(0,10);
+          if(priority.includes('urgent') || priority.includes('high') || priority.includes('至急') || priority.includes('高')) score += 80;
+          if(date && date < todayYmd()) score += 120;
+          else if(date === todayYmd()) score += 70;
+          if(isAbsenceType(item && item.type)) score += 50;
+          else if(isMakeupType(item && item.type)) score += 35;
+          else if(isTrialType(item && item.type)) score += 25;
+          return score;
+          }
+
+          function sortNextTasks(items){
+          return [...(items || [])].sort((a,b) => {
+          const score = nextTaskScore(b) - nextTaskScore(a);
+          if(score) return score;
+          return String(a.date || '9999-12-31').localeCompare(String(b.date || '9999-12-31')) ||
+            String(a.time || '99:99').localeCompare(String(b.time || '99:99'));
+          });
+          }
+
+          function nextPriorityLabel(item){
+          const date = String(item && item.date || '').slice(0,10);
+          const priority = String(item && item.priority || '').toLowerCase();
+          if(date && date < todayYmd()) return '期限超過';
+          if(date === todayYmd()) return '本日対応';
+          if(priority.includes('urgent') || priority.includes('high') || priority.includes('至急') || priority.includes('高')) return '優先';
+          return '通常';
+          }
+
+          function nextPriorityClass(item){
+          const label = nextPriorityLabel(item);
+          if(label === '期限超過') return 'red';
+          if(label === '本日対応') return 'orange';
+          if(label === '優先') return 'purple';
+          return 'gray';
+          }
+
+          function renderPriorityGuide(){
+          const dashboard = state.dashboard || makeEmptyDashboard();
+          const tasks = (dashboard.tasks || []).filter((x) => !boolDone(x.status));
+          const lessons = dashboard.lessons || [];
+          const requests = dashboard.allRequests || [];
+          if($('nextTaskCount')) $('nextTaskCount').textContent = String(tasks.length);
+          if($('nextLessonCount')) $('nextLessonCount').textContent = String(lessons.length);
+          if($('nextRequestCount')) $('nextRequestCount').textContent = String(requests.filter((x) => !boolDone(x.status)).length);
+          if($('todayDateLabel')) $('todayDateLabel').textContent = `${formatDate(todayYmd())} 現在`;
+          }
+
+          function scrollToNextTarget(id){
+          const target = $(id);
+          if(!target) return;
+          target.scrollIntoView({ behavior:'smooth', block:'start' });
+          }
+
+          function setCreateCardOpen(open){
+          const card = $('createLessonCard');
+          if(!card) return;
+          card.classList.toggle('next-collapsed', !open);
+          const button = $('openCreateCardBtn');
+          if(button) button.textContent = open ? '予約・授業入力を表示中' : '予約・授業を追加';
+          if(open) requestAnimationFrame(() => card.scrollIntoView({ behavior:'smooth', block:'start' }));
+          }
+
+          '''
+          text = replace_once(text, function_anchor, next_functions + function_anchor, "NEXT用JavaScript関数追加")
+
+          text = replace_once(
+              text,
+              "        renderStats();\n        renderTasks();",
+              "        renderStats();\n        renderPriorityGuide();\n        renderTasks();",
+              "優先案内再描画追加",
+          )
+
+          task_start = text.index("      function renderTasks(){")
+          task_end = text.index("\n      function renderRequests(){", task_start)
+          task_fn = text[task_start:task_end]
+          task_fn = replace_once(
+              task_fn,
+              "const items = (state.dashboard.tasks || []).filter((x) => !boolDone(x.status));",
+              "const items = sortNextTasks((state.dashboard.tasks || []).filter((x) => !boolDone(x.status)));",
+              "タスク優先順並べ替え",
+          )
+          task_fn = replace_once(
+              task_fn,
+              '<span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || \'未対応\')}</span>',
+              '<span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status || \'未対応\')}</span>\n'
+              '                  <span class="badge ${nextPriorityClass(item)} next-task-priority">${escapeHtml(nextPriorityLabel(item))}</span>',
+              "タスク優先度バッジ追加",
+          )
+          text = text[:task_start] + task_fn + text[task_end:]
+
+          text = replace_once(
+              text,
+              "        setCreateType('manual');\n        $('createLessonCard').scrollIntoView({ behavior:'smooth', block:'start' });",
+              "        setCreateType('manual');\n        setCreateCardOpen(true);",
+              "検索結果から予約入力欄を開く処理",
+          )
+
+          event_anchor = "        $('healthBtn').addEventListener('click', checkHealth);"
+          event_insert = r'''
+          $('openCreateCardBtn').addEventListener('click', () => setCreateCardOpen(true));
+          $('closeCreateCardBtn').addEventListener('click', () => {
+          setCreateCardOpen(false);
+          scrollToNextTarget('todayOverviewCard');
+          });
+          document.body.addEventListener('click', (e) => {
+          const target = e.target.closest('[data-next-scroll]');
+          if(target) scrollToNextTarget(target.dataset.nextScroll);
+          });'''
+          text = replace_once(text, event_anchor, event_anchor + event_insert, "NEXT操作イベント追加")
+
+          text = replace_once(
+              text,
+              "        setCreateType('phone');\n        const savedCode",
+              "        setCreateType('phone');\n        setCreateCardOpen(false);\n        const savedCode",
+              "予約入力欄初期非表示",
+          )
+
+          if text == original:
+              raise RuntimeError("owner.htmlに変更が発生していません。")
+
+          path.write_text(text, encoding="utf-8", newline="\n")
+          print("owner.html SCHOOL-NEXT-2 patch complete")
+          PY
+
+      - name: 4. HTML・JavaScript・ID・既存機能維持検査
+        id: validation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "${STATE_DIR}"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from datetime import datetime, timezone, timedelta
+          import hashlib
+          import json
+          import os
+          import re
+          import subprocess
+
+          target = Path("owner.html")
+          before = Path(os.environ["RUNNER_TEMP"]) / "owner-before-school-next-2.html"
+          out = Path(os.environ["STATE_DIR"])
+          JST = timezone(timedelta(hours=9))
+          results = []
+
+          def add(key, label, status, detail, blocking=False):
+              results.append({
+                  "key": key,
+                  "label": label,
+                  "status": status,
+                  "detail": detail,
+                  "blocking": bool(blocking and status == "NG"),
+              })
+
+          class Inspector(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.ids = []
+                  self.scripts = []
+                  self.in_script = False
+                  self.script_src = None
+                  self.parts = []
+
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  if data.get("id"):
+                      self.ids.append(data["id"])
+                  if tag.lower() == "script":
+                      self.in_script = True
+                      self.script_src = data.get("src")
+                      self.parts = []
+
+              def handle_data(self, data):
+                  if self.in_script and not self.script_src:
+                      self.parts.append(data)
+
+              def handle_endtag(self, tag):
+                  if tag.lower() == "script" and self.in_script:
+                      if not self.script_src:
+                          self.scripts.append("".join(self.parts))
+                      self.in_script = False
+                      self.script_src = None
+                      self.parts = []
+
+          before_text = before.read_text(encoding="utf-8")
+          after_text = target.read_text(encoding="utf-8")
+          before_parser = Inspector()
+          after_parser = Inspector()
+          before_parser.feed(before_text)
+          before_parser.close()
+          after_parser.feed(after_text)
+          after_parser.close()
+
+          missing_old_ids = sorted(set(before_parser.ids) - set(after_parser.ids))
+          duplicate_ids = sorted({value for value in after_parser.ids if after_parser.ids.count(value) > 1})
+          required_new_ids = {
+              "todayOverviewCard", "todayDateLabel", "nextPriorityGrid",
+              "nextTaskCount", "nextLessonCount", "nextRequestCount",
+              "todayLessonsCard", "requestsCard", "openCreateCardBtn", "closeCreateCardBtn"
+          }
+          missing_new_ids = sorted(required_new_ids - set(after_parser.ids))
+
+          if missing_old_ids:
+              add("existing_ids", "既存HTML ID維持", "NG", "削除されたID: " + ", ".join(missing_old_ids), True)
+          else:
+              add("existing_ids", "既存HTML ID維持", "OK", f"既存ID {len(set(before_parser.ids))}件をすべて維持")
+
+          if duplicate_ids:
+              add("duplicate_ids", "HTML ID重複", "NG", ", ".join(duplicate_ids), True)
+          else:
+              add("duplicate_ids", "HTML ID重複", "OK", f"ID {len(after_parser.ids)}件、重複なし")
+
+          if missing_new_ids:
+              add("next_ids", "NEXT-2追加ID", "NG", "不足: " + ", ".join(missing_new_ids), True)
+          else:
+              add("next_ids", "NEXT-2追加ID", "OK", f"追加ID {len(required_new_ids)}件を確認")
+
+          script_errors = []
+          script_count = 0
+          for index, script in enumerate(after_parser.scripts, 1):
+              if not script.strip():
+                  continue
+              temp = out / f".owner-next-2-{index}.js"
+              temp.write_text(script, encoding="utf-8")
+              proc = subprocess.run(["node", "--check", str(temp)], capture_output=True, text=True)
+              temp.unlink(missing_ok=True)
+              script_count += 1
+              if proc.returncode != 0:
+                  script_errors.append((proc.stderr or proc.stdout)[-1600:])
+
+          if script_errors:
+              add("javascript", "JavaScript構文", "NG", " / ".join(script_errors), True)
+          else:
+              add("javascript", "JavaScript構文", "OK", f"インラインscript {script_count}件 node --check PASS")
+
+          try:
+              parser = Inspector()
+              parser.feed(after_text)
+              parser.close()
+              add("html", "HTML構文", "OK", "標準HTMLパーサーで読込可能")
+          except Exception as exc:
+              add("html", "HTML構文", "NG", str(exc), True)
+
+          order_ids = ["todayOverviewCard", "tasksCard", "todayLessonsCard", "requestsCard", "createLessonCard"]
+          positions = [after_text.find(f'id="{value}"') for value in order_ids]
+          if any(value < 0 for value in positions) or positions != sorted(positions):
+              add("display_order", "主要画面表示順", "NG", f"{list(zip(order_ids, positions))}", True)
+          else:
+              add("display_order", "主要画面表示順", "OK", "今日の優先確認 → 今日やること → 本日の授業 → 受付一覧 → 予約追加")
+
+          required_markers = [
+              "STEP SCHOOL-NEXT-2 / owner.html",
+              "const VERSION = 'STEP SCHOOL-NEXT-2';",
+              "sortNextTasks",
+              "renderPriorityGuide",
+              "setCreateCardOpen",
+              'class="card next-collapsed" id="createLessonCard"',
+              "主要な日常操作は",
+              "管理コード",
+              'id="clearAdminBtn"',
+              'id="createPhoneBtn"',
+              'id="createWalkinBtn"',
+              'id="createManualBtn"',
+              'id="taskList"',
+              'id="requestList"',
+              'id="lessonList"',
+              'id="searchBtn"',
+              'id="messagePreview"',
+          ]
+          missing_markers = [marker for marker in required_markers if marker not in after_text]
+          if missing_markers:
+              add("required_features", "既存・NEXT機能維持", "NG", "不足: " + ", ".join(missing_markers), True)
+          else:
+              add("required_features", "既存・NEXT機能維持", "OK", f"必須マーカー {len(required_markers)}件を確認")
+
+          api_pattern = re.compile(r"['\"](/api/[a-zA-Z0-9_./-]+)['\"]")
+          before_apis = sorted(set(api_pattern.findall(before_text)))
+          after_apis = sorted(set(api_pattern.findall(after_text)))
+          if before_apis != after_apis:
+              add("api_unchanged", "既存API維持", "NG", f"before={before_apis} / after={after_apis}", True)
+          else:
+              add("api_unchanged", "既存API維持", "OK", f"既存API {len(after_apis)}件、追加・削除なし")
+
+          before_config_refs = before_text.count("config.js")
+          after_config_refs = after_text.count("config.js")
+          if before_config_refs != after_config_refs:
+              add("config_reference", "config.js参照維持", "NG", f"before={before_config_refs}, after={after_config_refs}", True)
+          else:
+              add("config_reference", "config.js参照維持", "OK", f"参照数 {after_config_refs}")
+
+          size = target.stat().st_size
+          if size > 300_000:
+              add("file_size", "owner.html容量", "NG", f"{size:,} bytes。300KBを超えています。", True)
+          elif size > 180_000:
+              add("file_size", "owner.html容量", "注意", f"{size:,} bytes。今後の分割候補です。")
+          else:
+              add("file_size", "owner.html容量", "OK", f"{size:,} bytes")
+
+          forbidden_public_changes = ["index.html", "member.html", "owner-ipad.html", "system-check.html", "config.js"]
+          changed = subprocess.run(
+              ["git", "diff", "--name-only"],
+              capture_output=True, text=True, check=True
+          ).stdout.splitlines()
+          unexpected = [name for name in forbidden_public_changes if name in changed]
+          if unexpected:
+              add("target_scope", "対象ファイル限定", "NG", "意図しない変更: " + ", ".join(unexpected), True)
+          else:
+              add("target_scope", "対象ファイル限定", "OK", "本体変更はowner.htmlのみ")
+
+          add("worker_change", "Worker変更記録", "OK", "変更なし。NEXT-1採用Workerを維持")
+          add("supabase_change", "Supabase変更記録", "OK", "変更なし。SQL実行不要")
+          add("api_change", "API変更記録", "OK", "変更なし。既存エンドポイントをそのまま利用")
+          add("automatic_line", "一括自動LINE配信", "OK", "追加なし。個別の文面確認・コピーを維持")
+
+          counts = {name: sum(1 for row in results if row["status"] == name) for name in ["OK", "注意", "NG"]}
+          blocking_ng = sum(1 for row in results if row["status"] == "NG" and row["blocking"])
+          payload = {
+              "step": "SCHOOL-NEXT-2",
+              "checked_at_jst": datetime.now(JST).isoformat(timespec="seconds"),
+              "target_file": "owner.html",
+              "before_sha256": hashlib.sha256(before.read_bytes()).hexdigest(),
+              "after_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+              "results": results,
+              "counts": counts,
+              "blocking_ng": blocking_ng,
+          }
+          (out / "school-next-2-validation.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          output = os.environ.get("GITHUB_OUTPUT")
+          if output:
+              with open(output, "a", encoding="utf-8") as fh:
+                  fh.write(f"blocking_ng={blocking_ng}\n")
+                  fh.write(f"ok_count={counts['OK']}\n")
+                  fh.write(f"warning_count={counts['注意']}\n")
+                  fh.write(f"ng_count={counts['NG']}\n")
+                  fh.write(f"after_sha256={payload['after_sha256']}\n")
+
+          if blocking_ng:
+              raise SystemExit(f"blocking NG: {blocking_ng}")
+          PY
+
+      - name: 5. Worker・公開URLの変更前接続確認
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          BROWSER_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+          HEALTH_FILE="${RUNNER_TEMP}/school-next-2-health.json"
+          PAGE_FILE="${RUNNER_TEMP}/school-next-2-owner-public.html"
+
+          HEALTH_STATUS="$(curl -sS -L --retry 2 --max-time 25 \
+            -A "${BROWSER_UA}" \
+            -H "Accept: application/json,text/plain,*/*" \
+            -H "Accept-Language: ja,en-US;q=0.9,en;q=0.8" \
+            -H "Cache-Control: no-cache" \
+            -o "${HEALTH_FILE}" -w '%{http_code}' \
+            "${API_BASE}/api/health?next_check=school-next-2-${GITHUB_RUN_ID}")"
+
+          if [ "${HEALTH_STATUS}" != "200" ]; then
+            echo "::error::Worker health HTTP ${HEALTH_STATUS}"
+            cat "${HEALTH_FILE}" || true
+            exit 1
+          fi
+
+          python3 - "${HEALTH_FILE}" "${EXPECTED_WORKER_VERSION}" <<'PY'
+          import json, sys
+          data = json.load(open(sys.argv[1], encoding="utf-8"))
+          expected = sys.argv[2]
+          if data.get("version") != expected:
+              raise SystemExit(f"Worker version mismatch: {data.get('version')} != {expected}")
+          if data.get("db_ok") is not True:
+              raise SystemExit("Worker db_ok is not true")
+          print("Worker health OK")
+          PY
+
+          PAGE_STATUS="$(curl -sS -L --retry 2 --max-time 25 \
+            -A "${BROWSER_UA}" \
+            -H "Accept: text/html,application/xhtml+xml" \
+            -H "Cache-Control: no-cache" \
+            -o "${PAGE_FILE}" -w '%{http_code}' \
+            "${PAGES_URL}?next_check=before-school-next-2-${GITHUB_RUN_ID}")"
+
+          if [ "${PAGE_STATUS}" != "200" ] || ! grep -qi '<html' "${PAGE_FILE}"; then
+            echo "::error::現在公開中のowner.html確認に失敗しました。HTTP ${PAGE_STATUS}"
+            exit 1
+          fi
+
+      - name: 6. 完成台帳更新・自動Commit・Push
+        if: success()
+        shell: bash
+        env:
+          BEFORE_SHA256: ${{ steps.preflight.outputs.before_sha256 }}
+          BEFORE_GIT_SHA: ${{ steps.preflight.outputs.before_git_sha }}
+          AFTER_SHA256: ${{ steps.validation.outputs.after_sha256 }}
+          OK_COUNT: ${{ steps.validation.outputs.ok_count }}
+          WARNING_COUNT: ${{ steps.validation.outputs.warning_count }}
+        run: |
+          set -Eeuo pipefail
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import os
+          import re
+
+          state_dir = Path(os.environ["STATE_DIR"])
+          state_dir.mkdir(exist_ok=True)
+          jst = timezone(timedelta(hours=9))
+          now = datetime.now(jst).isoformat(timespec="seconds")
+
+          current_path = state_dir / "current-step.yml"
+          current = current_path.read_text(encoding="utf-8")
+          current = re.sub(r'^current_step:.*$', 'current_step: "SCHOOL-NEXT-3"', current, flags=re.M)
+          current = re.sub(r'^last_completed_step:.*$', 'last_completed_step: "SCHOOL-NEXT-2"', current, flags=re.M)
+          current = re.sub(r'^last_result:.*$', 'last_result: "OK"', current, flags=re.M)
+          current = re.sub(r'^updated_at_jst:.*$', f'updated_at_jst: "{now}"', current, flags=re.M)
+          current = re.sub(r'^worker_changed:.*$', 'worker_changed: false', current, flags=re.M)
+          current = re.sub(r'^supabase_changed:.*$', 'supabase_changed: false', current, flags=re.M)
+          current = re.sub(r'^api_changed:.*$', 'api_changed: false', current, flags=re.M)
+          current_path.write_text(current, encoding="utf-8")
+
+          record = f'''step: "SCHOOL-NEXT-2"
+          revision: "R2"
+          result: "OK"
+          completed_at_jst: "{now}"
+          target_files:
+            - "owner.html"
+          changes:
+            - "今日の優先確認を最初に表示"
+            - "今日やることを優先度・期限順に表示"
+            - "本日の授業を受付一覧より前へ移動"
+            - "予約・授業追加を必要時だけ開く"
+            - "主要操作を3操作以内へ整理"
+          owner_before_sha256: "{os.environ.get('BEFORE_SHA256','')}"
+          owner_after_sha256: "{os.environ.get('AFTER_SHA256','')}"
+          baseline_commit: "{os.environ.get('BEFORE_GIT_SHA','')}"
+          backup_tag: "backup-school-next-before-2-20260723"
+          worker_changed: false
+          supabase_changed: false
+          sql_required: false
+          api_changed: false
+          github_pages_changed: true
+          validation_ok: {os.environ.get('OK_COUNT','0')}
+          validation_warning: {os.environ.get('WARNING_COUNT','0')}
+          next_step: "SCHOOL-NEXT-3"
+          '''
+          record = "\n".join(line[10:] if line.startswith("          ") else line for line in record.splitlines()) + "\n"
+          (state_dir / "school-next-2-change-record.yml").write_text(record, encoding="utf-8")
+          PY
+
+          rm -f "${ORIGINAL_WORKFLOW_FILE}" "${R1_WORKFLOW_FILE}" "${WORKFLOW_FILE}"
+
+          git add owner.html "${STATE_DIR}/current-step.yml" \
+            "${STATE_DIR}/school-next-2-change-record.yml" \
+            "${STATE_DIR}/school-next-2-validation.json" \
+            "${ORIGINAL_WORKFLOW_FILE}" "${R1_WORKFLOW_FILE}" "${WORKFLOW_FILE}"
+
+          if git diff --cached --quiet; then
+            echo "::error::Commit対象がありません。"
+            exit 1
+          fi
+
+          git commit -m "fix(school-next): complete NEXT-2 R2 owner today dashboard"
+          git push origin main
+
+          {
+            echo "## SCHOOL-NEXT-2 R2 完了"
+            echo ""
+            echo "- owner.html: 今日やること中心へ再編"
+            echo "- Worker変更: なし"
+            echo "- Supabase変更: なし"
+            echo "- API変更: なし"
+            echo "- 次のSTEP: SCHOOL-NEXT-3"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: 7. 失敗時ロールバック・R3台帳
+        if: failure()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -f "${RUNNER_TEMP}/owner-before-school-next-2.html" ]; then
+            cp "${RUNNER_TEMP}/owner-before-school-next-2.html" owner.html
+          else
+            git checkout -- owner.html || true
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import re
+
+          state_dir = Path("dpro-next")
+          state_dir.mkdir(exist_ok=True)
+          now = datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
+          current_path = state_dir / "current-step.yml"
+          if current_path.exists():
+              current = current_path.read_text(encoding="utf-8")
+              current = re.sub(r'^current_step:.*$', 'current_step: "SCHOOL-NEXT-2-R3_REQUIRED"', current, flags=re.M)
+              current = re.sub(r'^last_result:.*$', 'last_result: "NG"', current, flags=re.M)
+              current = re.sub(r'^updated_at_jst:.*$', f'updated_at_jst: "{now}"', current, flags=re.M)
+              current_path.write_text(current, encoding="utf-8")
+
+          record = f'''step: "SCHOOL-NEXT-2-R2"
+          result: "NG"
+          checked_at_jst: "{now}"
+          rollback: "owner.htmlを変更前へ復元"
+          worker_changed: false
+          supabase_changed: false
+          api_changed: false
+          next_step: "SCHOOL-NEXT-2-R3_REQUIRED"
+          '''
+          record = "\n".join(line[10:] if line.startswith("          ") else line for line in record.splitlines()) + "\n"
+          (state_dir / "school-next-2-r2-failure-record.yml").write_text(record, encoding="utf-8")
+          PY
+
+          git add owner.html "${STATE_DIR}/current-step.yml" "${STATE_DIR}/school-next-2-r2-failure-record.yml"
+          if [ -f "${STATE_DIR}/school-next-2-validation.json" ]; then
+            git add "${STATE_DIR}/school-next-2-validation.json"
+          fi
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(school-next): record NEXT-2 R2 failure and rollback"
+            git push origin main
+          fi
