@@ -1,0 +1,687 @@
+name: "STEP SCHOOL-NEXT-1 | 正常版保護・現状基準台帳"
+run-name: "SCHOOL-NEXT-1 baseline by ${{ github.actor }}"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/step-school-next-1-baseline.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-next-1-baseline
+  cancel-in-progress: false
+
+env:
+  STEP_NAME: SCHOOL-NEXT-1
+  WORKFLOW_FILE: .github/workflows/step-school-next-1-baseline.yml
+  STATE_DIR: dpro-next
+  BASELINE_TAG: backup-school-next-before-1-20260723
+  API_BASE: https://dpro-school-line-api.dpromstk2000.workers.dev
+  PAGES_BASE: https://dpromstk2000-lab.github.io/dpro-school-line
+  SHOP_CODE: dpro_school_demo
+
+jobs:
+  baseline:
+    name: 正常版保護・基準検査
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 1. リポジトリ取得
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 2. 前STEP確認・正常版バックアップタグ
+        id: preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          if [ "${GITHUB_REF_NAME}" != "main" ]; then
+            echo "::error::mainブランチで実行してください。現在: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p "${STATE_DIR}"
+          BASELINE_SHA="$(git rev-parse HEAD)"
+          echo "BASELINE_SHA=${BASELINE_SHA}" >> "${GITHUB_ENV}"
+          echo "baseline_sha=${BASELINE_SHA}" >> "${GITHUB_OUTPUT}"
+
+          REQUIRED=(index.html member.html owner.html owner-ipad.html system-check.html config.js)
+          for file in "${REQUIRED[@]}"; do
+            if [ ! -f "${file}" ]; then
+              echo "::error::必須ファイルがありません: ${file}"
+              exit 1
+            fi
+          done
+
+          PREVIOUS_STEP="未作成"
+          if [ -f "${STATE_DIR}/current-step.yml" ]; then
+            PREVIOUS_STEP="$(grep -E '^current_step:' "${STATE_DIR}/current-step.yml" | head -1 | cut -d: -f2- | xargs || true)"
+          fi
+          echo "previous_step=${PREVIOUS_STEP}" >> "${GITHUB_OUTPUT}"
+
+          if git rev-parse "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            TAG_SHA="$(git rev-list -n 1 "${BASELINE_TAG}")"
+            echo "::notice::既存バックアップタグを維持します: ${BASELINE_TAG} -> ${TAG_SHA}"
+          elif git ls-remote --exit-code --tags origin "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/${BASELINE_TAG}:refs/tags/${BASELINE_TAG}"
+            TAG_SHA="$(git rev-list -n 1 "${BASELINE_TAG}")"
+            echo "::notice::リモートの既存バックアップタグを取得しました: ${BASELINE_TAG} -> ${TAG_SHA}"
+          else
+            git tag -a "${BASELINE_TAG}" "${BASELINE_SHA}" -m "DPRO 学習塾 LINE / SCHOOL-NEXT-1 変更前正常版"
+            git push origin "refs/tags/${BASELINE_TAG}"
+            TAG_SHA="${BASELINE_SHA}"
+            echo "::notice::バックアップタグを作成しました: ${BASELINE_TAG}"
+          fi
+          echo "tag_sha=${TAG_SHA}" >> "${GITHUB_OUTPUT}"
+
+      - name: 3. YML構文検査
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ruby -e 'require "yaml"; YAML.load_file(ARGV[0], aliases: true); puts "YAML syntax OK"' "${WORKFLOW_FILE}"
+
+      - name: 4. HTML・JavaScript・既存機能・業務ロジック検査
+        id: local_check
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import re
+          import subprocess
+          from datetime import datetime, timezone, timedelta
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          ROOT = Path('.')
+          OUT = ROOT / 'dpro-next'
+          OUT.mkdir(exist_ok=True)
+          HTML_FILES = ['index.html', 'member.html', 'owner.html', 'owner-ipad.html', 'system-check.html']
+          REQUIRED_FILES = HTML_FILES + ['config.js']
+
+          results = []
+          files = []
+          temp_files = []
+
+          def add(key: str, label: str, status: str, detail: str, blocking: bool = False):
+              results.append({
+                  'key': key,
+                  'label': label,
+                  'status': status,
+                  'detail': detail,
+                  'blocking': bool(blocking and status == 'NG'),
+              })
+
+          class Inspector(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.ids = []
+                  self.inline_scripts = []
+                  self.external_scripts = []
+                  self._in_script = False
+                  self._script_src = None
+                  self._script_parts = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if 'id' in attrs:
+                      self.ids.append(attrs['id'])
+                  if tag.lower() == 'script':
+                      self._in_script = True
+                      self._script_src = attrs.get('src')
+                      self._script_parts = []
+                      if self._script_src:
+                          self.external_scripts.append(self._script_src)
+
+              def handle_data(self, data):
+                  if self._in_script and not self._script_src:
+                      self._script_parts.append(data)
+
+              def handle_endtag(self, tag):
+                  if tag.lower() == 'script' and self._in_script:
+                      if not self._script_src:
+                          self.inline_scripts.append(''.join(self._script_parts))
+                      self._in_script = False
+                      self._script_src = None
+                      self._script_parts = []
+
+          for name in REQUIRED_FILES:
+              path = ROOT / name
+              if not path.exists():
+                  add(f'file_{name}', f'{name}存在', 'NG', '必須ファイルがありません。', True)
+                  continue
+              data = path.read_bytes()
+              text = data.decode('utf-8', errors='replace')
+              file_record = {
+                  'path': name,
+                  'sha256': hashlib.sha256(data).hexdigest(),
+                  'bytes': len(data),
+                  'lines': text.count('\n') + 1,
+                  'step_markers': sorted(set(re.findall(r'STEP\s+SCHOOL(?:-NEXT)?-[0-9A-Z-]+', text))),
+              }
+              files.append(file_record)
+              if len(data) > 2_000_000:
+                  add(f'size_{name}', f'{name}容量', 'NG', f'{len(data):,} bytes。2MBを超えています。', True)
+              elif len(data) > 800_000:
+                  add(f'size_{name}', f'{name}容量', '注意', f'{len(data):,} bytes。初期読込軽量化を検討してください。')
+              else:
+                  add(f'size_{name}', f'{name}容量', 'OK', f'{len(data):,} bytes')
+
+          for name in HTML_FILES:
+              path = ROOT / name
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8', errors='replace')
+              inspector = Inspector()
+              try:
+                  inspector.feed(text)
+                  inspector.close()
+                  add(f'html_{name}', f'{name} HTML構文', 'OK', '標準HTMLパーサーで読込できました。')
+              except Exception as exc:
+                  add(f'html_{name}', f'{name} HTML構文', 'NG', str(exc), True)
+
+              duplicates = sorted({item for item in inspector.ids if inspector.ids.count(item) > 1})
+              if duplicates:
+                  add(f'ids_{name}', f'{name} HTML ID重複', 'NG', ', '.join(duplicates), True)
+              else:
+                  add(f'ids_{name}', f'{name} HTML ID重複', 'OK', f'{len(inspector.ids)}件、重複なし')
+
+              script_errors = []
+              checked = 0
+              for idx, script in enumerate(inspector.inline_scripts, 1):
+                  if not script.strip():
+                      continue
+                  temp = OUT / f'.syntax-{name}-{idx}.js'
+                  temp.write_text(script, encoding='utf-8')
+                  temp_files.append(temp)
+                  proc = subprocess.run(['node', '--check', str(temp)], text=True, capture_output=True)
+                  checked += 1
+                  if proc.returncode != 0:
+                      script_errors.append((proc.stderr or proc.stdout).strip()[-1200:])
+              if script_errors:
+                  add(f'js_{name}', f'{name} JavaScript構文', 'NG', ' / '.join(script_errors), True)
+              else:
+                  add(f'js_{name}', f'{name} JavaScript構文', 'OK', f'インラインscript {checked}件を検査')
+
+              markers = sorted(set(re.findall(r'STEP\s+SCHOOL(?:-NEXT)?-[0-9A-Z-]+', text)))
+              if len(markers) > 1:
+                  add(f'version_{name}', f'{name} STEP表記', '注意', f'複数表記を検出: {", ".join(markers)}')
+              elif markers:
+                  add(f'version_{name}', f'{name} STEP表記', 'OK', markers[0])
+              else:
+                  add(f'version_{name}', f'{name} STEP表記', '注意', 'STEP表記が見つかりません。')
+
+          config = ROOT / 'config.js'
+          if config.exists():
+              proc = subprocess.run(['node', '--check', str(config)], text=True, capture_output=True)
+              if proc.returncode == 0:
+                  add('js_config', 'config.js JavaScript構文', 'OK', 'node --check PASS')
+              else:
+                  add('js_config', 'config.js JavaScript構文', 'NG', (proc.stderr or proc.stdout)[-1200:], True)
+
+          required_markers = {
+              'index.html': ['config.js', '体験予約', '欠席連絡', '振替希望'],
+              'owner.html': ['adminCodeInput', 'clearAdminBtn', 'tasksCard', 'taskList', 'requestList', 'lessonList', 'searchBtn', 'messagePreview', 'createPhoneBtn', 'createWalkinBtn', 'createManualBtn'],
+              'member.html': ['phoneInput', 'studentNoInput', 'loadBtn', 'lessonList', 'requestList', 'siblingList', 'makeupCount', 'ticketCount', 'paymentStatus'],
+              'owner-ipad.html': ['管理コード', '出席', '授業中', '完了', '欠席', '振替'],
+              'system-check.html': ['btnRunAll', 'btnPrepare', 'btnHealth', 'btnDashboard', 'btnDay', 'btnClearAdmin', 'btnCopyChecklist'],
+              'config.js': ['/api/health', '/api/public/config', '/api/public/trial-reservations', '/api/public/absence', '/api/public/makeup-request', '/api/member/profile', '/api/admin/dashboard', '/api/admin/day', '/api/admin/search', '/api/admin/lessons/status'],
+          }
+          for name, markers in required_markers.items():
+              path = ROOT / name
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8', errors='replace')
+              missing = [marker for marker in markers if marker not in text]
+              if missing:
+                  add(f'preserve_{name}', f'{name} 既存機能維持', 'NG', f'必須マーカー不足: {", ".join(missing)}', True)
+              else:
+                  add(f'preserve_{name}', f'{name} 既存機能維持', 'OK', f'必須マーカー {len(markers)}件を確認')
+
+          combined = '\n'.join(
+              (ROOT / f).read_text(encoding='utf-8', errors='replace')
+              for f in REQUIRED_FILES if (ROOT / f).exists()
+          )
+          owner_text = (ROOT / 'owner.html').read_text(encoding='utf-8', errors='replace') if (ROOT / 'owner.html').exists() else ''
+          config_text = (ROOT / 'config.js').read_text(encoding='utf-8', errors='replace') if (ROOT / 'config.js').exists() else ''
+
+          business_checks = {
+              'trial': '体験予約',
+              'absence': '欠席連絡',
+              'makeup': '振替希望',
+              'lesson': '授業',
+              'guardian': '保護者',
+              'student': '生徒',
+              'teacher': '講師',
+              'ticket': 'チケット',
+              'sibling': '兄弟姉妹',
+          }
+          missing_business = [label for label in business_checks.values() if label not in combined]
+          if missing_business:
+              add('school_logic', '学習塾業務ロジック', 'NG', f'不足: {", ".join(missing_business)}', True)
+          else:
+              add('school_logic', '学習塾業務ロジック', 'OK', '体験・欠席・振替・授業・保護者・生徒・講師・残数・兄弟姉妹を確認')
+
+          if 'clearAdminBtn' in owner_text and ('btnClearAdmin' in combined or '削除' in owner_text):
+              add('admin_clear', '管理コード削除ボタン', 'OK', 'owner.htmlとsystem-check.htmlで確認')
+          else:
+              add('admin_clear', '管理コード削除ボタン', 'NG', '削除操作が確認できません。', True)
+
+          phone_basic = ('startsWith("+81")' in config_text or "startsWith('+81')" in config_text) and ('replace(/[^\\d]/g' in config_text or 'replace(/[^0-9]/g' in combined)
+          phone_fullwidth = ('[０-９]' in combined or 'normalize("NFKC")' in combined or "normalize('NFKC')" in combined)
+          if phone_basic and phone_fullwidth:
+              add('phone_normalize', '電話番号正規化', 'OK', '+81・記号除去・全角数字対応を確認')
+          elif phone_basic:
+              add('phone_normalize', '電話番号正規化', '注意', '+81・記号除去は確認。全画面共通の全角数字対応はNEXTで統一してください。')
+          else:
+              add('phone_normalize', '電話番号正規化', 'NG', '必要な正規化処理を確認できません。', True)
+
+          if 'fixPastDateInput' in owner_text or 'el.value < today' in owner_text or 'min=' in owner_text:
+              add('past_datetime_front', '過去日時防止・画面側', 'OK', 'owner.htmlで過去日補正を確認')
+          else:
+              add('past_datetime_front', '過去日時防止・画面側', 'NG', '画面側ガードを確認できません。', True)
+          add('past_datetime_worker', '過去日時防止・Worker側', '注意', 'Worker採用ソースがPagesリポジトリにないためNEXT-1では記録のみ。API側検査はNEXT-9で強化します。')
+
+          add('duplicate_guard', '重複登録防止', '注意', '既存画面・設定は維持。Workerの冪等性と同一生徒・同一日時ガードはNEXT-3以降で確認します。')
+          add('audit_guard', '操作履歴・監査ログ', '注意', '既存SQL・Worker採用版は変更しません。採用版ハッシュを別台帳へ登録する対象です。')
+
+          public_files = ['index.html', 'member.html']
+          suspicious_display = []
+          for name in public_files:
+              path = ROOT / name
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8', errors='replace').lower()
+              for word in ['service_role', 'supabase_service', 'internal_notes', 'private_key']:
+                  if word in text:
+                      suspicious_display.append(f'{name}:{word}')
+          if suspicious_display:
+              add('public_static_secret', '公開画面への管理情報混入・静的検査', 'NG', ', '.join(suspicious_display), True)
+          else:
+              add('public_static_secret', '公開画面への管理情報混入・静的検査', 'OK', '顧客画面に秘密鍵・内部メモ名称なし')
+
+          if 'defaultAdminCodeHint' in config_text or re.search(r'\b1234\b', config_text):
+              add('demo_admin_hint', '公開configのデモ管理コード', '注意', '公開デモ用ヒントを検出。実店舗版では環境分離し、顧客画面へ表示しないでください。')
+          else:
+              add('demo_admin_hint', '公開configのデモ管理コード', 'OK', '固定ヒントなし')
+
+          has_worker = any(ROOT.glob('worker*.js'))
+          has_sql = any(ROOT.rglob('*.sql'))
+          add('worker_change', 'Worker変更記録', 'OK', f'変更なし。Pagesリポジトリ内Workerソース: {"あり" if has_worker else "なし"}')
+          add('supabase_change', 'Supabase変更記録', 'OK', f'変更なし。Pagesリポジトリ内SQL: {"あり" if has_sql else "なし"}')
+          add('api_change', 'API変更記録', 'OK', '変更なし。現行エンドポイントを基準として保存')
+
+          for temp in temp_files:
+              temp.unlink(missing_ok=True)
+
+          blocking_ng = sum(1 for item in results if item['blocking'])
+          status_counts = {
+              'OK': sum(1 for item in results if item['status'] == 'OK'),
+              '注意': sum(1 for item in results if item['status'] == '注意'),
+              'NG': sum(1 for item in results if item['status'] == 'NG'),
+          }
+          jst = timezone(timedelta(hours=9))
+          payload = {
+              'step': 'SCHOOL-NEXT-1',
+              'checked_at_jst': datetime.now(jst).isoformat(timespec='seconds'),
+              'files': files,
+              'results': results,
+              'counts': status_counts,
+              'blocking_ng': blocking_ng,
+          }
+          (OUT / 'school-next-1-local-check.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          with open(Path.home() / 'local-check-output.txt', 'w', encoding='utf-8') as f:
+              f.write(str(blocking_ng))
+          print(json.dumps(status_counts, ensure_ascii=False))
+          PY
+
+          echo "blocking_ng=$(cat "$HOME/local-check-output.txt")" >> "${GITHUB_OUTPUT}"
+
+      - name: 5. Worker・公開画面・管理コード拒否検査
+        id: external_check
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          import subprocess
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          from urllib.parse import urlencode
+
+          API_BASE = os.environ['API_BASE'].rstrip('/')
+          PAGES_BASE = os.environ['PAGES_BASE'].rstrip('/')
+          SHOP_CODE = os.environ['SHOP_CODE']
+          OUT = Path(os.environ['STATE_DIR'])
+          OUT.mkdir(exist_ok=True)
+          results = []
+
+          def add(key, label, status, detail, blocking=False):
+              results.append({
+                  'key': key,
+                  'label': label,
+                  'status': status,
+                  'detail': detail,
+                  'blocking': bool(blocking and status == 'NG'),
+              })
+
+          def curl(url, headers=None, timeout=20):
+              body_path = Path('/tmp/dpro-body.txt')
+              body_path.unlink(missing_ok=True)
+              cmd = ['curl', '-sS', '-L', '--max-time', str(timeout), '-o', str(body_path), '-w', '%{http_code}']
+              for header in headers or []:
+                  cmd += ['-H', header]
+              cmd.append(url)
+              proc = subprocess.run(cmd, text=True, capture_output=True)
+              body = body_path.read_text(encoding='utf-8', errors='replace') if body_path.exists() else ''
+              return proc.returncode, proc.stdout.strip(), body, proc.stderr.strip()
+
+          rc, code, body, err = curl(f'{API_BASE}/api/health')
+          if rc == 0 and code.startswith('2'):
+              try:
+                  data = json.loads(body)
+                  detail = f'HTTP {code} / service={data.get("service", "-")} / version={data.get("version", "-")}'
+              except Exception:
+                  detail = f'HTTP {code} / JSON以外の応答'
+              add('worker_health', 'Worker', 'OK', detail)
+          else:
+              add('worker_health', 'Worker', 'NG', f'HTTP {code or "-"} / {err or body[:300]}', True)
+
+          public_url = f'{API_BASE}/api/public/config?' + urlencode({'shop_code': SHOP_CODE})
+          rc, code, body, err = curl(public_url)
+          if rc != 0 or not code.startswith('2'):
+              add('public_config', '公開設定API', 'NG', f'HTTP {code or "-"} / {err or body[:300]}', True)
+          else:
+              try:
+                  data = json.loads(body)
+                  forbidden = {
+                      'admin_code', 'admincode', 'service_role', 'service_role_key',
+                      'supabase_service_role_key', 'internal_notes', 'private_notes',
+                      'private_key', 'secret', 'audit_secret'
+                  }
+                  found = []
+                  def walk(value, path='root'):
+                      if isinstance(value, dict):
+                          for key, child in value.items():
+                              key_norm = str(key).lower().replace('-', '_')
+                              if key_norm in forbidden or 'service_role' in key_norm:
+                                  found.append(f'{path}.{key}')
+                              walk(child, f'{path}.{key}')
+                      elif isinstance(value, list):
+                          for idx, child in enumerate(value):
+                              walk(child, f'{path}[{idx}]')
+                  walk(data)
+                  if found:
+                      add('public_config', '公開設定API', 'NG', '管理用キーを検出: ' + ', '.join(found[:20]), True)
+                  else:
+                      add('public_config', '公開設定API', 'OK', f'HTTP {code} / 管理コード・秘密鍵・内部メモのキーなし')
+              except Exception as exc:
+                  add('public_config', '公開設定API', 'NG', f'JSON解析失敗: {exc}', True)
+
+          wrong_url = f'{API_BASE}/api/admin/dashboard?' + urlencode({'shop_code': SHOP_CODE, 'admin_code': '0000'})
+          rc, code, body, err = curl(wrong_url, headers=['X-Shop-Code: ' + SHOP_CODE, 'X-Admin-Code: 0000'])
+          if rc != 0:
+              add('admin_reject', '管理コード拒否', 'NG', err or '接続失敗', True)
+          elif code in {'401', '403'}:
+              add('admin_reject', '管理コード拒否', 'OK', f'不正コードをHTTP {code}で拒否')
+          elif code.startswith('2'):
+              add('admin_reject', '管理コード拒否', 'NG', f'不正コードでHTTP {code}。直ちにWorker修正が必要です。', True)
+          else:
+              add('admin_reject', '管理コード拒否', 'NG', f'期待は401/403、実際はHTTP {code} / {body[:300]}', True)
+
+          pages = ['index.html', 'member.html', 'owner.html', 'owner-ipad.html', 'system-check.html']
+          for page in pages:
+              rc, code, body, err = curl(f'{PAGES_BASE}/{page}?next1={os.environ.get("GITHUB_RUN_ID", "manual")}')
+              if rc == 0 and code.startswith('2') and '<html' in body.lower():
+                  add(f'page_{page}', f'{page}公開', 'OK', f'HTTP {code} / {len(body.encode("utf-8")):,} bytes')
+              else:
+                  add(f'page_{page}', f'{page}公開', 'NG', f'HTTP {code or "-"} / {err or "HTMLを確認できません"}', True)
+
+          blocking_ng = sum(1 for item in results if item['blocking'])
+          counts = {
+              'OK': sum(1 for item in results if item['status'] == 'OK'),
+              '注意': sum(1 for item in results if item['status'] == '注意'),
+              'NG': sum(1 for item in results if item['status'] == 'NG'),
+          }
+          jst = timezone(timedelta(hours=9))
+          payload = {
+              'step': 'SCHOOL-NEXT-1',
+              'checked_at_jst': datetime.now(jst).isoformat(timespec='seconds'),
+              'results': results,
+              'counts': counts,
+              'blocking_ng': blocking_ng,
+          }
+          (OUT / 'school-next-1-external-check.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(counts, ensure_ascii=False))
+          print(f'blocking_ng={blocking_ng}')
+          with open(Path.home() / 'external-check-output.txt', 'w', encoding='utf-8') as f:
+              f.write(str(blocking_ng))
+          PY
+
+          echo "blocking_ng=$(cat "$HOME/external-check-output.txt")" >> "${GITHUB_OUTPUT}"
+
+      - name: 6. 現状基準台帳・変更記録・次STEP更新
+        id: ledger
+        shell: bash
+        env:
+          PREVIOUS_STEP: ${{ steps.preflight.outputs.previous_step }}
+          TAG_SHA: ${{ steps.preflight.outputs.tag_sha }}
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          out = Path(os.environ['STATE_DIR'])
+          local = json.loads((out / 'school-next-1-local-check.json').read_text(encoding='utf-8'))
+          external = json.loads((out / 'school-next-1-external-check.json').read_text(encoding='utf-8'))
+          results = local['results'] + external['results']
+          counts = {
+              'OK': sum(1 for item in results if item['status'] == 'OK'),
+              '注意': sum(1 for item in results if item['status'] == '注意'),
+              'NG': sum(1 for item in results if item['status'] == 'NG'),
+          }
+          blocking_ng = sum(1 for item in results if item.get('blocking'))
+          jst = timezone(timedelta(hours=9))
+          now = datetime.now(jst)
+          passed = blocking_ng == 0
+          current_step = 'SCHOOL-NEXT-2' if passed else 'SCHOOL-NEXT-1-R1_REQUIRED'
+
+          ledger = {
+              'system': 'DPRO 学習塾 LINE',
+              'standard': 'DPRO NEXT',
+              'step': 'SCHOOL-NEXT-1',
+              'result': 'PASS' if passed else 'NG',
+              'current_step': current_step,
+              'completed_at_jst': now.isoformat(timespec='seconds'),
+              'repository': os.environ.get('GITHUB_REPOSITORY', ''),
+              'branch': os.environ.get('GITHUB_REF_NAME', ''),
+              'baseline_sha': os.environ.get('BASELINE_SHA', ''),
+              'backup_tag': os.environ.get('BASELINE_TAG', ''),
+              'backup_tag_sha': os.environ.get('TAG_SHA', ''),
+              'previous_step': os.environ.get('PREVIOUS_STEP', '未作成'),
+              'worker_changed': False,
+              'supabase_changed': False,
+              'api_changed': False,
+              'public_urls': {
+                  'customer': os.environ['PAGES_BASE'].rstrip('/') + '/index.html',
+                  'member': os.environ['PAGES_BASE'].rstrip('/') + '/member.html',
+                  'owner_pc': os.environ['PAGES_BASE'].rstrip('/') + '/owner.html',
+                  'owner_ipad': os.environ['PAGES_BASE'].rstrip('/') + '/owner-ipad.html',
+                  'system_check': os.environ['PAGES_BASE'].rstrip('/') + '/system-check.html',
+                  'worker_health': os.environ['API_BASE'].rstrip('/') + '/api/health',
+              },
+              'counts': counts,
+              'blocking_ng': blocking_ng,
+              'files': local['files'],
+              'results': results,
+              'next_action': 'SCHOOL-NEXT-2へ進む' if passed else 'NG項目を修正するSCHOOL-NEXT-1-R1を作成',
+          }
+          (out / 'school-next-baseline.json').write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          def yaml_quote(value):
+              return json.dumps(str(value), ensure_ascii=False)
+
+          state_lines = [
+              'system: "DPRO 学習塾 LINE"',
+              'standard: "DPRO NEXT"',
+              f'current_step: {yaml_quote(current_step)}',
+              f'last_completed_step: {yaml_quote("SCHOOL-NEXT-1" if passed else "")}',
+              f'last_result: {yaml_quote("PASS" if passed else "NG")}',
+              f'baseline_sha: {yaml_quote(os.environ.get("BASELINE_SHA", ""))}',
+              f'backup_tag: {yaml_quote(os.environ.get("BASELINE_TAG", ""))}',
+              f'updated_at_jst: {yaml_quote(now.isoformat(timespec="seconds"))}',
+              f'worker_changed: false',
+              f'supabase_changed: false',
+              f'api_changed: false',
+          ]
+          (out / 'current-step.yml').write_text('\n'.join(state_lines) + '\n', encoding='utf-8')
+
+          change_lines = [
+              'step: "SCHOOL-NEXT-1"',
+              'worker:',
+              '  changed: false',
+              '  reason: "正常版保護と現状検査のみ。Worker本体は変更していません。"',
+              'supabase:',
+              '  changed: false',
+              '  reason: "正常版保護と現状検査のみ。SQLは実行していません。"',
+              'api:',
+              '  changed: false',
+              '  reason: "既存APIを検査対象として使用しただけです。"',
+              'rollback:',
+              f'  tag: {yaml_quote(os.environ.get("BASELINE_TAG", ""))}',
+              f'  sha: {yaml_quote(os.environ.get("TAG_SHA", ""))}',
+          ]
+          (out / 'school-next-1-change-record.yml').write_text('\n'.join(change_lines) + '\n', encoding='utf-8')
+
+          md = []
+          md.append('# DPRO 学習塾 LINE / SCHOOL-NEXT-1 現状基準台帳')
+          md.append('')
+          md.append(f'- 判定: **{"PASS" if passed else "NG"}**')
+          md.append(f'- 次のSTEP: `{current_step}`')
+          md.append(f'- 完成日時（JST）: `{now.isoformat(timespec="seconds")}`')
+          md.append(f'- 基準SHA: `{os.environ.get("BASELINE_SHA", "")}`')
+          md.append(f'- バックアップタグ: `{os.environ.get("BASELINE_TAG", "")}`')
+          md.append('- Worker変更: なし')
+          md.append('- Supabase変更: なし')
+          md.append('- API変更: なし')
+          md.append('')
+          md.append('## 検査集計')
+          md.append('')
+          md.append(f'- OK: {counts["OK"]}')
+          md.append(f'- 注意: {counts["注意"]}')
+          md.append(f'- NG: {counts["NG"]}')
+          md.append(f'- ブロックNG: {blocking_ng}')
+          md.append('')
+          md.append('## 検査結果')
+          md.append('')
+          md.append('| 判定 | 検査 | 詳細 |')
+          md.append('|---|---|---|')
+          for item in results:
+              detail = str(item['detail']).replace('|', '／').replace('\n', ' ')
+              md.append(f'| {item["status"]} | {item["label"]} | {detail} |')
+          md.append('')
+          md.append('## 公開URL')
+          md.append('')
+          for key, value in ledger['public_urls'].items():
+              md.append(f'- {key}: `{value}`')
+          md.append('')
+          md.append('## NEXT-1で変更していないもの')
+          md.append('')
+          md.append('- 既存HTMLの機能・デザイン')
+          md.append('- Cloudflare Worker本番コード')
+          md.append('- Supabaseテーブル・RLS・データ')
+          md.append('- LINE設定')
+          md.append('')
+          md.append('NG時は本YMLを削除せず、`SCHOOL-NEXT-1-R1`で原因を修正します。')
+          (out / 'school-next-baseline.md').write_text('\n'.join(md) + '\n', encoding='utf-8')
+
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary, 'a', encoding='utf-8') as f:
+                  f.write('\n'.join(md) + '\n')
+
+          print(f'blocking_ng={blocking_ng}')
+          with open(Path.home() / 'ledger-output.txt', 'w', encoding='utf-8') as f:
+              f.write(str(blocking_ng))
+          PY
+
+          echo "blocking_ng=$(cat "$HOME/ledger-output.txt")" >> "${GITHUB_OUTPUT}"
+
+      - name: 7. 検査台帳を自動Commit・Push
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git add "${STATE_DIR}/school-next-1-local-check.json" \
+                  "${STATE_DIR}/school-next-1-external-check.json" \
+                  "${STATE_DIR}/school-next-baseline.json" \
+                  "${STATE_DIR}/school-next-baseline.md" \
+                  "${STATE_DIR}/current-step.yml" \
+                  "${STATE_DIR}/school-next-1-change-record.yml"
+
+          if git diff --cached --quiet; then
+            echo "::notice::台帳の変更はありません。"
+          else
+            git commit -m "chore(school-next): NEXT-1 baseline ledger"
+            git push origin HEAD:main
+          fi
+
+      - name: 8. NEXT-1最終判定
+        if: always()
+        shell: bash
+        env:
+          BLOCKING_NG: ${{ steps.ledger.outputs.blocking_ng }}
+        run: |
+          set -Eeuo pipefail
+          if [ -z "${BLOCKING_NG:-}" ]; then
+            echo "::error::検査台帳を作成できませんでした。"
+            exit 1
+          fi
+          if [ "${BLOCKING_NG}" -gt 0 ]; then
+            echo "::error::ブロックNGが ${BLOCKING_NG} 件あります。YMLは残します。SCHOOL-NEXT-1-R1で修正してください。"
+            exit 1
+          fi
+          echo "::notice::SCHOOL-NEXT-1 PASS。NEXT-2へ進めます。"
+
+      - name: 9. 成功後にYML自身を削除・完了Commit・Push
+        if: success()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [ ! -f "${WORKFLOW_FILE}" ]; then
+            echo "::error::削除対象YMLが見つかりません: ${WORKFLOW_FILE}"
+            exit 1
+          fi
+
+          rm -f "${WORKFLOW_FILE}"
+          git add -A "${WORKFLOW_FILE}" "${STATE_DIR}/current-step.yml"
+
+          if git diff --cached --quiet; then
+            echo "::notice::削除対象の変更はありません。"
+          else
+            git commit -m "chore(school-next): complete NEXT-1 and remove workflow"
+            git push origin HEAD:main
+          fi
+
+          echo "SCHOOL-NEXT-1 COMPLETE"
