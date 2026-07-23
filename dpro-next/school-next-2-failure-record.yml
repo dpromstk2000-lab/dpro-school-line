@@ -1,0 +1,8 @@
+step: "SCHOOL-NEXT-2"
+result: "NG"
+checked_at_jst: "2026-07-23T22:23:39+09:00"
+rollback: "owner.htmlを変更前へ復元"
+worker_changed: false
+supabase_changed: false
+api_changed: false
+next_step: "SCHOOL-NEXT-2-R1_REQUIRED"
