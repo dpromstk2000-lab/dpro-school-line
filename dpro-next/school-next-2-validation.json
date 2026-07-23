@@ -1,0 +1,120 @@
+{
+  "step": "SCHOOL-NEXT-2",
+  "checked_at_jst": "2026-07-23T22:41:55+09:00",
+  "target_file": "owner.html",
+  "before_sha256": "f3090d7401027e3d1412aa87d17501088812ce3f4a66ce8d1ed410501abeeb61",
+  "after_sha256": "44ca1e406c6de844cd135ef8865e9911a692f0f6f31e6928eafec2e7f3bcd744",
+  "results": [
+    {
+      "key": "existing_ids",
+      "label": "既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 49件をすべて維持",
+      "blocking": false
+    },
+    {
+      "key": "duplicate_ids",
+      "label": "HTML ID重複",
+      "status": "OK",
+      "detail": "ID 59件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "next_ids",
+      "label": "NEXT-2追加ID",
+      "status": "OK",
+      "detail": "追加ID 10件を確認",
+      "blocking": false
+    },
+    {
+      "key": "javascript",
+      "label": "JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 node --check PASS",
+      "blocking": false
+    },
+    {
+      "key": "html",
+      "label": "HTML構文",
+      "status": "OK",
+      "detail": "標準HTMLパーサーで読込可能",
+      "blocking": false
+    },
+    {
+      "key": "display_order",
+      "label": "主要画面表示順",
+      "status": "OK",
+      "detail": "今日の優先確認 → 今日やること → 本日の授業 → 受付一覧 → 予約追加",
+      "blocking": false
+    },
+    {
+      "key": "required_features",
+      "label": "既存・NEXT機能維持",
+      "status": "OK",
+      "detail": "必須マーカー 17件を確認",
+      "blocking": false
+    },
+    {
+      "key": "api_unchanged",
+      "label": "既存API維持",
+      "status": "OK",
+      "detail": "既存API 12件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "config_reference",
+      "label": "config.js参照維持",
+      "status": "OK",
+      "detail": "参照数 1",
+      "blocking": false
+    },
+    {
+      "key": "file_size",
+      "label": "owner.html容量",
+      "status": "OK",
+      "detail": "92,818 bytes",
+      "blocking": false
+    },
+    {
+      "key": "target_scope",
+      "label": "対象ファイル限定",
+      "status": "OK",
+      "detail": "本体変更はowner.htmlのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker_change",
+      "label": "Worker変更記録",
+      "status": "OK",
+      "detail": "変更なし。NEXT-1採用Workerを維持",
+      "blocking": false
+    },
+    {
+      "key": "supabase_change",
+      "label": "Supabase変更記録",
+      "status": "OK",
+      "detail": "変更なし。SQL実行不要",
+      "blocking": false
+    },
+    {
+      "key": "api_change",
+      "label": "API変更記録",
+      "status": "OK",
+      "detail": "変更なし。既存エンドポイントをそのまま利用",
+      "blocking": false
+    },
+    {
+      "key": "automatic_line",
+      "label": "一括自動LINE配信",
+      "status": "OK",
+      "detail": "追加なし。個別の文面確認・コピーを維持",
+      "blocking": false
+    }
+  ],
+  "counts": {
+    "OK": 15,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0
+}

@@ -1,0 +1,24 @@
+step: "SCHOOL-NEXT-2"
+revision: "R2"
+result: "OK"
+completed_at_jst: "2026-07-23T22:41:57+09:00"
+target_files:
+  - "owner.html"
+changes:
+  - "今日の優先確認を最初に表示"
+  - "今日やることを優先度・期限順に表示"
+  - "本日の授業を受付一覧より前へ移動"
+  - "予約・授業追加を必要時だけ開く"
+  - "主要操作を3操作以内へ整理"
+owner_before_sha256: "f3090d7401027e3d1412aa87d17501088812ce3f4a66ce8d1ed410501abeeb61"
+owner_after_sha256: "44ca1e406c6de844cd135ef8865e9911a692f0f6f31e6928eafec2e7f3bcd744"
+baseline_commit: "6c965a0fe003c91f54fafa65fbf5364f1aba3097"
+backup_tag: "backup-school-next-before-2-20260723"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+github_pages_changed: true
+validation_ok: 15
+validation_warning: 0
+next_step: "SCHOOL-NEXT-3"
