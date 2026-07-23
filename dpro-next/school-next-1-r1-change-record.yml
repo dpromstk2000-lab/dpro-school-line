@@ -1,0 +1,13 @@
+step: "SCHOOL-NEXT-1-R1"
+result: "NG"
+completed_at_jst: ""
+checked_at_jst: "2026-07-23T21:47:16+09:00"
+reason: "公開設定API・公開受付レスポンス・会員APIの内部情報除外と会員所属照合"
+worker_changed: true
+worker_deploy_required: true
+supabase_changed: false
+sql_required: false
+github_pages_changed: false
+api_changed: true
+worker_version: "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723"
+next_step: "SCHOOL-NEXT-1-R2_REQUIRED"

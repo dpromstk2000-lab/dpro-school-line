@@ -1,0 +1,97 @@
+{
+  "step": "SCHOOL-NEXT-1-R1",
+  "checked_at_jst": "2026-07-23T21:47:16+09:00",
+  "expected_worker_version": "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
+  "results": [
+    {
+      "key": "worker_version",
+      "label": "Worker差し替え",
+      "status": "NG",
+      "detail": "HTTP 403, expected 200: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaeedd63c9b5\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "public_config",
+      "label": "公開設定API",
+      "status": "NG",
+      "detail": "HTTP 403, expected 200: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaeefa0be5fc\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "member_sanitize",
+      "label": "LINE会員API安全化",
+      "status": "NG",
+      "detail": "HTTP 403, expected 200: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaef0e6e92aa\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "phone_normalize",
+      "label": "電話番号正規化",
+      "status": "NG",
+      "detail": "HTTP 403, expected 200: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaef2c9ca606\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "member_both_required",
+      "label": "会員キー両方必須",
+      "status": "NG",
+      "detail": "HTTP 403, expected 400: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaef49d0e87f\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "member_relation",
+      "label": "保護者・生徒所属一致",
+      "status": "NG",
+      "detail": "HTTP 403, expected 404: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaef6c53c48c\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "admin_reject",
+      "label": "管理コード拒否",
+      "status": "NG",
+      "detail": "HTTP 403, expected 401: {\"type\":\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/\",\"title\":\"Error 1010: Access denied\",\"status\":403,\"detail\":\"The site owner has blocked access based on your browser's signature.\",\"instance\":\"a1facaef8a8750a3\",\"error_code\":1010,\"e",
+      "blocking": true
+    },
+    {
+      "key": "page_index.html",
+      "label": "index.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 56,192 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_member.html",
+      "label": "member.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 45,767 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner.html",
+      "label": "owner.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 86,253 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner-ipad.html",
+      "label": "owner-ipad.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 55,914 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_system-check.html",
+      "label": "system-check.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 33,967 bytes",
+      "blocking": false
+    }
+  ],
+  "counts": {
+    "OK": 5,
+    "注意": 0,
+    "NG": 7
+  },
+  "blocking_ng": 7
+}
