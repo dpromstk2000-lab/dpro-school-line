@@ -1,0 +1,101 @@
+{
+  "step": "SCHOOL-NEXT-1-R2",
+  "checked_at_jst": "2026-07-23T22:04:00+09:00",
+  "reason": "R1のPython urllib通信がCloudflare Error 1010で拒否されたため、ブラウザ相当ヘッダー付きcurlで再検査",
+  "expected_worker_version": "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
+  "worker_changed_in_r2": false,
+  "supabase_changed_in_r2": false,
+  "api_changed_in_r2": false,
+  "results": [
+    {
+      "key": "worker_version",
+      "label": "Worker差し替え",
+      "status": "OK",
+      "detail": "HTTP 200 / version=STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723 / db_ok=true",
+      "blocking": false
+    },
+    {
+      "key": "public_config",
+      "label": "公開設定API",
+      "status": "OK",
+      "detail": "HTTP 200 / 内部情報なし / courses=5 / teachers=4",
+      "blocking": false
+    },
+    {
+      "key": "member_sanitize",
+      "label": "LINE会員API安全化",
+      "status": "OK",
+      "detail": "HTTP 200 / 内部情報なし / 電話番号と生徒番号の一致データ取得OK",
+      "blocking": false
+    },
+    {
+      "key": "phone_normalize",
+      "label": "電話番号正規化",
+      "status": "OK",
+      "detail": "全角数字・Unicodeハイフン・+81を一致確認",
+      "blocking": false
+    },
+    {
+      "key": "member_both_required",
+      "label": "会員キー両方必須",
+      "status": "OK",
+      "detail": "電話番号なしをHTTP 400で拒否",
+      "blocking": false
+    },
+    {
+      "key": "member_relation",
+      "label": "保護者・生徒所属一致",
+      "status": "OK",
+      "detail": "不一致組合せをHTTP 404で拒否",
+      "blocking": false
+    },
+    {
+      "key": "admin_reject",
+      "label": "管理コード拒否",
+      "status": "OK",
+      "detail": "不正コードをHTTP 401で拒否",
+      "blocking": false
+    },
+    {
+      "key": "page_index.html",
+      "label": "index.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 56,192 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_member.html",
+      "label": "member.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 45,767 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner.html",
+      "label": "owner.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 86,253 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_owner-ipad.html",
+      "label": "owner-ipad.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 55,914 bytes",
+      "blocking": false
+    },
+    {
+      "key": "page_system-check.html",
+      "label": "system-check.html公開",
+      "status": "OK",
+      "detail": "HTTP 200 / 33,967 bytes",
+      "blocking": false
+    }
+  ],
+  "counts": {
+    "OK": 12,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0
+}
