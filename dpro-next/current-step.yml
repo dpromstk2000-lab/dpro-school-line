@@ -1,12 +1,26 @@
 system: "DPRO 学習塾 LINE"
 standard: "DPRO NEXT"
-current_step: "SCHOOL-NEXT-10"
-last_completed_step: "SCHOOL-NEXT-9"
+current_step: "COMPLETE"
+last_completed_step: "SCHOOL-NEXT-10"
 last_result: "OK"
+final_version: "SCHOOL-NEXT-10-COMPLETE-20260724"
+completed_at_jst: "2026-07-24T22:00:01+09:00"
 baseline_sha: "035ba1a0df04cb0b0854d05d3255ff71df20bed0"
 backup_tag: "backup-school-next-before-1-20260723"
-updated_at_jst: "2026-07-24T20:23:28+09:00"
+final_backup_tag: "backup-school-next-before-10b-20260724"
 worker_changed: false
 supabase_changed: false
 api_changed: false
 worker_version: "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723"
+public_demo: "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?v=school-next-10"
+owner_pc: "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html?v=school-next-10"
+owner_ipad: "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html?v=school-next-10"
+line_member: "https://dpromstk2000-lab.github.io/dpro-school-line/member.html?phone=090-9999-0000&student_no=SCHOOL-DEMO-999&auto=1&v=school-next-10"
+system_check: "https://dpromstk2000-lab.github.io/dpro-school-line/system-check.html"
+product_page: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/school.html"
+operation_sheet_pdf: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.pdf"
+operation_sheet_png: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.png"
+sales_ready: true
+public_demo_ready: true
+owner_operation_ready: true
+maintenance_policy: "既存機能を維持し、変更前タグ・system-check・公開検査を通過した変更だけを反映する。"

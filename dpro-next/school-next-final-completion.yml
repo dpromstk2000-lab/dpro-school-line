@@ -1,0 +1,71 @@
+system: "DPRO 学習塾 LINE"
+standard: "DPRO NEXT"
+current_step: "COMPLETE"
+final_version: "SCHOOL-NEXT-10-COMPLETE-20260724"
+completed_at_jst: "2026-07-24T22:00:01+09:00"
+result: "OK"
+all_steps:
+  SCHOOL-NEXT-1: "OK"
+  SCHOOL-NEXT-2: "OK"
+  SCHOOL-NEXT-3: "OK"
+  SCHOOL-NEXT-4: "OK"
+  SCHOOL-NEXT-5: "OK"
+  SCHOOL-NEXT-6: "OK"
+  SCHOOL-NEXT-7: "OK"
+  SCHOOL-NEXT-8: "OK"
+  SCHOOL-NEXT-9: "OK"
+  SCHOOL-NEXT-10A: "OK"
+  SCHOOL-NEXT-10B: "OK"
+public_urls:
+  customer: "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?v=school-next-10"
+  member: "https://dpromstk2000-lab.github.io/dpro-school-line/member.html?phone=090-9999-0000&student_no=SCHOOL-DEMO-999&auto=1&v=school-next-10"
+  owner_pc: "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html?v=school-next-10"
+  owner_ipad: "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html?v=school-next-10"
+  system_check: "https://dpromstk2000-lab.github.io/dpro-school-line/system-check.html"
+  product_page: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/school.html"
+  catalog_page: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems.html"
+  operation_sheet_pdf: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.pdf"
+  operation_sheet_png: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.png"
+operation_sheet:
+  format: "A4 portrait"
+  pages: 1
+  qr_codes_checked: 6
+  qr_url_match: "PASS"
+  public_sha_match: "PASS"
+safety:
+  system_check_ok: 32
+  system_check_attention: 0
+  system_check_ng: 0
+  worker_health: "PASS"
+  supabase_connection: "PASS"
+  invalid_admin_code_rejected: "PASS"
+  public_admin_information_guard: "PASS"
+  phone_normalization: "PASS"
+  past_datetime_guard: "PASS"
+  duplicate_guard: "PASS"
+  html_javascript_id_check: "PASS"
+backend_changes:
+  worker_changed: false
+  supabase_changed: false
+  sql_required: false
+  api_changed: false
+release:
+  sales_ready: true
+  public_demo_ready: true
+  owner_operation_ready: true
+  pc_final_visual_check: "USER_FINAL_CHECK_ITEM"
+  ipad_final_visual_check: "USER_FINAL_CHECK_ITEM"
+  smartphone_final_visual_check: "USER_FINAL_CHECK_ITEM"
+source_records:
+  school_next_9: "dpro-next/school-next-9-change-record.yml"
+  product_site_next_10a: "dpro-next/school-next-10a-completion.yml"
+  current_step_before_sha256: "ba43fc27b6dc87bcd01180d4f251ff510365c47890f8e8a9feb3f6b88e372572"
+backup_and_rollback:
+  initial_backup_tag: "backup-school-next-before-1-20260723"
+  final_backup_tag: "backup-school-next-before-10b-20260724"
+maintenance_policy:
+  - "既存機能を削除せず、変更前バックアップタグを作成する。"
+  - "Worker・Supabaseは必要な場合だけ変更する。"
+  - "公開前にsystem-check、構文、ID、主要業務ロジックを検査する。"
+  - "公開後にGitHub Pages、製品ページ、操作体験シートを再確認する。"
+  - "一括自動LINE配信は追加せず、個別確認を基本とする。"
