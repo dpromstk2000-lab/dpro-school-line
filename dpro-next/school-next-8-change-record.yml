@@ -1,5 +1,5 @@
 step: "SCHOOL-NEXT-8"
-result: "PUBLIC_VERIFY_PENDING"
+result: "OK"
 applied_at_jst: "2026-07-24T19:30:48+09:00"
 target_files:
   - "owner.html"
@@ -33,3 +33,10 @@ member_next_action_persisted: false
 validation_ok: 19
 validation_warning: 0
 next_step_after_public_verify: "SCHOOL-NEXT-9"
+completed_at_jst: "2026-07-24T19:31:26+09:00"
+public_owner_url: "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html"
+public_member_url: "https://dpromstk2000-lab.github.io/dpro-school-line/member.html"
+public_verify: "PASS"
+current_step: "SCHOOL-NEXT-9"
+last_completed_step: "SCHOOL-NEXT-8"
+next_step: "SCHOOL-NEXT-9"
