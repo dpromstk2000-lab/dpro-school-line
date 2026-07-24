@@ -1,0 +1,10 @@
+step: "SCHOOL-NEXT-10B"
+result: "NG"
+failed_at_jst: "2026-07-24T22:00:04+09:00"
+rollback_tag: "backup-school-next-before-10b-20260724"
+applied_commit: "cf159aa5511b96200827ad590e38990a8a5b72fa"
+current_step_after_failure: "SCHOOL-NEXT-10B-R1_REQUIRED"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
