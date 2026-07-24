@@ -1,11 +1,11 @@
 system: "DPRO 学習塾 LINE"
 standard: "DPRO NEXT"
-current_step: "SCHOOL-NEXT-9"
+current_step: "SCHOOL-NEXT-9-R1_REQUIRED"
 last_completed_step: "SCHOOL-NEXT-8"
-last_result: "OK"
+last_result: "NG"
 baseline_sha: "035ba1a0df04cb0b0854d05d3255ff71df20bed0"
 backup_tag: "backup-school-next-before-1-20260723"
-updated_at_jst: "2026-07-24T19:31:26+09:00"
+updated_at_jst: "2026-07-24T20:04:04+09:00"
 worker_changed: false
 supabase_changed: false
 api_changed: false

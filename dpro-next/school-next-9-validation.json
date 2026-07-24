@@ -1,0 +1,258 @@
+{
+  "step": "SCHOOL-NEXT-9",
+  "checked_at_jst": "2026-07-24T20:04:04+09:00",
+  "files": {
+    "system-check.html": {
+      "sha256": "73e37484393e9d87c407f8902b873b309fd64b3eff231776decca1bfae6ede34",
+      "bytes": 43102
+    },
+    "index.html": {
+      "sha256": "4303b45697ff3fc7497e94eff8a682878d01342bdd2bb98bcb537389f81f8043",
+      "bytes": 60026
+    },
+    "member.html": {
+      "sha256": "606882dbf0cd885a325f0d6ef5baf9b14cc6238f4896a50de3314df8ac7d182a",
+      "bytes": 66509
+    },
+    "owner.html": {
+      "sha256": "1fc0e3fb96da1789aa128479b5c3918b75c6e3a75c4e0c059a0130b3dee5b4a3",
+      "bytes": 136275
+    },
+    "owner-ipad.html": {
+      "sha256": "bd7d9520cdf139b60a14e5322427fe81d746076802bf2029bf7f3405f9c8d645",
+      "bytes": 66603
+    }
+  },
+  "counts": {
+    "OK": 31,
+    "注意": 0,
+    "NG": 1
+  },
+  "blocking_ng": 1,
+  "results": [
+    {
+      "key": "system-check.html-id",
+      "label": "system-check.html ID重複",
+      "status": "OK",
+      "detail": "ID 51件",
+      "blocking": false
+    },
+    {
+      "key": "system-check.html-js",
+      "label": "system-check.html JavaScript",
+      "status": "NG",
+      "detail": "   function updateJudgement(){const done=checklistProgress(),c=ac();if(c.total&&c.ng===0&&done>=checklistItems.length)setStatus('okJudgement',c.attention?`SCHOOL-NEXT-9 許容注意 ${c.attention}件。最終目視後に完了可能です。`:'SCHOOL-NEXT-9 OKです。','ok');else if(c.ng)setStatus('okJudgement',`NG ${c.ng}件を修正してください。`,'ng');else setStatus('okJudgement',`最終自動検査と手動チェック ${done}/${checklistItems.length} を進めてください。`,'warn')}else if(apiOk && done >= 4){\n                                                                                                                                                                                                                                                                                                                                                                                                             ^^^^\n\nSyntaxError: Unexpected token 'else'\n    at wrapSafe (node:internal/modules/cjs/loader:1713:18)\n    at checkSyntax (node:internal/main/check_syntax:78:3)\n\nNode.js v22.23.1\n",
+      "blocking": true
+    },
+    {
+      "key": "system-check.html-size",
+      "label": "system-check.html 容量",
+      "status": "OK",
+      "detail": "43102bytes",
+      "blocking": false
+    },
+    {
+      "key": "system-check.html-secret",
+      "label": "system-check.html 秘密情報形式",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "index.html-id",
+      "label": "index.html ID重複",
+      "status": "OK",
+      "detail": "ID 68件",
+      "blocking": false
+    },
+    {
+      "key": "index.html-js",
+      "label": "index.html JavaScript",
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
+    },
+    {
+      "key": "index.html-size",
+      "label": "index.html 容量",
+      "status": "OK",
+      "detail": "60026bytes",
+      "blocking": false
+    },
+    {
+      "key": "index.html-secret",
+      "label": "index.html 秘密情報形式",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "member.html-id",
+      "label": "member.html ID重複",
+      "status": "OK",
+      "detail": "ID 45件",
+      "blocking": false
+    },
+    {
+      "key": "member.html-js",
+      "label": "member.html JavaScript",
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
+    },
+    {
+      "key": "member.html-size",
+      "label": "member.html 容量",
+      "status": "OK",
+      "detail": "66509bytes",
+      "blocking": false
+    },
+    {
+      "key": "member.html-secret",
+      "label": "member.html 秘密情報形式",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "owner.html-id",
+      "label": "owner.html ID重複",
+      "status": "OK",
+      "detail": "ID 90件",
+      "blocking": false
+    },
+    {
+      "key": "owner.html-js",
+      "label": "owner.html JavaScript",
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
+    },
+    {
+      "key": "owner.html-size",
+      "label": "owner.html 容量",
+      "status": "OK",
+      "detail": "136275bytes",
+      "blocking": false
+    },
+    {
+      "key": "owner.html-secret",
+      "label": "owner.html 秘密情報形式",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "owner-ipad.html-id",
+      "label": "owner-ipad.html ID重複",
+      "status": "OK",
+      "detail": "ID 39件",
+      "blocking": false
+    },
+    {
+      "key": "owner-ipad.html-js",
+      "label": "owner-ipad.html JavaScript",
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
+    },
+    {
+      "key": "owner-ipad.html-size",
+      "label": "owner-ipad.html 容量",
+      "status": "OK",
+      "detail": "66603bytes",
+      "blocking": false
+    },
+    {
+      "key": "owner-ipad.html-secret",
+      "label": "owner-ipad.html 秘密情報形式",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "config-js",
+      "label": "config.js JavaScript",
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
+    },
+    {
+      "key": "config-version",
+      "label": "config.js NEXT-9",
+      "status": "OK",
+      "detail": "version/nextAudit",
+      "blocking": false
+    },
+    {
+      "key": "phone",
+      "label": "電話番号正規化",
+      "status": "OK",
+      "detail": "+81→0・数字以外除去",
+      "blocking": false
+    },
+    {
+      "key": "index.html-leak",
+      "label": "index.html 管理情報混入",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "member.html-leak",
+      "label": "member.html 管理情報混入",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "past",
+      "label": "過去日時防止",
+      "status": "OK",
+      "detail": "index静的確認",
+      "blocking": false
+    },
+    {
+      "key": "duplicate",
+      "label": "重複送信防止",
+      "status": "OK",
+      "detail": "静的確認",
+      "blocking": false
+    },
+    {
+      "key": "business",
+      "label": "主要業務ロジック",
+      "status": "OK",
+      "detail": "NEXT機能一式",
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "変更範囲",
+      "status": "OK",
+      "detail": "system-check/configのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker",
+      "label": "Worker変更",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase",
+      "label": "Supabase変更",
+      "status": "OK",
+      "detail": "なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "api",
+      "label": "API変更",
+      "status": "OK",
+      "detail": "なし",
+      "blocking": false
+    }
+  ]
+}
