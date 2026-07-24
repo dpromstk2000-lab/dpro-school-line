@@ -1,0 +1,418 @@
+name: "STEP SCHOOL-NEXT-10B-R1 | COMPLETE後処理修正"
+run-name: "SCHOOL-NEXT-10B-R1 completion cleanup fix by ${{ github.actor }}"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/STEP-SCHOOL-NEXT-10B-R1.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-next-10b-r1-final-completion
+  cancel-in-progress: false
+
+jobs:
+  final-completion:
+    name: "SCHOOL-NEXT-10B-R1 最終完成判定"
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      WORKFLOW_PATH: ".github/workflows/STEP-SCHOOL-NEXT-10B-R1.yml"
+      ORIGINAL_WORKFLOW_PATH: ".github/workflows/STEP-SCHOOL-NEXT-10B.yml"
+      CURRENT_STEP_FILE: "dpro-next/current-step.yml"
+      STEP9_RECORD: "dpro-next/school-next-9-change-record.yml"
+      FINAL_RECORD: "dpro-next/school-next-final-completion.yml"
+      FAILURE_RECORD: "dpro-next/school-next-10b-failure.yml"
+      BEFORE_TAG: "backup-school-next-before-10b-r1-20260724"
+      EXPECTED_CURRENT_STEP_BLOB_SHA: "8e45bcd4d6171374168918c22cf2f64681b5b731"
+      EXPECTED_STEP9_BLOB_SHA: "ba9d63636b91b4991d3b51c855c4ad493c865467"
+      FINAL_VERSION: "SCHOOL-NEXT-10-COMPLETE-20260724"
+      SCHOOL_BASE_URL: "https://dpromstk2000-lab.github.io/dpro-school-line"
+      WORKER_URL: "https://dpro-school-line-api.dpromstk2000.workers.dev"
+      PRODUCT_URL: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems/school.html"
+      CATALOG_URL: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/systems.html"
+      PDF_URL: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.pdf"
+      PNG_URL: "https://dpromstk2000-lab.github.io/dpro-line-systems-site/assets/pdfs/dpro-school-line-next-operation-guide.png"
+      SITE_COMPLETION_RAW: "https://raw.githubusercontent.com/dpromstk2000-lab/dpro-line-systems-site/main/dpro-next/school-next-10a-completion.yml"
+      QR_REPORT_RAW: "https://raw.githubusercontent.com/dpromstk2000-lab/dpro-line-systems-site/main/assets/school-next/operation-sheet-qr-check.json"
+      PDF_RAW: "https://raw.githubusercontent.com/dpromstk2000-lab/dpro-line-systems-site/main/assets/pdfs/dpro-school-line-next-operation-guide.pdf"
+      PNG_RAW: "https://raw.githubusercontent.com/dpromstk2000-lab/dpro-line-systems-site/main/assets/pdfs/dpro-school-line-next-operation-guide.png"
+
+    steps:
+      - name: "1. 学習塾リポジトリ取得"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "2. 前STEP・基準状態・重複実行確認"
+        id: preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for file in "$WORKFLOW_PATH" "$CURRENT_STEP_FILE" "$STEP9_RECORD"; do
+            [[ -f "$file" ]] || { echo "::error file=$file::必須ファイルがありません。"; exit 1; }
+          done
+
+          if grep -q 'current_step: "COMPLETE"' "$CURRENT_STEP_FILE" && [[ -f "$FINAL_RECORD" ]]; then
+            echo "mode=duplicate" >> "$GITHUB_OUTPUT"
+            echo "::notice::SCHOOL-NEXT-10Bは完了済みです。再アップロードされたYMLのみ削除します。"
+            exit 0
+          fi
+
+          [[ "$(git hash-object "$CURRENT_STEP_FILE")" == "$EXPECTED_CURRENT_STEP_BLOB_SHA" ]] || { echo "::error file=$CURRENT_STEP_FILE::基準版不一致"; exit 1; }
+          [[ "$(git hash-object "$STEP9_RECORD")" == "$EXPECTED_STEP9_BLOB_SHA" ]] || { echo "::error file=$STEP9_RECORD::STEP9台帳不一致"; exit 1; }
+          grep -q 'current_step: "SCHOOL-NEXT-10B-R1_REQUIRED"' "$CURRENT_STEP_FILE" || { echo "::error::current_stepがSCHOOL-NEXT-10B-R1_REQUIREDではありません。"; exit 1; }
+          grep -q 'last_completed_step: "SCHOOL-NEXT-9"' "$CURRENT_STEP_FILE" || exit 1
+          grep -q 'last_result: "NG"' "$CURRENT_STEP_FILE" || exit 1
+          grep -q 'result: "OK"' "$STEP9_RECORD" || { echo "::error::SCHOOL-NEXT-9がOKではありません。"; exit 1; }
+          grep -q 'validation_ok: 32' "$STEP9_RECORD" || { echo "::error::STEP9のOK件数が32ではありません。"; exit 1; }
+          grep -q 'validation_attention: 0' "$STEP9_RECORD" || { echo "::error::STEP9に注意項目があります。"; exit 1; }
+
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r HEAD)
+          before_sha="$(git rev-parse HEAD)"
+          if [[ "${#changed[@]}" -eq 1 && "${changed[0]}" == "$WORKFLOW_PATH" ]]; then
+            before_sha="$(git rev-parse HEAD^)"
+          fi
+          echo "BEFORE_SHA=$before_sha" >> "$GITHUB_ENV"
+          echo "mode=apply" >> "$GITHUB_OUTPUT"
+
+      - name: "2B. 完了済みYMLの自動削除"
+        if: steps.preflight.outputs.mode == 'duplicate'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          rm -f "$WORKFLOW_PATH" "$ORIGINAL_WORKFLOW_PATH" "$FAILURE_RECORD"
+
+          stage_optional() {
+            local path="$1"
+            if [[ -e "$path" ]] || git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+              git add -A -- "$path"
+            fi
+          }
+
+          stage_optional "$WORKFLOW_PATH"
+          stage_optional "$ORIGINAL_WORKFLOW_PATH"
+          stage_optional "$FAILURE_RECORD"
+
+          if git diff --cached --quiet; then
+            echo "::notice::削除対象はありません。"
+            exit 0
+          fi
+
+          git commit -m "chore(school-next): remove duplicate SCHOOL-NEXT-10B-R1 workflow [skip ci]"
+          git push origin main
+
+      - name: "3. 変更前バックアップタグ"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if git rev-parse "$BEFORE_TAG" >/dev/null 2>&1; then
+            [[ "$(git rev-list -n 1 "$BEFORE_TAG")" == "$BEFORE_SHA" ]] || { echo "::error::既存タグの参照先が異なります。"; exit 1; }
+          elif git ls-remote --exit-code --tags origin "refs/tags/$BEFORE_TAG" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/$BEFORE_TAG:refs/tags/$BEFORE_TAG"
+            [[ "$(git rev-list -n 1 "$BEFORE_TAG")" == "$BEFORE_SHA" ]] || exit 1
+          else
+            git tag -a "$BEFORE_TAG" "$BEFORE_SHA" -m "before SCHOOL-NEXT-10B COMPLETE"
+            git push origin "refs/tags/$BEFORE_TAG"
+          fi
+
+      - name: "4. YML・HTML・JavaScript・ID最終構文検査"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ruby -e 'require "yaml"; YAML.load_file(ARGV[0], aliases: true)' "$WORKFLOW_PATH"
+          for file in index.html member.html owner.html owner-ipad.html system-check.html; do
+            [[ -f "$file" ]] || { echo "::error file=$file::画面ファイルがありません。"; exit 1; }
+          done
+          node --check config.js
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          class Checker(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.ids=[]; self.scripts=[]; self.in_script=False; self.buf=[]
+              def handle_starttag(self, tag, attrs):
+                  data=dict(attrs)
+                  if data.get('id'): self.ids.append(data['id'])
+                  if tag=='script' and not data.get('src'): self.in_script=True; self.buf=[]
+              def handle_endtag(self, tag):
+                  if tag=='script' and self.in_script:
+                      self.scripts.append(''.join(self.buf)); self.in_script=False
+              def handle_data(self, data):
+                  if self.in_script: self.buf.append(data)
+
+          for name in ['index.html','member.html','owner.html','owner-ipad.html','system-check.html']:
+              parser=Checker(); parser.feed(Path(name).read_text(encoding='utf-8'))
+              dup=sorted({item for item in parser.ids if parser.ids.count(item)>1})
+              if dup: raise SystemExit(f'{name}: duplicate ids {dup}')
+              for idx,script in enumerate(parser.scripts,1):
+                  (Path('/tmp')/f'{Path(name).stem}-{idx}.js').write_text(script,encoding='utf-8')
+          print('HTML parse and ID check PASS')
+          PY
+          for js in /tmp/index-*.js /tmp/member-*.js /tmp/owner-*.js /tmp/owner-ipad-*.js /tmp/system-check-*.js; do
+            [[ -e "$js" ]] || continue
+            node --check "$js"
+          done
+
+      - name: "5. 公開画面・製品サイト・操作体験シート・Worker最終検査"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update >/dev/null
+          sudo apt-get install -y poppler-utils >/dev/null
+          mkdir -p /tmp/school-next-10b
+
+          fetch() {
+            local url="$1" out="$2" status
+            status="$(curl -sS -L --max-time 45 -A 'Mozilla/5.0 Chrome/150' -H 'Cache-Control: no-cache' -o "$out" -w '%{http_code}' "$url?verify=$GITHUB_RUN_ID-$(date +%s%N)" || true)"
+            [[ "$status" == 200 ]] || { echo "::error::$url HTTP $status"; exit 1; }
+          }
+
+          fetch "$SCHOOL_BASE_URL/index.html" /tmp/school-next-10b/index.html
+          fetch "$SCHOOL_BASE_URL/member.html" /tmp/school-next-10b/member.html
+          fetch "$SCHOOL_BASE_URL/owner.html" /tmp/school-next-10b/owner.html
+          fetch "$SCHOOL_BASE_URL/owner-ipad.html" /tmp/school-next-10b/ipad.html
+          fetch "$SCHOOL_BASE_URL/system-check.html" /tmp/school-next-10b/system-check.html
+          fetch "$PRODUCT_URL" /tmp/school-next-10b/product.html
+          fetch "$CATALOG_URL" /tmp/school-next-10b/catalog.html
+          fetch "$PDF_URL" /tmp/school-next-10b/public.pdf
+          fetch "$PNG_URL" /tmp/school-next-10b/public.png
+
+          curl -fsSL --max-time 40 "$SITE_COMPLETION_RAW" -o /tmp/school-next-10b/site-completion.yml
+          curl -fsSL --max-time 40 "$QR_REPORT_RAW" -o /tmp/school-next-10b/qr-report.json
+          curl -fsSL --max-time 45 "$PDF_RAW" -o /tmp/school-next-10b/raw.pdf
+          curl -fsSL --max-time 45 "$PNG_RAW" -o /tmp/school-next-10b/raw.png
+
+          grep -q 'STEP SCHOOL-NEXT-9 / system-check.html' /tmp/school-next-10b/system-check.html
+          grep -q 'DPRO NEXT最終一括検査' /tmp/school-next-10b/system-check.html
+          grep -q 'STEP SCHOOL-NEXT-10A / DPRO NEXT COMPLETE' /tmp/school-next-10b/product.html
+          grep -q '操作体験シートPDF' /tmp/school-next-10b/product.html
+          grep -q 'SCHOOL NEXT-10完成' /tmp/school-next-10b/catalog.html
+          grep -q 'result: "OK"' /tmp/school-next-10b/site-completion.yml
+          grep -q 'public_verify: "PASS"' /tmp/school-next-10b/site-completion.yml
+          grep -q 'pdf_pages: 1' /tmp/school-next-10b/site-completion.yml
+          grep -q 'qr_codes_checked: 6' /tmp/school-next-10b/site-completion.yml
+          grep -q 'qr_result: "PASS"' /tmp/school-next-10b/site-completion.yml
+
+          [[ "$(sha256sum /tmp/school-next-10b/public.pdf | awk '{print $1}')" == "$(sha256sum /tmp/school-next-10b/raw.pdf | awk '{print $1}')" ]] || { echo "::error::公開PDFとリポジトリPDFが一致しません。"; exit 1; }
+          [[ "$(sha256sum /tmp/school-next-10b/public.png | awk '{print $1}')" == "$(sha256sum /tmp/school-next-10b/raw.png | awk '{print $1}')" ]] || { echo "::error::公開PNGとリポジトリPNGが一致しません。"; exit 1; }
+          [[ "$(pdfinfo /tmp/school-next-10b/public.pdf | awk '/^Pages:/{print $2}')" == 1 ]] || { echo "::error::操作体験シートが1ページではありません。"; exit 1; }
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          report=json.loads(Path('/tmp/school-next-10b/qr-report.json').read_text(encoding='utf-8'))
+          results=report.get('results',{})
+          if len(results)!=6: raise SystemExit(f'QR件数が6ではありません: {len(results)}')
+          failed=[key for key,item in results.items() if not item.get('pass') or item.get('decoded')!=item.get('expected')]
+          if failed: raise SystemExit('QR URL不一致: '+','.join(failed))
+          print('QR 6/6 URL match PASS')
+          PY
+
+          health_status="$(curl -sS -L --max-time 35 -o /tmp/school-next-10b/health.json -w '%{http_code}' "$WORKER_URL/api/health")"
+          [[ "$health_status" == 200 ]] || { echo "::error::Worker health HTTP $health_status"; exit 1; }
+          python3 - <<'PY'
+          import json
+          data=json.load(open('/tmp/school-next-10b/health.json',encoding='utf-8'))
+          if not data.get('ok'): raise SystemExit('Worker health ok=false')
+          print('Worker health PASS')
+          PY
+
+          invalid_status="$(curl -sS -L --max-time 35 -o /tmp/school-next-10b/invalid.json -w '%{http_code}' "$WORKER_URL/api/admin/dashboard?shop_code=dpro_school_demo&admin_code=0000")"
+          [[ "$invalid_status" == 401 || "$invalid_status" == 403 ]] || { echo "::error::無効管理コードが拒否されませんでした: HTTP $invalid_status"; exit 1; }
+          member_status="$(curl -sS -L --max-time 35 -o /tmp/school-next-10b/member-api.json -w '%{http_code}' "$WORKER_URL/api/member/profile?shop_code=dpro_school_demo&phone=090-9999-0000&student_no=SCHOOL-DEMO-999")"
+          [[ "$member_status" == 200 ]] || { echo "::error::LINE会員プロフィール HTTP $member_status"; exit 1; }
+
+      - name: "6. COMPLETE完成台帳を生成"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import base64
+          from pathlib import Path
+          Path('/tmp/school_next_10b_complete.py').write_bytes(base64.b64decode("ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lLCB0aW1lem9uZSwgdGltZWRlbHRhCmltcG9ydCBoYXNobGliCgpKU1Q9dGltZXpvbmUodGltZWRlbHRhKGhvdXJzPTkpKQpjb21wbGV0ZWQ9ZGF0ZXRpbWUubm93KEpTVCkuaXNvZm9ybWF0KHRpbWVzcGVjPSdzZWNvbmRzJykKY3VycmVudD1QYXRoKCdkcHJvLW5leHQvY3VycmVudC1zdGVwLnltbCcpCm9sZD1jdXJyZW50LnJlYWRfdGV4dChlbmNvZGluZz0ndXRmLTgnKQpyZXF1aXJlZD1bCiAgICAnY3VycmVudF9zdGVwOiAiU0NIT09MLU5FWFQtMTBCLVIxX1JFUVVJUkVEIicsCiAgICAnbGFzdF9jb21wbGV0ZWRfc3RlcDogIlNDSE9PTC1ORVhULTkiJywKICAgICdsYXN0X3Jlc3VsdDogIk5HIicsCiAgICAnd29ya2VyX2NoYW5nZWQ6IGZhbHNlJywKICAgICdzdXBhYmFzZV9jaGFuZ2VkOiBmYWxzZScsCiAgICAnYXBpX2NoYW5nZWQ6IGZhbHNlJywKXQptaXNzaW5nPVt4IGZvciB4IGluIHJlcXVpcmVkIGlmIHggbm90IGluIG9sZF0KaWYgbWlzc2luZzoKICAgIHJhaXNlIFJ1bnRpbWVFcnJvcignY3VycmVudC1zdGVwIG1hcmtlcnMgbWlzc2luZzogJysnLCAnLmpvaW4obWlzc2luZykpCgpmaW5hbF9jdXJyZW50PWYnJydzeXN0ZW06ICJEUFJPIOWtpue/kuWhviBMSU5FIgpzdGFuZGFyZDogIkRQUk8gTkVYVCIKY3VycmVudF9zdGVwOiAiQ09NUExFVEUiCmxhc3RfY29tcGxldGVkX3N0ZXA6ICJTQ0hPT0wtTkVYVC0xMCIKbGFzdF9yZXN1bHQ6ICJPSyIKZmluYWxfdmVyc2lvbjogIlNDSE9PTC1ORVhULTEwLUNPTVBMRVRFLTIwMjYwNzI0Igpjb21wbGV0ZWRfYXRfanN0OiAie2NvbXBsZXRlZH0iCmJhc2VsaW5lX3NoYTogIjAzNWJhMWEwZGYwNGNiMGIwODU0ZDA1ZDMyNTVmZjcxZGYyMGJlZDAiCmJhY2t1cF90YWc6ICJiYWNrdXAtc2Nob29sLW5leHQtYmVmb3JlLTEtMjAyNjA3MjMiCmZpbmFsX2JhY2t1cF90YWc6ICJiYWNrdXAtc2Nob29sLW5leHQtYmVmb3JlLTEwYi1yMS0yMDI2MDcyNCIKd29ya2VyX2NoYW5nZWQ6IGZhbHNlCnN1cGFiYXNlX2NoYW5nZWQ6IGZhbHNlCmFwaV9jaGFuZ2VkOiBmYWxzZQp3b3JrZXJfdmVyc2lvbjogIlNURVAtU0NIT09MLU5FWFQtMS1SMS1XT1JLRVItU0VDVVJJVFktMjAyNjA3MjMiCnB1YmxpY19kZW1vOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLXNjaG9vbC1saW5lL2luZGV4Lmh0bWw/dj1zY2hvb2wtbmV4dC0xMCIKb3duZXJfcGM6ICJodHRwczovL2Rwcm9tc3RrMjAwMC1sYWIuZ2l0aHViLmlvL2Rwcm8tc2Nob29sLWxpbmUvb3duZXIuaHRtbD92PXNjaG9vbC1uZXh0LTEwIgpvd25lcl9pcGFkOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLXNjaG9vbC1saW5lL293bmVyLWlwYWQuaHRtbD92PXNjaG9vbC1uZXh0LTEwIgpsaW5lX21lbWJlcjogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1zY2hvb2wtbGluZS9tZW1iZXIuaHRtbD9waG9uZT0wOTAtOTk5OS0wMDAwJnN0dWRlbnRfbm89U0NIT09MLURFTU8tOTk5JmF1dG89MSZ2PXNjaG9vbC1uZXh0LTEwIgpzeXN0ZW1fY2hlY2s6ICJodHRwczovL2Rwcm9tc3RrMjAwMC1sYWIuZ2l0aHViLmlvL2Rwcm8tc2Nob29sLWxpbmUvc3lzdGVtLWNoZWNrLmh0bWwiCnByb2R1Y3RfcGFnZTogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1saW5lLXN5c3RlbXMtc2l0ZS9zeXN0ZW1zL3NjaG9vbC5odG1sIgpvcGVyYXRpb25fc2hlZXRfcGRmOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLWxpbmUtc3lzdGVtcy1zaXRlL2Fzc2V0cy9wZGZzL2Rwcm8tc2Nob29sLWxpbmUtbmV4dC1vcGVyYXRpb24tZ3VpZGUucGRmIgpvcGVyYXRpb25fc2hlZXRfcG5nOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLWxpbmUtc3lzdGVtcy1zaXRlL2Fzc2V0cy9wZGZzL2Rwcm8tc2Nob29sLWxpbmUtbmV4dC1vcGVyYXRpb24tZ3VpZGUucG5nIgpzYWxlc19yZWFkeTogdHJ1ZQpwdWJsaWNfZGVtb19yZWFkeTogdHJ1ZQpvd25lcl9vcGVyYXRpb25fcmVhZHk6IHRydWUKbWFpbnRlbmFuY2VfcG9saWN5OiAi5pei5a2Y5qmf6IO944KS57at5oyB44GX44CB5aSJ5pu05YmN44K/44Kw44O7c3lzdGVtLWNoZWNr44O75YWs6ZaL5qSc5p+744KS6YCa6YGO44GX44Gf5aSJ5pu044Gg44GR44KS5Y+N5pig44GZ44KL44CCIgonJycKY3VycmVudC53cml0ZV90ZXh0KGZpbmFsX2N1cnJlbnQsZW5jb2Rpbmc9J3V0Zi04JyxuZXdsaW5lPSdcbicpCm9sZF9zaGE9aGFzaGxpYi5zaGEyNTYob2xkLmVuY29kZSgndXRmLTgnKSkuaGV4ZGlnZXN0KCkKcmVjb3JkPWYnJydzeXN0ZW06ICJEUFJPIOWtpue/kuWhviBMSU5FIgpzdGFuZGFyZDogIkRQUk8gTkVYVCIKY3VycmVudF9zdGVwOiAiQ09NUExFVEUiCmZpbmFsX3ZlcnNpb246ICJTQ0hPT0wtTkVYVC0xMC1DT01QTEVURS0yMDI2MDcyNCIKY29tcGxldGVkX2F0X2pzdDogIntjb21wbGV0ZWR9IgpyZXN1bHQ6ICJPSyIKYWxsX3N0ZXBzOgogIFNDSE9PTC1ORVhULTE6ICJPSyIKICBTQ0hPT0wtTkVYVC0yOiAiT0siCiAgU0NIT09MLU5FWFQtMzogIk9LIgogIFNDSE9PTC1ORVhULTQ6ICJPSyIKICBTQ0hPT0wtTkVYVC01OiAiT0siCiAgU0NIT09MLU5FWFQtNjogIk9LIgogIFNDSE9PTC1ORVhULTc6ICJPSyIKICBTQ0hPT0wtTkVYVC04OiAiT0siCiAgU0NIT09MLU5FWFQtOTogIk9LIgogIFNDSE9PTC1ORVhULTEwQTogIk9LIgogIFNDSE9PTC1ORVhULTEwQjogIk9LIgpwdWJsaWNfdXJsczoKICBjdXN0b21lcjogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1zY2hvb2wtbGluZS9pbmRleC5odG1sP3Y9c2Nob29sLW5leHQtMTAiCiAgbWVtYmVyOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLXNjaG9vbC1saW5lL21lbWJlci5odG1sP3Bob25lPTA5MC05OTk5LTAwMDAmc3R1ZGVudF9ubz1TQ0hPT0wtREVNTy05OTkmYXV0bz0xJnY9c2Nob29sLW5leHQtMTAiCiAgb3duZXJfcGM6ICJodHRwczovL2Rwcm9tc3RrMjAwMC1sYWIuZ2l0aHViLmlvL2Rwcm8tc2Nob29sLWxpbmUvb3duZXIuaHRtbD92PXNjaG9vbC1uZXh0LTEwIgogIG93bmVyX2lwYWQ6ICJodHRwczovL2Rwcm9tc3RrMjAwMC1sYWIuZ2l0aHViLmlvL2Rwcm8tc2Nob29sLWxpbmUvb3duZXItaXBhZC5odG1sP3Y9c2Nob29sLW5leHQtMTAiCiAgc3lzdGVtX2NoZWNrOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLXNjaG9vbC1saW5lL3N5c3RlbS1jaGVjay5odG1sIgogIHByb2R1Y3RfcGFnZTogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1saW5lLXN5c3RlbXMtc2l0ZS9zeXN0ZW1zL3NjaG9vbC5odG1sIgogIGNhdGFsb2dfcGFnZTogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1saW5lLXN5c3RlbXMtc2l0ZS9zeXN0ZW1zLmh0bWwiCiAgb3BlcmF0aW9uX3NoZWV0X3BkZjogImh0dHBzOi8vZHByb21zdGsyMDAwLWxhYi5naXRodWIuaW8vZHByby1saW5lLXN5c3RlbXMtc2l0ZS9hc3NldHMvcGRmcy9kcHJvLXNjaG9vbC1saW5lLW5leHQtb3BlcmF0aW9uLWd1aWRlLnBkZiIKICBvcGVyYXRpb25fc2hlZXRfcG5nOiAiaHR0cHM6Ly9kcHJvbXN0azIwMDAtbGFiLmdpdGh1Yi5pby9kcHJvLWxpbmUtc3lzdGVtcy1zaXRlL2Fzc2V0cy9wZGZzL2Rwcm8tc2Nob29sLWxpbmUtbmV4dC1vcGVyYXRpb24tZ3VpZGUucG5nIgpvcGVyYXRpb25fc2hlZXQ6CiAgZm9ybWF0OiAiQTQgcG9ydHJhaXQiCiAgcGFnZXM6IDEKICBxcl9jb2Rlc19jaGVja2VkOiA2CiAgcXJfdXJsX21hdGNoOiAiUEFTUyIKICBwdWJsaWNfc2hhX21hdGNoOiAiUEFTUyIKc2FmZXR5OgogIHN5c3RlbV9jaGVja19vazogMzIKICBzeXN0ZW1fY2hlY2tfYXR0ZW50aW9uOiAwCiAgc3lzdGVtX2NoZWNrX25nOiAwCiAgd29ya2VyX2hlYWx0aDogIlBBU1MiCiAgc3VwYWJhc2VfY29ubmVjdGlvbjogIlBBU1MiCiAgaW52YWxpZF9hZG1pbl9jb2RlX3JlamVjdGVkOiAiUEFTUyIKICBwdWJsaWNfYWRtaW5faW5mb3JtYXRpb25fZ3VhcmQ6ICJQQVNTIgogIHBob25lX25vcm1hbGl6YXRpb246ICJQQVNTIgogIHBhc3RfZGF0ZXRpbWVfZ3VhcmQ6ICJQQVNTIgogIGR1cGxpY2F0ZV9ndWFyZDogIlBBU1MiCiAgaHRtbF9qYXZhc2NyaXB0X2lkX2NoZWNrOiAiUEFTUyIKYmFja2VuZF9jaGFuZ2VzOgogIHdvcmtlcl9jaGFuZ2VkOiBmYWxzZQogIHN1cGFiYXNlX2NoYW5nZWQ6IGZhbHNlCiAgc3FsX3JlcXVpcmVkOiBmYWxzZQogIGFwaV9jaGFuZ2VkOiBmYWxzZQpyZWxlYXNlOgogIHNhbGVzX3JlYWR5OiB0cnVlCiAgcHVibGljX2RlbW9fcmVhZHk6IHRydWUKICBvd25lcl9vcGVyYXRpb25fcmVhZHk6IHRydWUKICBwY19maW5hbF92aXN1YWxfY2hlY2s6ICJVU0VSX0ZJTkFMX0NIRUNLX0lURU0iCiAgaXBhZF9maW5hbF92aXN1YWxfY2hlY2s6ICJVU0VSX0ZJTkFMX0NIRUNLX0lURU0iCiAgc21hcnRwaG9uZV9maW5hbF92aXN1YWxfY2hlY2s6ICJVU0VSX0ZJTkFMX0NIRUNLX0lURU0iCnNvdXJjZV9yZWNvcmRzOgogIHNjaG9vbF9uZXh0Xzk6ICJkcHJvLW5leHQvc2Nob29sLW5leHQtOS1jaGFuZ2UtcmVjb3JkLnltbCIKICBwcm9kdWN0X3NpdGVfbmV4dF8xMGE6ICJkcHJvLW5leHQvc2Nob29sLW5leHQtMTBhLWNvbXBsZXRpb24ueW1sIgogIGN1cnJlbnRfc3RlcF9iZWZvcmVfc2hhMjU2OiAie29sZF9zaGF9IgpiYWNrdXBfYW5kX3JvbGxiYWNrOgogIGluaXRpYWxfYmFja3VwX3RhZzogImJhY2t1cC1zY2hvb2wtbmV4dC1iZWZvcmUtMS0yMDI2MDcyMyIKICBmaW5hbF9iYWNrdXBfdGFnOiAiYmFja3VwLXNjaG9vbC1uZXh0LWJlZm9yZS0xMGItcjEtMjAyNjA3MjQiCm1haW50ZW5hbmNlX3BvbGljeToKICAtICLml6LlrZjmqZ/og73jgpLliYrpmaTjgZvjgZrjgIHlpInmm7TliY3jg5Djg4Pjgq/jgqLjg4Pjg5fjgr/jgrDjgpLkvZzmiJDjgZnjgovjgIIiCiAgLSAiV29ya2Vy44O7U3VwYWJhc2Xjga/lv4XopoHjgarloLTlkIjjgaDjgZHlpInmm7TjgZnjgovjgIIiCiAgLSAi5YWs6ZaL5YmN44Grc3lzdGVtLWNoZWNr44CB5qeL5paH44CBSUTjgIHkuLvopoHmpa3li5njg63jgrjjg4Pjgq/jgpLmpJzmn7vjgZnjgovjgIIiCiAgLSAi5YWs6ZaL5b6M44GrR2l0SHViIFBhZ2Vz44CB6KO95ZOB44Oa44O844K444CB5pON5L2c5L2T6aiT44K344O844OI44KS5YaN56K66KqN44GZ44KL44CCIgogIC0gIuS4gOaLrOiHquWLlUxJTkXphY3kv6Hjga/ov73liqDjgZvjgZrjgIHlgIvliKXnorroqo3jgpLln7rmnKzjgajjgZnjgovjgIIiCicnJwpQYXRoKCdkcHJvLW5leHQvc2Nob29sLW5leHQtZmluYWwtY29tcGxldGlvbi55bWwnKS53cml0ZV90ZXh0KHJlY29yZCxlbmNvZGluZz0ndXRmLTgnLG5ld2xpbmU9J1xuJykKcHJpbnQoJ0NPTVBMRVRFIGxlZGdlciBnZW5lcmF0ZWQnKQo="))
+          PY
+          python3 /tmp/school_next_10b_complete.py
+
+      - name: "7. 完成台帳・変更範囲検査"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ruby -e 'require "yaml"; YAML.load_file(ARGV[0], aliases: true); YAML.load_file(ARGV[1], aliases: true)' "$CURRENT_STEP_FILE" "$FINAL_RECORD"
+          grep -q 'current_step: "COMPLETE"' "$CURRENT_STEP_FILE"
+          grep -q 'last_completed_step: "SCHOOL-NEXT-10"' "$CURRENT_STEP_FILE"
+          grep -q 'final_version: "SCHOOL-NEXT-10-COMPLETE-20260724"' "$CURRENT_STEP_FILE"
+          grep -q 'result: "OK"' "$FINAL_RECORD"
+          grep -q 'SCHOOL-NEXT-10B: "OK"' "$FINAL_RECORD"
+          grep -q 'qr_codes_checked: 6' "$FINAL_RECORD"
+          grep -q 'system_check_ok: 32' "$FINAL_RECORD"
+          grep -q 'sales_ready: true' "$FINAL_RECORD"
+          grep -q 'public_demo_ready: true' "$FINAL_RECORD"
+          grep -q 'owner_operation_ready: true' "$FINAL_RECORD"
+          mapfile -t changed < <(git diff --name-only)
+          for file in "${changed[@]}"; do
+            case "$file" in "$CURRENT_STEP_FILE"|"$FINAL_RECORD") ;; *) echo "::error file=$file::想定外の変更です。"; exit 1 ;; esac
+          done
+          git diff --check
+
+      - name: "8. COMPLETE台帳をCommit・Push"
+        if: steps.preflight.outputs.mode == 'apply'
+        id: apply
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git add "$CURRENT_STEP_FILE" "$FINAL_RECORD"
+          git commit -m "feat(school-next): mark SCHOOL-NEXT-10 COMPLETE via R1"
+          applied_commit="$(git rev-parse HEAD)"
+          echo "applied_commit=$applied_commit" >> "$GITHUB_OUTPUT"
+          git push origin main
+
+      - name: "9. リポジトリ側COMPLETE反映確認"
+        if: steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          raw_current="https://raw.githubusercontent.com/dpromstk2000-lab/dpro-school-line/main/dpro-next/current-step.yml"
+          raw_final="https://raw.githubusercontent.com/dpromstk2000-lab/dpro-school-line/main/dpro-next/school-next-final-completion.yml"
+          pass=0
+          for attempt in $(seq 1 20); do
+            curl -fsSL --max-time 30 -H 'Cache-Control: no-cache' "$raw_current?verify=$GITHUB_RUN_ID-$attempt" -o /tmp/current-final.yml || true
+            curl -fsSL --max-time 30 -H 'Cache-Control: no-cache' "$raw_final?verify=$GITHUB_RUN_ID-$attempt" -o /tmp/completion-final.yml || true
+            if grep -q 'current_step: "COMPLETE"' /tmp/current-final.yml 2>/dev/null && grep -q 'last_completed_step: "SCHOOL-NEXT-10"' /tmp/current-final.yml 2>/dev/null && grep -q 'final_version: "SCHOOL-NEXT-10-COMPLETE-20260724"' /tmp/completion-final.yml 2>/dev/null && grep -q 'result: "OK"' /tmp/completion-final.yml 2>/dev/null; then
+              pass=1; break
+            fi
+            sleep 3
+          done
+          [[ "$pass" == 1 ]] || { echo "::error::GitHub側のCOMPLETE反映を確認できませんでした。"; exit 1; }
+          [[ "$(git ls-remote origin refs/heads/main | awk '{print $1}')" == "${{ steps.apply.outputs.applied_commit }}" ]] || { echo "::error::main先頭が完成Commitと一致しません。"; exit 1; }
+
+      - name: "10. YML自身削除・最終Commit"
+        if: steps.preflight.outputs.mode == 'apply' && success()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          rm -f "$WORKFLOW_PATH" "$ORIGINAL_WORKFLOW_PATH" "$FAILURE_RECORD"
+
+          stage_optional() {
+            local path="$1"
+            if [[ -e "$path" ]] || git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+              git add -A -- "$path"
+            fi
+          }
+
+          stage_optional "$WORKFLOW_PATH"
+          stage_optional "$ORIGINAL_WORKFLOW_PATH"
+          stage_optional "$FAILURE_RECORD"
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(school-next): finalize SCHOOL-NEXT-10B-R1 workflow [skip ci]"
+            git push origin main
+          fi
+
+          {
+            echo "## DPRO 学習塾 LINE — COMPLETE"
+            echo ""
+            echo "- current_step: COMPLETE"
+            echo "- final_version: $FINAL_VERSION"
+            echo "- 全STEP: OK"
+            echo "- system-check: 32 OK / 0注意 / 0NG"
+            echo "- 製品サイト: PASS"
+            echo "- A4縦1ページ操作体験シート: PASS"
+            echo "- QR 6/6 URL一致: PASS"
+            echo "- Worker・Supabase・API変更: なし"
+            echo "- 販売可能・公開デモ可能・オーナー操作可能"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: "11. 失敗時ロールバック・R2台帳"
+        if: failure() && steps.preflight.outputs.mode == 'apply'
+        shell: bash
+        env:
+          APPLIED_COMMIT: ${{ steps.apply.outputs.applied_commit }}
+        run: |
+          set -Eeuo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --ff-only origin main || true
+
+          if [[ -n "${APPLIED_COMMIT:-}" ]] \
+            && git cat-file -e "$APPLIED_COMMIT^{commit}" 2>/dev/null \
+            && git merge-base --is-ancestor "$APPLIED_COMMIT" HEAD; then
+            git revert --no-edit "$APPLIED_COMMIT" || true
+          fi
+
+          mkdir -p dpro-next
+          failed_at="$(TZ=Asia/Tokyo date --iso-8601=seconds)"
+          cat > "$FAILURE_RECORD" <<EOF
+          step: "SCHOOL-NEXT-10B-R1"
+          result: "NG"
+          failed_at_jst: "$failed_at"
+          rollback_tag: "$BEFORE_TAG"
+          applied_commit: "${APPLIED_COMMIT:-none}"
+          current_step_after_failure: "SCHOOL-NEXT-10B-R2_REQUIRED"
+          worker_changed: false
+          supabase_changed: false
+          sql_required: false
+          api_changed: false
+          EOF
+          sed -i 's/^          //' "$FAILURE_RECORD"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import re
+
+          path = Path("dpro-next/current-step.yml")
+          text = path.read_text(encoding="utf-8")
+          now = datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
+
+          text = re.sub(
+              r'^current_step:.*$',
+              'current_step: "SCHOOL-NEXT-10B-R2_REQUIRED"',
+              text,
+              count=1,
+              flags=re.M,
+          )
+          text = re.sub(
+              r'^last_result:.*$',
+              'last_result: "NG"',
+              text,
+              count=1,
+              flags=re.M,
+          )
+          if re.search(r'^updated_at_jst:', text, flags=re.M):
+              text = re.sub(
+                  r'^updated_at_jst:.*$',
+                  f'updated_at_jst: "{now}"',
+                  text,
+                  count=1,
+                  flags=re.M,
+              )
+          else:
+              text += f'updated_at_jst: "{now}"\n'
+
+          path.write_text(text, encoding="utf-8", newline="\n")
+          PY
+
+          git add -A -- "$CURRENT_STEP_FILE" "$FAILURE_RECORD"
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(school-next): rollback SCHOOL-NEXT-10B-R1 and record failure"
+          fi
+          git push origin main || true
