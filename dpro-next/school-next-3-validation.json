@@ -1,0 +1,106 @@
+{
+  "step": "SCHOOL-NEXT-3",
+  "checked_at_jst": "2026-07-24T11:45:09+09:00",
+  "target": "owner.html",
+  "before_sha256": "44ca1e406c6de844cd135ef8865e9911a692f0f6f31e6928eafec2e7f3bcd744",
+  "after_sha256": "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c",
+  "counts": {
+    "OK": 13,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0,
+  "results": [
+    {
+      "key": "existing_ids",
+      "label": "既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 59件を維持",
+      "blocking": false
+    },
+    {
+      "key": "duplicate_ids",
+      "label": "HTML ID重複",
+      "status": "OK",
+      "detail": "ID 64件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "new_ids",
+      "label": "NEXT-3追加ID",
+      "status": "OK",
+      "detail": "追加ID 5件を確認",
+      "blocking": false
+    },
+    {
+      "key": "javascript",
+      "label": "JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "features",
+      "label": "統合機能・既存機能",
+      "status": "OK",
+      "detail": "必須マーカー 13件",
+      "blocking": false
+    },
+    {
+      "key": "api_unchanged",
+      "label": "既存API維持",
+      "status": "OK",
+      "detail": "既存API 12件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "network",
+      "label": "追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 1を維持",
+      "blocking": false
+    },
+    {
+      "key": "size",
+      "label": "owner.html容量",
+      "status": "OK",
+      "detail": "104,150 bytes",
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "対象ファイル限定",
+      "status": "OK",
+      "detail": "本体変更はowner.htmlのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker",
+      "label": "Worker変更",
+      "status": "OK",
+      "detail": "変更なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase",
+      "label": "Supabase変更",
+      "status": "OK",
+      "detail": "変更なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "line",
+      "label": "一括自動LINE配信",
+      "status": "OK",
+      "detail": "追加なし・個別確認を維持",
+      "blocking": false
+    },
+    {
+      "key": "limit",
+      "label": "初期表示件数",
+      "status": "OK",
+      "detail": "最大30件",
+      "blocking": false
+    }
+  ]
+}

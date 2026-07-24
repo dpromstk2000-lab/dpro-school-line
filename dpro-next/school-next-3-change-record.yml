@@ -1,0 +1,25 @@
+step: "SCHOOL-NEXT-3"
+revision: "R1"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T11:45:10+09:00"
+target_files:
+  - "owner.html"
+changes:
+  - "体験・欠席・振替・授業予定を共通一覧へ統合"
+  - "受付・予約・授業の種類フィルター"
+  - "未対応・進行中・完了フィルター"
+  - "生徒・保護者・電話・生徒番号・コース検索"
+  - "初期表示最大30件"
+  - "既存種類別一覧と授業操作を維持"
+owner_before_sha256: "44ca1e406c6de844cd135ef8865e9911a692f0f6f31e6928eafec2e7f3bcd744"
+owner_after_sha256: "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c"
+baseline_commit: "503bc3a5e0bfb04c83f7368a247539953d2db22c"
+backup_tag: "backup-school-next-before-3-20260723"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+validation_ok: 13
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-4"
