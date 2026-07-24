@@ -1,0 +1,50 @@
+{
+  "step": "SCHOOL-NEXT-9",
+  "worker_version": "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
+  "db_ok": true,
+  "results": [
+    {
+      "name": "health",
+      "status": 200,
+      "ok": true,
+      "meta": "200|0.944353|418"
+    },
+    {
+      "name": "prepare",
+      "status": 200,
+      "ok": true,
+      "meta": "200|0.875893|453"
+    },
+    {
+      "name": "dashboard",
+      "status": 200,
+      "ok": true,
+      "meta": "200|0.589446|7461"
+    },
+    {
+      "name": "invalid_admin",
+      "status": 401,
+      "ok": true,
+      "meta": "401|0.427043|163"
+    },
+    {
+      "name": "search_hyphen",
+      "status": 200,
+      "ok": true,
+      "meta": "200|0.962229|5830"
+    },
+    {
+      "name": "search_plain",
+      "status": 200,
+      "ok": true,
+      "meta": "200|1.367935|5828"
+    },
+    {
+      "name": "member",
+      "status": 200,
+      "ok": true,
+      "meta": "200|0.566651|1732"
+    }
+  ],
+  "blocking": []
+}

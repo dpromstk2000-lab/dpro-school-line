@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DPRO 学習塾・習い事 LINE｜営業前デモ確認</title>
+  <title>DPRO 学習塾・習い事 LINE｜DPRO NEXT最終一括検査</title>
   <style>
     :root{
       --bg1:#eef6ff;
@@ -57,6 +57,10 @@
     .btns{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;background:#f8fafc;border:1px solid #cbd5e1;color:#0f172a;box-shadow:0 7px 15px rgba(15,23,42,.06);transition:.15s transform,.15s box-shadow,.15s opacity;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}.btn:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(15,23,42,.10)}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--blue);border-color:var(--blue);color:#fff}.green{background:var(--green);border-color:var(--green);color:#fff}.teal{background:var(--teal);border-color:var(--teal);color:#fff}.orange{background:var(--orange);border-color:var(--orange);color:#fff}.dark{background:var(--navy);border-color:var(--navy);color:#fff}.danger{background:var(--red);border-color:var(--red);color:#fff}
     .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.field label{display:block;font-size:12px;color:#526174;font-weight:900;margin:0 0 5px}.field input,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px 13px;font-size:15px;background:#fff;color:#0f172a}.field textarea{min-height:90px;resize:vertical}.status{margin-top:14px;padding:13px 14px;border-radius:14px;background:var(--softBlue);border:1px solid #bfdbfe;color:#1e40af;font-weight:800;font-size:14px}.ok{background:var(--softGreen);border-color:#bbf7d0;color:#047857}.warn{background:var(--softOrange);border-color:#fed7aa;color:#b45309}.ng{background:var(--softRed);border-color:#fecaca;color:#b91c1c}.status small{display:block;color:inherit;opacity:.85;margin-top:3px;font-weight:700}.metric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.metric{padding:14px;border-radius:16px;border:1px solid #dbe6f1;background:#f8fbff;min-height:86px}.metric strong{display:block;font-size:28px;line-height:1;margin:4px 0}.metric span{font-size:12px;font-weight:900;color:#64748b}.metric.blue{background:#eff6ff}.metric.green{background:#ecfdf5}.metric.orange{background:#fff7ed}.metric.red{background:#fef2f2}.metric.purple{background:#f5f3ff}
     .link-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.screen{border:1px solid #dbe6f1;background:#fff;border-radius:18px;padding:16px}.screen h3{margin:0 0 6px;font-size:17px}.screen p{font-size:13px;color:#526174;font-weight:700;margin:0 0 12px}.screen .btns .btn{padding:10px 12px;font-size:13px}.checklist{display:grid;gap:10px;margin-top:12px}.check-item{display:flex;gap:10px;align-items:flex-start;border:1px solid #e2e8f0;border-radius:14px;background:#fff;padding:12px}.check-item input{width:20px;height:20px;margin-top:2px}.check-item b{display:block}.check-item small{display:block;color:#64748b;font-weight:700}.jsonbox{background:#0b1328;color:#e5eefc;border-radius:16px;padding:16px;overflow:auto;max-height:360px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap}.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:900;padding:4px 9px;border-radius:999px;background:#e0f2fe;color:#0369a1}.pill.okpill{background:#dcfce7;color:#047857}.pill.warnpill{background:#ffedd5;color:#c2410c}.pill.ngpill{background:#fee2e2;color:#b91c1c}.footer{text-align:center;color:#64748b;font-size:12px;font-weight:800;margin:28px 0 0}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#0b1328;color:#fff;border-radius:999px;padding:12px 18px;font-weight:900;box-shadow:0 15px 35px rgba(15,23,42,.25);opacity:0;pointer-events:none;transition:.22s;z-index:50}.toast.show{opacity:1;bottom:34px}.wide{grid-column:1/-1}.hide{display:none!important}
+
+    .audit-card{border-color:#c7d2fe;background:linear-gradient(135deg,#eef2ff,#ecfdf5)}
+    .audit-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.audit-metric{background:#fff;border:1px solid #dbe6f1;border-radius:16px;padding:14px}.audit-metric strong{display:block;font-size:29px}.audit-metric span{font-size:12px;font-weight:900;color:#64748b}
+    .audit-list{display:grid;gap:10px;margin-top:14px}.audit-row{display:grid;grid-template-columns:80px 1fr;gap:12px;background:#fff;border:1px solid #dbe6f1;border-radius:14px;padding:12px}.audit-status{border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;text-align:center}.audit-status.OK{background:#dcfce7;color:#047857}.audit-status.注意{background:#ffedd5;color:#c2410c}.audit-status.NG{background:#fee2e2;color:#b91c1c}.audit-detail{color:#64748b;font-size:12px;font-weight:750;line-height:1.65}.audit-summary{margin-top:12px;padding:12px;border-radius:14px;background:#fff;border:1px solid #dbe6f1;font-weight:850}
     @media(max-width:900px){.hero,.grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.form-grid,.link-grid{grid-template-columns:1fr}h1{font-size:31px}.wrap{padding:14px}.hero-main,.hero-card,.card{padding:20px}.btn{width:100%}}
   </style>
 </head>
@@ -64,9 +68,9 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main panel">
-        <span class="badge">STEP SCHOOL-11 / system-check.html</span>
-        <h1>DPRO 学習塾・習い事 LINE<br>営業前デモ確認画面</h1>
-        <p class="lead">営業前デモ準備、API確認、全画面導線、体験予約・欠席・振替・授業予定の反映をまとめて確認します。</p>
+        <span class="badge">STEP SCHOOL-NEXT-9 / system-check.html</span>
+        <h1>DPRO 学習塾・習い事 LINE<br>DPRO NEXT最終一括検査</h1>
+        <p class="lead">Worker・Supabase・主要API・全公開画面・構文・ID重複・容量・読込時間・管理コード拒否・公開情報混入・電話正規化・過去日時・重複防止・業務ロジックをOK・注意・NGでまとめて確認します。</p>
       </div>
       <div class="hero-card">
         <h2>DPROスクール</h2>
@@ -99,8 +103,17 @@
           <div id="mainStatus" class="status">まだ確認していません。まず管理コードを保存して「まとめて確認」を押してください。</div>
         </section>
 
-        <section class="card">
-          <div class="section-title"><span class="num">2</span><h2>全画面導線確認</h2></div>
+        
+        <section class="card audit-card" id="finalAuditCard">
+          <div class="section-title"><span class="num">2</span><h2>DPRO NEXT最終自動検査</h2></div>
+          <p class="note">公開HTML本文と主要APIだけを取得し、OK・注意・NGで判定します。全画像・全データは取得しません。</p>
+          <div class="audit-metrics"><div class="audit-metric"><span>検査</span><strong id="auditTotal">0</strong></div><div class="audit-metric"><span>OK</span><strong id="auditOk">0</strong></div><div class="audit-metric"><span>注意</span><strong id="auditAttention">0</strong></div><div class="audit-metric"><span>NG</span><strong id="auditNg">0</strong></div></div>
+          <div class="btns"><button class="btn primary" id="btnFinalAudit">最終自動検査を実行</button><button class="btn green" id="btnCopyAudit">検査結果コピー</button><button class="btn danger" id="btnClearAudit">結果クリア</button></div>
+          <div id="auditSummary" class="audit-summary">まだ実行していません。</div><div id="auditList" class="audit-list"></div>
+        </section>
+
+<section class="card">
+          <div class="section-title"><span class="num">3</span><h2>全画面導線確認</h2></div>
           <p class="note">営業で見せる5画面をここから開けます。反映後は必ず各画面のSTEP表記を確認してください。</p>
           <div class="link-grid">
             <div class="screen">
@@ -137,7 +150,7 @@
         </section>
 
         <section class="card">
-          <div class="section-title"><span class="num">3</span><h2>手動チェックリスト</h2></div>
+          <div class="section-title"><span class="num">4</span><h2>手動チェックリスト</h2></div>
           <p class="note">実際の画面を開いて、営業デモで見せる流れを上から順番に確認します。チェック状態はこのブラウザに保存されます。</p>
           <div class="checklist" id="checklist"></div>
           <div class="btns" style="margin-top:14px">
@@ -147,7 +160,7 @@
         </section>
 
         <section class="card">
-          <div class="section-title"><span class="num">4</span><h2>API取得結果</h2></div>
+          <div class="section-title"><span class="num">5</span><h2>API取得結果</h2></div>
           <p class="note">エラー時はここにJSONが出ます。確認用なので営業先には見せなくて大丈夫です。</p>
           <pre class="jsonbox" id="jsonBox">まだ取得していません。</pre>
         </section>
@@ -204,29 +217,32 @@
         </section>
       </aside>
     </main>
-    <div class="footer">DPRO 学習塾・習い事 LINE / STEP SCHOOL-11 / system-check.html</div>
+    <div class="footer">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-9 / system-check.html</div>
   </div>
   <div id="toast" class="toast">コピーしました</div>
 
+  <script src="./config.js"></script>
   <script>
-    const VERSION = 'STEP SCHOOL-11';
+    const VERSION = 'STEP SCHOOL-NEXT-9';
+    const SHARED_CONFIG = window.DPRO_SCHOOL_CONFIG || {};
+    const AUDIT_CONFIG = SHARED_CONFIG.nextAudit || {};
     const DEFAULTS = {
-      apiBaseUrl: 'https://dpro-school-line-api.dpromstk2000.workers.dev',
-      pagesBaseUrl: 'https://dpromstk2000-lab.github.io/dpro-school-line/',
-      shopCode: 'dpro_school_demo',
-      adminCode: '1234',
-      demoPhone: '090-9999-0000',
-      demoPhonePlain: '09099990000',
-      demoStudentNo: 'SCHOOL-DEMO-999'
+      apiBaseUrl: SHARED_CONFIG.apiBaseUrl || 'https://dpro-school-line-api.dpromstk2000.workers.dev',
+      pagesBaseUrl: SHARED_CONFIG.pagesBaseUrl || 'https://dpromstk2000-lab.github.io/dpro-school-line/',
+      shopCode: SHARED_CONFIG.shopCode || 'dpro_school_demo',
+      adminCode: '1234', demoPhone:'090-9999-0000', demoPhonePlain:'09099990000', demoStudentNo:'SCHOOL-DEMO-999',
+      expectedWorkerVersion: AUDIT_CONFIG.expectedWorkerVersion || 'STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723',
+      fileSizeWarnBytes:Number(AUDIT_CONFIG.fileSizeWarnBytes || 240000), loadWarnMs:Number(AUDIT_CONFIG.loadWarnMs || 2500),
+      expectedPageMarkers:AUDIT_CONFIG.expectedPageMarkers || {system:'STEP SCHOOL-NEXT-9 / system-check.html',index:'STEP SCHOOL-NEXT-7 / index.html',member:'STEP SCHOOL-NEXT-8 / member.html',owner:'STEP SCHOOL-NEXT-8 / owner.html',ipad:'STEP SCHOOL-NEXT-6 / owner-ipad.html'}
     };
     const LS = {
       admin:'dpro_school_admin_code',
       api:'dpro_school_api_base_url',
       pages:'dpro_school_pages_base_url',
       shop:'dpro_school_shop_code',
-      checklist:'dpro_school_step11_checklist'
+      checklist:'dpro_school_next9_checklist', audit:'dpro_school_next9_audit'
     };
-    let last = {health:null,dashboard:null,day:null,search:null,prepare:null};
+    let last = {health:null,dashboard:null,day:null,search:null,prepare:null,audit:[]};
 
     const $ = (id)=>document.getElementById(id);
     const today = ()=>{
@@ -280,11 +296,7 @@
       return unique.size;
     }
     function updateUrls(){
-      $('openSystem').href = withCache('system-check.html','step-school-11');
-      $('openIndex').href = withCache('index.html','step-school-6-r2');
-      $('openMember').href = withCache('member.html','step-school-7');
-      $('openOwner').href = withCache('owner.html','step-school-10-r4');
-      $('openIpad').href = withCache('owner-ipad.html','step-school-9-r1');
+      $('openSystem').href=withCache('system-check.html','school-next-9'); $('openIndex').href=withCache('index.html','school-next-7'); $('openMember').href=withCache('member.html','school-next-8'); $('openOwner').href=withCache('owner.html','school-next-8'); $('openIpad').href=withCache('owner-ipad.html','school-next-6');
     }
     function allUrlsText(){
       return [
@@ -410,6 +422,22 @@
         throw e;
       }
     }
+
+const AUDIT_PAGES=[['system','system-check.html'],['index','index.html'],['member','member.html'],['owner','owner.html'],['ipad','owner-ipad.html']];
+function ae(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function ac(){return {total:last.audit.length,ok:last.audit.filter(x=>x.status==='OK').length,attention:last.audit.filter(x=>x.status==='注意').length,ng:last.audit.filter(x=>x.status==='NG').length}}
+function ar(key,label,status,detail){const row={key,label,status,detail:String(detail||'')};const i=last.audit.findIndex(x=>x.key===key);if(i>=0)last.audit[i]=row;else last.audit.push(row);renderAudit()}
+function renderAudit(){const c=ac();$('auditTotal').textContent=c.total;$('auditOk').textContent=c.ok;$('auditAttention').textContent=c.attention;$('auditNg').textContent=c.ng;$('auditList').innerHTML=last.audit.map(x=>`<div class="audit-row"><span class="audit-status ${x.status}">${ae(x.status)}</span><div><b>${ae(x.label)}</b><div class="audit-detail">${ae(x.detail)}</div></div></div>`).join('');$('auditSummary').textContent=c.total?`検査 ${c.total} / OK ${c.ok} / 注意 ${c.attention} / NG ${c.ng}`:'まだ実行していません。';updateJudgement()}
+function auditText(){const c=ac();return ['DPRO 学習塾 LINE / SCHOOL-NEXT-9 最終検査',`OK ${c.ok} / 注意 ${c.attention} / NG ${c.ng}`,'',...last.audit.map(x=>`[${x.status}] ${x.label}\n${x.detail}`)].join('\n')}
+async function timedText(target){const t=performance.now(),r=await fetch(target,{cache:'no-store'}),text=await r.text();return {ok:r.ok,status:r.status,text,ms:Math.round(performance.now()-t),bytes:new Blob([text]).size}}
+async function timedJson(target,opts={}){const x=await timedTextWithOptions(target,opts);let data={};try{data=JSON.parse(x.text)}catch(e){data={raw:x.text}}return {...x,data}}
+async function timedTextWithOptions(target,opts){const t=performance.now(),r=await fetch(target,{...opts,cache:'no-store'}),text=await r.text();return {ok:r.ok,status:r.status,text,ms:Math.round(performance.now()-t),bytes:new Blob([text]).size}}
+function inspectPage(key,file,result){const marker=DEFAULTS.expectedPageMarkers[key];ar(`page-${key}`,`${file} 公開・表記`,result.ok&&result.text.includes(marker)?'OK':'NG',`HTTP ${result.status} / ${result.ms}ms / ${result.bytes}bytes`);ar(`time-${key}`,`${file} 読込時間`,result.ms>DEFAULTS.loadWarnMs?'注意':'OK',`${result.ms}ms`);ar(`size-${key}`,`${file} 容量`,result.bytes>DEFAULTS.fileSizeWarnBytes?'注意':'OK',`${result.bytes}bytes`);const d=new DOMParser().parseFromString(result.text,'text/html'),ids=[...d.querySelectorAll('[id]')].map(n=>n.id),dup=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))];ar(`ids-${key}`,`${file} ID重複`,dup.length?'NG':'OK',dup.length?dup.join(', '):`ID ${ids.length}件`);let js=[];[...d.querySelectorAll('script:not([src])')].forEach((x,i)=>{try{new Function(x.textContent)}catch(e){js.push(`script${i+1}:${e.message}`)}});ar(`js-${key}`,`${file} JavaScript`,js.length?'NG':'OK',js.join(' / ')||'構文PASS');if(key==='index'||key==='member'){const leak=/(X-Admin-Code|\/api\/admin\/|admin_code\s*[:=]|service_role)/i.test(result.text);ar(`leak-${key}`,`${file} 管理情報混入`,leak?'NG':'OK',leak?'管理文字列を検出':'混入なし')}}
+async function runFinalAudit(){if($('btnFinalAudit').disabled)return;$('btnFinalAudit').disabled=true;last.audit=[];renderAudit();try{const h=await timedJson(url('/api/health'));ar('worker','Worker',h.ok?'OK':'NG',`HTTP ${h.status} / ${h.data.worker_version||h.data.version||''}`);ar('db','Supabase',h.data.db_ok===true?'OK':'NG',`db_ok=${h.data.db_ok}`)}catch(e){ar('worker','Worker','NG',e.message)}
+if(adminCode()){const good=await timedJson(url('/api/admin/dashboard',{shop_code:shopCode(),admin_code:adminCode()}));ar('admin-good','管理コード認証',good.ok?'OK':'NG',`HTTP ${good.status}`);const bad=await timedJson(url('/api/admin/dashboard',{shop_code:shopCode(),admin_code:'NEXT9-INVALID'}));ar('admin-bad','無効な管理コード拒否',[400,401,403].includes(bad.status)?'OK':'NG',`HTTP ${bad.status}`);for(const q of [DEFAULTS.demoPhone,DEFAULTS.demoPhonePlain]){const x=await timedJson(url('/api/admin/search',{shop_code:shopCode(),admin_code:adminCode(),q}));ar(`phone-${q}`,'電話番号正規化検索',x.ok?'OK':'NG',`${q} / HTTP ${x.status}`)}}else{ar('admin-good','管理コード認証','NG','管理コード未入力')}
+for(const [key,file] of AUDIT_PAGES){try{inspectPage(key,file,await timedText(withCache(file,`next9-${Date.now()}`)))}catch(e){ar(`page-${key}`,`${file} 公開・表記`,'NG',e.message)}}
+try{const c=await timedText(withCache('config.js',`next9-${Date.now()}`));new Function(c.text);ar('config','config.js','OK',`${c.ms}ms / ${c.bytes}bytes`);ar('phone-code','電話番号正規化実装',c.text.includes('startsWith("+81")')&&c.text.includes('replace(/[^\\d]/g')?'OK':'NG','+81→0・数字以外除去')}catch(e){ar('config','config.js','NG',e.message)}
+const index=(await timedText(withCache('index.html','next9-static'))).text,member=(await timedText(withCache('member.html','next9-static'))).text,owner=(await timedText(withCache('owner.html','next9-static'))).text,ipad=(await timedText(withCache('owner-ipad.html','next9-static'))).text;ar('past','過去日時登録防止',/guardDateInput|過去の日付|date\s*<\s*today/i.test(index)?'OK':'NG','index.html静的確認');ar('duplicate','重複送信防止',/sending|isSubmitting|disabled\s*=\s*true|二重/i.test(index)?'OK':'注意','静的確認・必要なら実機連続タップ');ar('business','主要業務ロジック',index.includes('repeatNotice')&&member.includes('historySection')&&member.includes('memberNextActionSection')&&owner.includes('followupCard')&&ipad.includes('fieldModeBar')?'OK':'NG','前回と同じ・履歴・次アクション・フォロー・現場モード');ar('demo','DEMOデータ準備',last.prepare?'OK':'注意',last.prepare?'準備済み':'まとめて確認で準備してください');$('btnFinalAudit').disabled=false;renderAudit()}
     async function runAll(){
       $('btnRunAll').disabled=true;
       try{
@@ -419,6 +447,7 @@
           await checkDashboard();
           await checkDay();
           await searchDemo(DEFAULTS.demoPhone);
+          await runFinalAudit();
         }
         setStatus('mainStatus',`まとめて確認が完了しました。各画面を開いてSTEP表記と導線を確認してください。<small>確認時刻 ${nowText()}</small>`,'ok');
         updateJudgement();
@@ -427,14 +456,14 @@
       }finally{ $('btnRunAll').disabled=false; }
     }
     const checklistItems = [
-      ['system', 'system-check.html が STEP SCHOOL-11 表示になっている', '営業前デモ準備・API確認・URL一覧が見える'],
-      ['index', 'index.html で体験予約・欠席連絡・振替希望が送れる', '過去日不可、時間は30分単位、受付文面コピーOK'],
-      ['member', 'member.html で生徒証・授業予定・残数が見える', '090-9999-0000 / SCHOOL-DEMO-999 で確認'],
-      ['owner', 'owner.html で今日やること・受付一覧・授業予定が見える', '電話予約・教室受付予約・既存生徒の授業追加も確認'],
-      ['ipad', 'owner-ipad.html で出席・授業中・完了が押せる', '日付表示が yyyy-mm-dd で見切れない'],
-      ['copy', '保護者向け返信文面コピーができる', '文面を見る→コピー→対応済みにするの流れ'],
-      ['search', '電話番号ハイフンあり/なし検索ができる', '090-9999-0000 と 09099990000 の両方'],
-      ['final', '営業デモで空画面・英語ステータス・見切れが目立たない', '未対応、対応済みなど日本語表示を確認']
+      ['system','system-check.html が SCHOOL-NEXT-9 表示','最終自動検査と結果コピー'],
+      ['index','体験・欠席・振替','過去日・30分単位・前回と同じ'],
+      ['member','生徒証・次にすること・履歴','デモ生徒で確認'],
+      ['owner','今日やること・進捗・フォロー','文面コピーと個別確認'],
+      ['ipad','現場モード・出席・授業中・完了・欠席','管理準備モード切替'],
+      ['responsive','PC・iPad・スマホ最終目視','文字切れ・横はみ出し・重なりなし'],
+      ['security','管理コード拒否・公開情報混入','最終自動検査NGなし'],
+      ['final','販売・公開デモ可能','空画面・英語状態・見切れなし']
     ];
     function savedChecks(){ try{return JSON.parse(localStorage.getItem(LS.checklist)||'{}')}catch(e){return {}} }
     function renderChecklist(){
@@ -451,18 +480,7 @@
       updateJudgement();
     }
     function checklistProgress(){ const s=savedChecks(); return checklistItems.filter(([id])=>s[id]).length; }
-    function updateJudgement(){
-      const done = checklistProgress();
-      const apiOk = last.health && last.health.ok;
-      const dataOk = !!(last.dashboard || last.day);
-      if(apiOk && dataOk && done >= checklistItems.length){
-        setStatus('okJudgement','STEP SCHOOL-11 OKです。営業前デモ準備・全画面導線確認まで完了しています。','ok');
-      }else if(apiOk && done >= 4){
-        setStatus('okJudgement',`かなり進んでいます。チェック ${done}/${checklistItems.length} 完了。残りの画面導線を確認してください。`,'warn');
-      }else{
-        setStatus('okJudgement',`確認途中です。チェック ${done}/${checklistItems.length} 完了。まず「まとめて確認」と各画面チェックを進めてください。`,'warn');
-      }
-    }
+    function updateJudgement(){const done=checklistProgress(),c=ac();if(c.total&&c.ng===0&&done>=checklistItems.length)setStatus('okJudgement',c.attention?`SCHOOL-NEXT-9 許容注意 ${c.attention}件。最終目視後に完了可能です。`:'SCHOOL-NEXT-9 OKです。','ok');else if(c.ng)setStatus('okJudgement',`NG ${c.ng}件を修正してください。`,'ng');else setStatus('okJudgement',`最終自動検査と手動チェック ${done}/${checklistItems.length} を進めてください。`,'warn')}
     function init(){
       $('apiBase').value = localStorage.getItem(LS.api) || DEFAULTS.apiBaseUrl;
       $('pagesBase').value = localStorage.getItem(LS.pages) || DEFAULTS.pagesBaseUrl;
@@ -470,6 +488,7 @@
       $('adminCode').value = localStorage.getItem(LS.admin) || '';
       updateUrls();
       renderChecklist();
+      renderAudit();
       if($('adminCode').value) setStatus('adminStatus','管理コードを保存済みです。','ok');
       $('btnFillAdmin').onclick=()=>{$('adminCode').value=DEFAULTS.adminCode;setStatus('adminStatus','1234を入力しました。保存を押してください。','warn')};
       $('btnSaveAdmin').onclick=()=>{localStorage.setItem(LS.admin,adminCode());setStatus('adminStatus','管理コードを保存しました。','ok')};
@@ -481,6 +500,9 @@
       $('btnDashboard').onclick=checkDashboard;
       $('btnDay').onclick=checkDay;
       $('btnRunAll').onclick=runAll;
+      $('btnFinalAudit').onclick=runFinalAudit;
+      $('btnCopyAudit').onclick=()=>copyText(auditText());
+      $('btnClearAudit').onclick=()=>{last.audit=[];renderAudit();showToast('結果をクリアしました')};
       $('btnSearch').onclick=()=>searchDemo($('searchQ').value);
       $('btnSearchNoHyphen').onclick=()=>searchDemo(DEFAULTS.demoPhonePlain);
       $('btnCopyAllUrls').onclick=()=>copyText(allUrlsText());
@@ -491,7 +513,7 @@
       });
       $('btnCopyChecklist').onclick=()=>{
         const s=savedChecks();
-        const text = ['DPRO 学習塾・習い事 LINE / STEP SCHOOL-11 チェック結果','',...checklistItems.map(([id,title])=>`${s[id]?'✅':'□'} ${title}`)].join('\n');
+        const text = ['DPRO 学習塾・習い事 LINE / SCHOOL-NEXT-9 チェック結果','',...checklistItems.map(([id,title])=>`${s[id]?'✅':'□'} ${title}`)].join('\n');
         copyText(text);
       };
       $('btnClearChecklist').onclick=()=>{localStorage.removeItem(LS.checklist);renderChecklist();showToast('リセットしました')};

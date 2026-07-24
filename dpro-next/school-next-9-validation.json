@@ -1,10 +1,10 @@
 {
   "step": "SCHOOL-NEXT-9",
-  "checked_at_jst": "2026-07-24T20:04:04+09:00",
+  "checked_at_jst": "2026-07-24T20:22:37+09:00",
   "files": {
     "system-check.html": {
-      "sha256": "73e37484393e9d87c407f8902b873b309fd64b3eff231776decca1bfae6ede34",
-      "bytes": 43102
+      "sha256": "ecdc81fe4330688c88d32fbcd83e72133a61512c5c14048e72fd729e0a7bf802",
+      "bytes": 42666
     },
     "index.html": {
       "sha256": "4303b45697ff3fc7497e94eff8a682878d01342bdd2bb98bcb537389f81f8043",
@@ -24,11 +24,11 @@
     }
   },
   "counts": {
-    "OK": 31,
+    "OK": 32,
     "注意": 0,
-    "NG": 1
+    "NG": 0
   },
-  "blocking_ng": 1,
+  "blocking_ng": 0,
   "results": [
     {
       "key": "system-check.html-id",
@@ -40,15 +40,15 @@
     {
       "key": "system-check.html-js",
       "label": "system-check.html JavaScript",
-      "status": "NG",
-      "detail": "   function updateJudgement(){const done=checklistProgress(),c=ac();if(c.total&&c.ng===0&&done>=checklistItems.length)setStatus('okJudgement',c.attention?`SCHOOL-NEXT-9 許容注意 ${c.attention}件。最終目視後に完了可能です。`:'SCHOOL-NEXT-9 OKです。','ok');else if(c.ng)setStatus('okJudgement',`NG ${c.ng}件を修正してください。`,'ng');else setStatus('okJudgement',`最終自動検査と手動チェック ${done}/${checklistItems.length} を進めてください。`,'warn')}else if(apiOk && done >= 4){\n                                                                                                                                                                                                                                                                                                                                                                                                             ^^^^\n\nSyntaxError: Unexpected token 'else'\n    at wrapSafe (node:internal/modules/cjs/loader:1713:18)\n    at checkSyntax (node:internal/main/check_syntax:78:3)\n\nNode.js v22.23.1\n",
-      "blocking": true
+      "status": "OK",
+      "detail": "PASS",
+      "blocking": false
     },
     {
       "key": "system-check.html-size",
       "label": "system-check.html 容量",
       "status": "OK",
-      "detail": "43102bytes",
+      "detail": "42666bytes",
       "blocking": false
     },
     {

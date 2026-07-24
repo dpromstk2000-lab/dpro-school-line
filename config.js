@@ -1,5 +1,5 @@
 // =========================================================
-// STEP SCHOOL-4
+// STEP SCHOOL-NEXT-9
 // DPRO 学習塾・習い事 LINE
 // config.js 完全版
 // 作成日：20260709
@@ -11,7 +11,7 @@
 // =========================================================
 
 window.DPRO_SCHOOL_CONFIG = {
-  version: "STEP SCHOOL-4",
+  version: "STEP SCHOOL-NEXT-9",
   serviceName: "DPRO 学習塾・習い事 LINE",
   serviceSubtitle: "学習塾・習い事向け 体験予約・出席・振替・保護者連絡システム",
 
@@ -37,6 +37,19 @@ window.DPRO_SCHOOL_CONFIG = {
     guardianName: "テスト 保護者",
     phone: "090-9999-0000"
   },
+  nextAudit: {
+    expectedWorkerVersion: "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
+    fileSizeWarnBytes: 240000,
+    loadWarnMs: 2500,
+    expectedPageMarkers: {
+      system: "STEP SCHOOL-NEXT-9 / system-check.html",
+      index: "STEP SCHOOL-NEXT-7 / index.html",
+      member: "STEP SCHOOL-NEXT-8 / member.html",
+      owner: "STEP SCHOOL-NEXT-8 / owner.html",
+      ipad: "STEP SCHOOL-NEXT-6 / owner-ipad.html"
+    }
+  },
+
 
   endpoints: {
     health: "/api/health",

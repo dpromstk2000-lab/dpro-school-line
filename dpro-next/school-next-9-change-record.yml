@@ -1,0 +1,29 @@
+step: "SCHOOL-NEXT-9"
+revision: "R1"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T20:22:43+09:00"
+target_files:
+  - "system-check.html"
+  - "config.js"
+changes:
+  - "OK・注意・NG最終検査"
+  - "Worker・Supabase・主要API"
+  - "無効な管理コード拒否"
+  - "公開画面構文・ID・容量・読込時間"
+  - "管理情報・秘密情報混入"
+  - "電話正規化・過去日時・重複防止"
+system_before_sha256: "bad265f5a55862a9da4d0650c0ab7e15aa87ce48ff04a5688c9fc4746c118f6d"
+system_after_sha256: "ecdc81fe4330688c88d32fbcd83e72133a61512c5c14048e72fd729e0a7bf802"
+config_before_sha256: "04bf89794dd603cb45b78ce1bfd0b6e944423abfa15174cbbe1ab201e97f40d2"
+config_after_sha256: "9c0784c8d199b5d124d4bb1bd4de71f9ca04de6dbb3f96f0ec4a3dd7dbf3a4d2"
+baseline_commit: "9f0d71712c6b0d505fe12fa0cccdd308af19821a"
+backup_tag: "backup-school-next-before-9-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+file_size_warning_bytes: 240000
+load_time_warning_ms: 2500
+validation_ok: 32
+validation_attention: 0
+next_step_after_public_verify: "SCHOOL-NEXT-10"
