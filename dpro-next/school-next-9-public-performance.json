@@ -1,0 +1,48 @@
+{
+  "step": "SCHOOL-NEXT-9",
+  "checked_at_jst": "2026-07-24T20:23:27+09:00",
+  "results": [
+    {
+      "file": "system-check.html",
+      "http_status": 200,
+      "time_seconds": 0.280404,
+      "bytes": 42666.0,
+      "status": "OK"
+    },
+    {
+      "file": "config.js",
+      "http_status": 200,
+      "time_seconds": 0.320542,
+      "bytes": 9077.0,
+      "status": "OK"
+    },
+    {
+      "file": "index.html",
+      "http_status": 200,
+      "time_seconds": 0.136863,
+      "bytes": 60026.0,
+      "status": "OK"
+    },
+    {
+      "file": "member.html",
+      "http_status": 200,
+      "time_seconds": 0.117955,
+      "bytes": 66509.0,
+      "status": "OK"
+    },
+    {
+      "file": "owner.html",
+      "http_status": 200,
+      "time_seconds": 0.125698,
+      "bytes": 136275.0,
+      "status": "OK"
+    },
+    {
+      "file": "owner-ipad.html",
+      "http_status": 200,
+      "time_seconds": 0.288124,
+      "bytes": 66603.0,
+      "status": "OK"
+    }
+  ]
+}
