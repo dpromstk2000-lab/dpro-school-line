@@ -1,6 +1,6 @@
 step: "SCHOOL-NEXT-4"
 revision: "R2"
-result: "PUBLIC_VERIFY_PENDING"
+result: "OK"
 applied_at_jst: "2026-07-24T15:21:04+09:00"
 target_files:
   - "owner.html"
@@ -26,3 +26,9 @@ added_network_request: false
 validation_ok: 14
 validation_warning: 0
 next_step_after_public_verify: "SCHOOL-NEXT-5"
+completed_at_jst: "2026-07-24T15:21:46+09:00"
+public_owner_url: "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html"
+public_verify: "PASS"
+current_step: "SCHOOL-NEXT-5"
+last_completed_step: "SCHOOL-NEXT-4"
+next_step: "SCHOOL-NEXT-5"
