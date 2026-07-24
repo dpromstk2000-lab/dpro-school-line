@@ -1,0 +1,35 @@
+step: "SCHOOL-NEXT-8"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T19:30:48+09:00"
+target_files:
+  - "owner.html"
+  - "member.html"
+changes:
+  - "体験後フォロー候補"
+  - "欠席・振替後フォロー候補"
+  - "授業完了後の次回確認候補"
+  - "個別フォロー文面の表示・コピー"
+  - "端末内14日間の確認済み補助表示"
+  - "会員画面の次にすること"
+  - "確認待ち・次回授業・振替・教室相談の案内"
+owner_before_sha256: "a6b96016e36bc05e8b587892de49dafebcac03d15425fc47f116f1d633a37941"
+owner_after_sha256: "1fc0e3fb96da1789aa128479b5c3918b75c6e3a75c4e0c059a0130b3dee5b4a3"
+member_before_sha256: "679c0bb441a2eedb423b6d2325f5539f8def0b56ed3377400ca8ddebad299c81"
+member_after_sha256: "606882dbf0cd885a325f0d6ef5baf9b14cc6238f4896a50de3314df8ac7d182a"
+baseline_commit: "65bcd241832f6726c9969f6e8881320b12b1a0ed"
+backup_tag: "backup-school-next-before-8-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+new_followup_table: false
+automatic_line_delivery: false
+followup_display_limit: 20
+reviewed_retention_days: 14
+reviewed_scope: "browser_local_only"
+reviewed_shared_across_devices: false
+member_next_action_persisted: false
+validation_ok: 19
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-9"

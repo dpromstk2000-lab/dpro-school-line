@@ -245,6 +245,30 @@
 .next-priority-card{min-height:96px;}
 }
 
+
+/* SCHOOL-NEXT-8: 次回案内・再来校・フォロー */
+.followup-card{border-color:#c7d2fe;background:linear-gradient(135deg,rgba(238,242,255,.97),rgba(240,253,250,.97));}
+.followup-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px;}
+.followup-head-copy{color:#64748b;font-size:12px;font-weight:800;line-height:1.7;margin-top:5px;}
+.followup-count-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:13px;}
+.followup-count{border:1px solid #dbe5f2;border-top:4px solid #2563eb;border-radius:16px;background:#fff;padding:13px;text-align:left;box-shadow:none;color:#0f172a;}
+.followup-count[data-followup-filter="trial"]{border-top-color:#7c3aed;}
+.followup-count[data-followup-filter="absence"]{border-top-color:#f97316;}
+.followup-count[data-followup-filter="next"]{border-top-color:#10b981;}
+.followup-count.active{outline:3px solid rgba(37,99,235,.15);background:#eff6ff;}
+.followup-count strong{display:block;font-size:28px;line-height:1;margin-bottom:7px;}
+.followup-count b{display:block;font-size:13px;margin-bottom:4px;}
+.followup-count small{display:block;color:#64748b;font-size:11px;font-weight:800;line-height:1.5;}
+.followup-item{border-left:5px solid #2563eb;}
+.followup-item.trial{border-left-color:#7c3aed;}
+.followup-item.absence{border-left-color:#f97316;}
+.followup-item.next{border-left-color:#10b981;}
+.followup-reviewed{opacity:.68;background:#f8fafc;}
+.followup-summary{margin-top:12px;padding:11px 13px;border-radius:14px;background:#fff;border:1px solid #dbe5f2;color:#475569;font-size:12px;font-weight:820;line-height:1.7;}
+.followup-device-note{margin-top:12px;padding:10px 12px;border-radius:13px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;font-weight:800;line-height:1.7;}
+@media(max-width:900px){.followup-count-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.followup-head{flex-direction:column;}}
+@media(max-width:560px){.followup-count-grid{grid-template-columns:1fr;}}
+
     @media(max-width:1100px){.hero,.grid{grid-template-columns:1fr;}.stats{grid-template-columns:repeat(2,1fr);}.item{grid-template-columns:1fr;}.item-actions{justify-content:flex-start;min-width:0;}.two-col{grid-template-columns:1fr;}}
     @media(max-width:720px){body{padding:14px;}.hero-main,.hero-side,.card{border-radius:20px;padding:18px;}h1{font-size:32px;}.stats,.form-grid,.form-grid.three,.mini-grid{grid-template-columns:1fr;}.btn{width:100%;}.btn.small{width:auto;}.actions .btn{width:100%;}.top-actions .btn{width:100%;}.tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}.tab{white-space:nowrap;}.item-actions .btn{width:100%;}}
   </style>
@@ -253,7 +277,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-NEXT-5 / owner.html</div>
+        <div class="version">STEP SCHOOL-NEXT-8 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">未対応、今日の授業、体験・欠席・振替の受付を優先順に確認できます。普段は「今日やること」から対応し、予約・授業の追加は必要な時だけ開くDPRO NEXT型の管理画面です。</p>
         <div class="top-actions">
@@ -273,6 +297,7 @@
           <span class="pill">振替希望</span>
           <span class="pill">生徒検索</span>
           <span class="pill">電話予約</span>
+          <span class="pill">次回フォロー</span>
         </div>
       </div>
     </header>
@@ -313,6 +338,35 @@
           <p class="hint">期限・優先度・受付内容から重要な順に並べます。文面を確認・コピーし、終わったものを「対応済み」にします。</p>
           <div class="list" id="taskList"></div>
         </div>
+
+
+<div class="card followup-card" id="followupCard">
+<div class="section-title"><span class="num">F</span><h2>次回案内・再来校フォロー</h2></div>
+<div class="followup-head">
+  <div>
+    <p class="hint" style="margin-bottom:0;">体験後、欠席・振替後、授業完了後の候補を既存データから整理します。自動配信は行わず、対象と文面を個別確認してLINEへコピーします。</p>
+    <div class="followup-head-copy">初期表示は最大20件です。候補は体験後・欠席振替・次回授業確認に分類します。</div>
+  </div>
+  <button class="btn secondary small" id="followupShowReviewedBtn" type="button" aria-pressed="false">確認済みも表示</button>
+</div>
+<div class="followup-count-grid" id="followupFilterBar">
+  <button class="followup-count active" type="button" data-followup-filter="all" aria-pressed="true">
+    <strong id="followupAllCount">0</strong><b>すべて</b><small>現在のフォロー候補</small>
+  </button>
+  <button class="followup-count" type="button" data-followup-filter="trial" aria-pressed="false">
+    <strong id="followupTrialCount">0</strong><b>体験後</b><small>感想・入会相談</small>
+  </button>
+  <button class="followup-count" type="button" data-followup-filter="absence" aria-pressed="false">
+    <strong id="followupAbsenceCount">0</strong><b>欠席・振替後</b><small>振替・確定確認</small>
+  </button>
+  <button class="followup-count" type="button" data-followup-filter="next" aria-pressed="false">
+    <strong id="followupNextCount">0</strong><b>次回授業</b><small>授業完了後の確認</small>
+  </button>
+</div>
+<div class="list" id="followupList"></div>
+<div class="followup-summary" id="followupSummary">情報を更新すると、既存の受付・授業データからフォロー候補を表示します。</div>
+<div class="followup-device-note">「この端末で確認済み」は14日間だけ、このブラウザ上で候補を隠す補助機能です。教室全体の共有済み記録ではありません。</div>
+</div>
 
         <div class="card" id="todayLessonsCard">
           <div class="section-title"><span class="num">3</span><h2>本日の授業予定</h2></div>
@@ -573,6 +627,7 @@
             <li>今日やることを上から確認</li>
             <li>進捗ボードで受付・授業の滞留を確認</li>
             <li>保護者確認ボードで返信・予定連絡を確認</li>
+            <li>フォロー候補を個別確認して文面をコピー</li>
             <li>文面を確認・コピーしてLINEで送信</li>
             <li>対応済みにして一覧を整理</li>
             <li>本日の授業を出席・授業中・完了へ更新</li>
@@ -583,7 +638,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-5 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-8 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -591,7 +646,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-NEXT-5';
+      const VERSION = 'STEP SCHOOL-NEXT-8';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -609,6 +664,9 @@
         unifiedQuery: '',
         progressStage: 'all',
         confirmationStage: 'all',
+        followupFilter: 'all',
+        followupShowReviewed: false,
+        followupMap: new Map(),
         dashboard: makeEmptyDashboard(),
         maps: new Map(),
         selectedMessage: '',
@@ -974,11 +1032,197 @@ if(button) button.textContent = open ? '予約・授業入力を表示中' : '�
 if(open) requestAnimationFrame(() => card.scrollIntoView({ behavior:'smooth', block:'start' }));
 }
 
+
+function followupDateDistance(value){
+const ymd = String(value || '').slice(0,10);
+if(!ymd) return 0;
+const target = new Date(`${ymd}T00:00:00`);
+const today = new Date(`${todayYmd()}T00:00:00`);
+if(Number.isNaN(target.getTime())) return 0;
+return Math.round((target.getTime() - today.getTime()) / 86400000);
+}
+
+function followupTypeForItem(item){
+if(!item) return '';
+const status = String(item.status || '').toLowerCase();
+if(item.kind === 'request'){
+if(!boolDone(item.status)) return '';
+if(isTrialType(item.type)) return 'trial';
+if(isAbsenceType(item.type) || isMakeupType(item.type)) return 'absence';
+return '';
+}
+if(status.includes('欠席') || status.includes('absent')) return 'absence';
+if(boolDone(item.status) || status.includes('completed') || status.includes('finished')) return 'next';
+return '';
+}
+
+function followupTypeLabel(type){
+return {trial:'体験後フォロー',absence:'欠席・振替後フォロー',next:'次回授業確認'}[type] || 'フォロー';
+}
+
+function followupBadgeClass(type){
+return {trial:'purple',absence:'orange',next:'green'}[type] || 'blue';
+}
+
+function followupCandidateKey(candidate){
+return [
+candidate.type || '',
+normalizePhone(candidate.phone || ''),
+candidate.studentNo || '',
+candidate.studentName || '',
+String(candidate.date || '').slice(0,10)
+].join('|');
+}
+
+function loadFollowupReviewed(){
+let data = {};
+try{ data = JSON.parse(localStorage.getItem('dpro_school_followup_reviewed_v1') || '{}') || {}; }catch(e){ data = {}; }
+const limit = Date.now() - 14 * 86400000;
+Object.keys(data).forEach((key) => {
+if(!Number.isFinite(Number(data[key])) || Number(data[key]) < limit) delete data[key];
+});
+localStorage.setItem('dpro_school_followup_reviewed_v1', JSON.stringify(data));
+return data;
+}
+
+function markFollowupReviewed(candidate){
+const data = loadFollowupReviewed();
+data[followupCandidateKey(candidate)] = Date.now();
+localStorage.setItem('dpro_school_followup_reviewed_v1', JSON.stringify(data));
+}
+
+function followupMessage(candidate){
+const guardian = candidate.guardianName || candidate.studentName || '保護者';
+const student = candidate.studentName || 'お子さま';
+if(candidate.type === 'trial'){
+return normalizeNewlines(`${guardian}様\n${state.config.shopName}です。\n\n先日は${student}さんの体験授業にお越しいただき、ありがとうございました。\n授業のご感想や、学習について気になる点はございませんか。\n\nご希望があれば、今後の通い方やコースについて個別にご案内いたします。`);
+}
+if(candidate.type === 'absence'){
+return normalizeNewlines(`${guardian}様\n${state.config.shopName}です。\n\n${student}さんの欠席・振替について確認のご連絡です。\n対象：${formatDateTime(candidate.date, candidate.time)}\n\n振替日時のご希望や、確定内容についてご不明な点がございましたら、このLINEへご返信ください。`);
+}
+return normalizeNewlines(`${guardian}様\n${state.config.shopName}です。\n\n${student}さんの授業後の確認です。\n直近授業：${formatDateTime(candidate.date, candidate.time)}\n\n次回授業の予定や、学習内容について確認したい点がございましたら、このLINEへご返信ください。`);
+}
+
+function makeFollowupCandidate(item){
+const type = followupTypeForItem(item);
+if(!type) return null;
+const distance = followupDateDistance(item.date);
+if(item.date && (distance > 14 || distance < -45)) return null;
+return {
+type,
+kind:item.kind,
+rawItem:item.rawItem,
+studentName:item.studentName || '',
+guardianName:item.guardianName || '',
+phone:item.phone || '',
+studentNo:item.studentNo || '',
+course:item.course || '',
+date:item.date || '',
+time:item.time || '',
+status:item.status || '',
+source:item.source || '',
+message:'',
+reviewed:false
+};
+}
+
+function demoFollowupCandidates(){
+const today = todayYmd();
+return [
+{type:'trial',kind:'request',studentName:'テスト 次郎',guardianName:'テスト 太郎',phone:'090-1111-2222',studentNo:'SCHOOL-DEMO-1001',course:'体験授業：小学生算数',date:addDays(today,-2),time:'17:00',status:'対応済み',source:'LINE体験予約'},
+{type:'absence',kind:'lesson',studentName:'テスト 太郎',guardianName:'テスト 保護者',phone:DEMO_PHONE,studentNo:DEMO_STUDENT_NO,course:'小学生算数',date:addDays(today,-1),time:'17:00',status:'欠席',source:'授業予定'},
+{type:'next',kind:'lesson',studentName:'テスト 花子',guardianName:'テスト 保護者',phone:'090-8888-0000',studentNo:'SCHOOL-DEMO-998',course:'英会話キッズ',date:today,time:'18:00',status:'完了',source:'授業予定'}
+];
+}
+
+function buildFollowupCandidates(){
+let candidates = getUnifiedItems().map(makeFollowupCandidate).filter(Boolean);
+if(!candidates.length && state.usedFallback) candidates = demoFollowupCandidates();
+const reviewedMap = loadFollowupReviewed();
+const dedup = new Map();
+candidates.forEach((candidate) => {
+candidate.message = followupMessage(candidate);
+candidate.reviewed = Boolean(reviewedMap[followupCandidateKey(candidate)]);
+const key = [candidate.type, normalizePhone(candidate.phone), candidate.studentNo, candidate.studentName].join('|');
+const current = dedup.get(key);
+if(!current || String(candidate.date || '').localeCompare(String(current.date || '')) > 0) dedup.set(key, candidate);
+});
+const priority = {trial:3,absence:2,next:1};
+return [...dedup.values()].sort((a,b) => {
+const reviewedDiff = Number(a.reviewed) - Number(b.reviewed);
+if(reviewedDiff) return reviewedDiff;
+const typeDiff = (priority[b.type] || 0) - (priority[a.type] || 0);
+if(typeDiff) return typeDiff;
+return String(b.date || '').localeCompare(String(a.date || '')) || String(b.time || '').localeCompare(String(a.time || ''));
+});
+}
+
+function renderFollowupBoard(){
+const list = $('followupList');
+if(!list) return;
+const all = buildFollowupCandidates();
+const counts = {
+all:all.length,
+trial:all.filter((item) => item.type === 'trial').length,
+absence:all.filter((item) => item.type === 'absence').length,
+next:all.filter((item) => item.type === 'next').length
+};
+$('followupAllCount').textContent = String(counts.all);
+$('followupTrialCount').textContent = String(counts.trial);
+$('followupAbsenceCount').textContent = String(counts.absence);
+$('followupNextCount').textContent = String(counts.next);
+document.querySelectorAll('#followupFilterBar [data-followup-filter]').forEach((button) => {
+const active = button.dataset.followupFilter === state.followupFilter;
+button.classList.toggle('active', active);
+button.setAttribute('aria-pressed', active ? 'true' : 'false');
+});
+$('followupShowReviewedBtn').textContent = state.followupShowReviewed ? '確認済みを隠す' : '確認済みも表示';
+$('followupShowReviewedBtn').setAttribute('aria-pressed', state.followupShowReviewed ? 'true' : 'false');
+
+let filtered = all.filter((item) => state.followupFilter === 'all' || item.type === state.followupFilter);
+if(!state.followupShowReviewed) filtered = filtered.filter((item) => !item.reviewed);
+const visible = filtered.slice(0,20);
+state.followupMap = new Map();
+
+if(!visible.length){
+list.innerHTML = '<div class="empty">現在の表示条件に一致するフォロー候補はありません。</div>';
+} else {
+list.innerHTML = visible.map((candidate, index) => {
+const key = `followup-${index}`;
+state.followupMap.set(key, candidate);
+return `
+<div class="item followup-item ${candidate.type} ${candidate.reviewed ? 'followup-reviewed' : ''}">
+<div class="item-main">
+<div class="item-title">
+<span>${escapeHtml(followupTypeLabel(candidate.type))}</span>
+<span class="badge ${followupBadgeClass(candidate.type)}">${escapeHtml(followupTypeLabel(candidate.type))}</span>
+<span class="badge ${candidate.reviewed ? 'gray' : 'blue'}">${candidate.reviewed ? 'この端末で確認済み' : '個別確認'}</span>
+</div>
+<div class="item-meta">
+生徒：<b>${escapeHtml(candidate.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(candidate.guardianName || '保護者確認中')}<br>
+対象：${escapeHtml(formatDateTime(candidate.date, candidate.time))}　${candidate.course ? `コース：${escapeHtml(candidate.course)}` : ''}<br>
+${candidate.phone ? `電話：${escapeHtml(formatPhone(candidate.phone))}` : ''}${candidate.studentNo ? `　生徒番号：${escapeHtml(candidate.studentNo)}` : ''}
+</div>
+</div>
+<div class="item-actions">
+<button class="btn navy small" type="button" data-followup-action="show" data-followup-key="${key}">文面を見る</button>
+<button class="btn small" type="button" data-followup-action="copy" data-followup-key="${key}">文面コピー</button>
+${candidate.phone && candidate.studentNo ? `<a class="btn secondary small" href="./member.html?phone=${encodeURIComponent(candidate.phone)}&student_no=${encodeURIComponent(candidate.studentNo)}&auto=1" target="_blank" rel="noopener">会員画面確認</a>` : ''}
+${candidate.reviewed ? '' : `<button class="btn green small" type="button" data-followup-action="reviewed" data-followup-key="${key}">この端末で確認済み</button>`}
+</div>
+</div>`;
+}).join('');
+}
+const hiddenReviewed = all.filter((item) => item.reviewed).length;
+$('followupSummary').textContent = `候補 ${all.length}件 / 表示 ${visible.length}件 / この端末で確認済み ${hiddenReviewed}件 / 自動LINE配信なし`;
+}
+
       function renderAll(){
         $('shopNameHero').textContent = state.config.shopName;
         renderStats();
         renderPriorityGuide();
         renderTasks();
+        renderFollowupBoard();
         renderConfirmationBoard();
         renderProgressBoard();
         renderUnifiedReception();
@@ -1963,6 +2207,34 @@ if(target) scrollToNextTarget(target.dataset.nextScroll);
         $('copyPreviewBtn').addEventListener('click', () => { if(!state.selectedMessage){ showToast('コピーする文面がありません'); return; } copyText(state.selectedMessage, '文面をコピーしました'); });
 
 
+
+
+$('followupFilterBar').addEventListener('click', (event) => {
+const button = event.target.closest('[data-followup-filter]');
+if(!button) return;
+state.followupFilter = button.dataset.followupFilter || 'all';
+renderFollowupBoard();
+});
+$('followupShowReviewedBtn').addEventListener('click', () => {
+state.followupShowReviewed = !state.followupShowReviewed;
+renderFollowupBoard();
+});
+$('followupList').addEventListener('click', async (event) => {
+const button = event.target.closest('[data-followup-action]');
+if(!button) return;
+const candidate = state.followupMap.get(button.dataset.followupKey);
+if(!candidate) return;
+if(button.dataset.followupAction === 'show') showMessage({ message:candidate.message });
+if(button.dataset.followupAction === 'copy'){
+showMessage({ message:candidate.message });
+await copyText(candidate.message, 'フォロー文面をコピーしました');
+}
+if(button.dataset.followupAction === 'reviewed'){
+markFollowupReviewed(candidate);
+renderFollowupBoard();
+showToast('この端末で14日間、確認済みとして隠します');
+}
+});
 
 $('confirmationBoard').addEventListener('click', (e) => {
 const button = e.target.closest('[data-confirmation-stage]');

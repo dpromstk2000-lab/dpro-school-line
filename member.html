@@ -197,6 +197,17 @@
 @media(max-width:700px){.contact-status-grid{grid-template-columns:1fr;}}
 
 
+
+/* SCHOOL-NEXT-8: 会員ページの次アクション */
+.member-next-card{border-color:#c7d2fe;background:linear-gradient(135deg,rgba(238,242,255,.97),rgba(236,253,245,.97));}
+.member-next-panel{border:1px solid #dbe5f2;background:#fff;border-radius:18px;padding:16px;}
+.member-next-label{display:inline-flex;padding:6px 10px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:950;margin-bottom:9px;}
+.member-next-title{font-size:20px;font-weight:950;letter-spacing:-.02em;line-height:1.45;}
+.member-next-text{margin-top:7px;color:#475569;font-size:13px;font-weight:760;line-height:1.75;}
+.member-next-meta{margin-top:10px;padding:10px 12px;border-radius:13px;background:#f8fafc;border:1px solid #e2e8f0;color:#334155;font-size:12px;font-weight:820;line-height:1.7;}
+.member-next-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px;}
+@media(max-width:560px){.member-next-actions .btn{width:100%;}}
+
 /* SCHOOL-NEXT-7: 利用履歴・前回と同じ */
 .history-card{border-color:#bfdbfe;background:linear-gradient(135deg,rgba(239,246,255,.96),rgba(240,253,250,.96));}
 .history-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:14px;}
@@ -370,7 +381,7 @@
   <div class="wrap">
     <section class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-NEXT-7 / member.html</div>
+        <div class="version">STEP SCHOOL-NEXT-8 / member.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>生徒証・授業予定画面</h1>
         <p class="lead">保護者がLINEから、生徒証・次回授業・欠席/振替依頼・教室の確認状況を確認できます。電話番号と生徒番号で安全に表示します。</p>
       </div>
@@ -382,6 +393,7 @@
           <span class="pill">授業予定</span>
           <span class="pill">振替残数</span>
           <span class="pill">チケット確認</span>
+          <span class="pill">次にすること</span>
         </div>
       </div>
     </section>
@@ -430,13 +442,26 @@
 </div>
 </div>
 
+
+<div class="card member-next-card" id="memberNextActionSection">
+<div class="section-title"><span class="num">3</span><h2>次にすること</h2></div>
+<p class="hint">教室の確認状況、次回授業、振替残数から、今確認する内容を1つに整理します。</p>
+<div class="member-next-panel">
+<span class="member-next-label" id="memberNextActionLabel">確認</span>
+<div class="member-next-title" id="memberNextActionTitle">生徒証を表示すると、次の行動を案内します。</div>
+<div class="member-next-text" id="memberNextActionText">教室確認中の連絡や次回授業をもとに表示します。</div>
+<div class="member-next-meta" id="memberNextActionMeta">自動送信は行いません。</div>
+<div class="member-next-actions" id="memberNextActionButtons"></div>
+</div>
+</div>
+
 <div class="card" id="profileSection">
-          <div class="section-title"><span class="num">3</span><h2>生徒情報</h2></div>
+          <div class="section-title"><span class="num">4</span><h2>生徒情報</h2></div>
           <div class="mini-grid" id="studentInfoGrid"></div>
         </div>
 
         <div class="card">
-          <div class="section-title"><span class="num">4</span><h2>次回授業・授業予定</h2></div>
+          <div class="section-title"><span class="num">5</span><h2>次回授業・授業予定</h2></div>
           <p class="hint">今後の授業予定を確認できます。欠席や振替が必要な場合は、下のボタンから連絡できます。</p>
           <div class="list" id="lessonList"></div>
           <div class="actions">
@@ -447,12 +472,12 @@
         </div>
 
         <div class="card">
-          <div class="section-title"><span class="num">5</span><h2>欠席・振替依頼状況</h2></div>
+          <div class="section-title"><span class="num">6</span><h2>欠席・振替依頼状況</h2></div>
           <div class="list" id="requestList"></div>
         </div>
 
 <div class="card history-card" id="historySection">
-<div class="section-title"><span class="num">6</span><h2>利用履歴・前回と同じ</h2></div>
+<div class="section-title"><span class="num">7</span><h2>利用履歴・前回と同じ</h2></div>
 <p class="hint">教室から取得した最近の授業・連絡履歴を最大12件表示します。欠席・振替は、前回の時間と連絡内容を引き継げます。</p>
 <div class="history-summary">
   <div class="history-kpi"><strong id="historyLessonCount">0</strong><span>完了・過去の授業</span></div>
@@ -527,6 +552,7 @@
           <ol style="margin:0; padding-left:20px; color:#475569; font-size:13px; line-height:1.9; font-weight:750;">
             <li>電話番号と生徒番号を入力</li>
             <li>生徒証・授業予定を表示</li>
+            <li>「次にすること」を確認</li>
             <li>振替残数・チケット残数を確認</li>
             <li>必要なら欠席連絡・振替希望へ進む</li>
             <li>履歴から「前回と同じ」を選ぶ</li>
@@ -536,7 +562,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-7 / member.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-8 / member.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -544,7 +570,7 @@
     (function () {
       'use strict';
 
-      const VERSION = "STEP SCHOOL-NEXT-7";
+      const VERSION = "STEP SCHOOL-NEXT-8";
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -561,7 +587,9 @@
         lastMessage: ''
       ,
         historyFilter: 'all',
-        repeatMap: new Map()};
+        repeatMap: new Map(),
+        nextActionMessage: '',
+        nextRepeatRequest: null};
 
       function readConfig() {
         const candidates = [
@@ -911,6 +939,7 @@
         $('paymentStatus').textContent = p.plan.paymentStatus || '確認中';
         $('paymentStatus').className = paymentBadgeClass(p.plan.paymentStatus);
         renderContactStatus(p);
+        renderNextMemberAction(p);
         renderStudentInfo(p);
         renderLessons(p.lessons || []);
         renderRequests(p.requests || []);
@@ -947,6 +976,94 @@ $('memberCompletedCount').textContent = String(completed);
 $('memberLessonCount').textContent = String(lessonCount);
 const source = state.usedFallback ? 'デモ表示' : '教室データ';
 $('memberContactSummary').textContent = `${source} / 教室確認中 ${pending}件 / 対応済み ${completed}件 / 今後の授業 ${lessonCount}件 / ${new Date().toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' })}更新`;
+}
+
+
+function memberFutureLesson(lesson){
+const status = String(lesson && lesson.status || '').toLowerCase();
+if(['取消','キャンセル','cancel','欠席','absence','完了','done','completed'].some((value) => status.includes(value))) return false;
+const date = String(lesson && lesson.date || '').slice(0,10);
+return Boolean(date && date >= todayYmd());
+}
+
+function latestRepeatableRequest(profile){
+return (profile.requests || [])
+.filter((request) => repeatModeForRequest(request))
+.sort((a,b) => `${String(b.date || '')}${formatTime(b.time || '')}`.localeCompare(`${String(a.date || '')}${formatTime(a.time || '')}`))[0] || null;
+}
+
+function buildMemberNextMessage(profile, nextLesson){
+const guardian = profile.guardian.name || profile.student.name || '教室ご担当者';
+const student = profile.student.name || '生徒';
+if(nextLesson){
+return normalizeNewlines(`${profile.shopName || state.config.shopName} ご担当者様\n\n${student}の次回授業について確認です。\n予定：${formatDate(nextLesson.date)} ${formatTime(nextLesson.time)}\nコース：${nextLesson.course || profile.student.course || '授業'}\n\n変更や確認事項がある場合はご連絡をお願いいたします。\n\n${guardian}`);
+}
+return normalizeNewlines(`${profile.shopName || state.config.shopName} ご担当者様\n\n${student}の次回授業について相談したく、ご連絡しました。\n現在のコース：${profile.student.course || '未登録'}\n振替残数：${profile.plan.makeupRemaining ?? 0}回\n\n次回予定についてご案内をお願いいたします。\n\n${guardian}`);
+}
+
+function renderNextMemberAction(profile){
+const pending = (profile.requests || []).filter((request) => !memberRequestDone(request.status));
+const nextLesson = (profile.lessons || []).filter(memberFutureLesson).sort((a,b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))[0] || null;
+const repeatRequest = latestRepeatableRequest(profile);
+state.nextRepeatRequest = repeatRequest;
+state.nextActionMessage = buildMemberNextMessage(profile, nextLesson);
+
+let label = '次回確認';
+let title = '次回授業について確認しましょう';
+let text = '授業予定または教室への相談内容を確認できます。';
+let meta = '自動送信は行いません。内容を確認して操作してください。';
+let buttons = '';
+
+if(pending.length){
+label = '教室確認中';
+title = `教室の確認を待っている連絡が${pending.length}件あります`;
+text = '欠席・振替依頼は、教室の返信または授業予定への反映をお待ちください。';
+meta = '確認状況を更新して、対応済みになったか確認できます。';
+buttons = '<button class="btn secondary" type="button" data-member-next-action="refresh">確認状況を更新</button><button class="btn orange" type="button" data-member-next-action="requests">依頼状況を見る</button>';
+} else if(nextLesson){
+label = '次回授業';
+title = `${formatDate(nextLesson.date)} ${formatTime(nextLesson.time)}の授業を確認`;
+text = `${nextLesson.course || profile.student.course || '授業'} / 担当：${nextLesson.teacher || '担当未定'}`;
+meta = `振替残数 ${profile.plan.makeupRemaining ?? 0}回 / チケット残数 ${profile.plan.ticketRemaining ?? 0}回`;
+buttons = '<button class="btn" type="button" data-member-next-action="lessons">授業予定を見る</button><button class="btn orange" type="button" data-member-next-action="absence">欠席連絡</button><button class="btn green" type="button" data-member-next-action="makeup">振替希望</button>';
+} else if(Number(profile.plan.makeupRemaining || 0) > 0){
+label = '振替案内';
+title = '振替予定を決めましょう';
+text = `利用できる振替が${profile.plan.makeupRemaining}回あります。希望日を新しく選んで連絡できます。`;
+meta = '前回と同じ機能でも日付はコピーされず、必ず選び直します。';
+buttons = '<button class="btn green" type="button" data-member-next-action="makeup">振替希望へ進む</button>' +
+(repeatRequest ? '<button class="btn secondary" type="button" data-member-next-action="repeat">前回と同じ内容</button>' : '') +
+'<button class="btn navy" type="button" data-member-next-action="copy">相談文面をコピー</button>';
+} else {
+label = '教室へ相談';
+title = '次回授業を教室へ相談しましょう';
+text = '現在表示できる今後の授業予定がありません。教室へ確認する文面をコピーできます。';
+meta = '文面を確認して、ご自身でLINEへ貼り付けて送信してください。';
+buttons = '<button class="btn navy" type="button" data-member-next-action="copy">相談文面をコピー</button><button class="btn secondary" type="button" data-member-next-action="refresh">情報を更新</button>';
+}
+
+$('memberNextActionLabel').textContent = label;
+$('memberNextActionTitle').textContent = title;
+$('memberNextActionText').textContent = text;
+$('memberNextActionMeta').textContent = meta;
+$('memberNextActionButtons').innerHTML = buttons;
+}
+
+async function copyNextActionMessage(){
+const text = normalizeNewlines(state.nextActionMessage || '');
+if(!text.trim()){ showToast('コピーする文面がありません'); return; }
+try{
+await navigator.clipboard.writeText(text);
+showToast('相談文面をコピーしました');
+}catch(e){
+const area = document.createElement('textarea');
+area.value = text;
+document.body.appendChild(area);
+area.select();
+document.execCommand('copy');
+area.remove();
+showToast('相談文面をコピーしました');
+}
 }
 
       function paymentBadgeClass(status) {
@@ -1223,6 +1340,20 @@ window.location.href = `${state.config.pagesBaseUrl}index.html?${params.toString
 
       function bindEvents() {
         
+
+$('memberNextActionButtons').addEventListener('click', (event) => {
+const button = event.target.closest('[data-member-next-action]');
+if(!button) return;
+const action = button.dataset.memberNextAction;
+if(action === 'refresh') loadProfile();
+if(action === 'requests') $('requestList').scrollIntoView({ behavior:'smooth', block:'start' });
+if(action === 'lessons') $('lessonList').scrollIntoView({ behavior:'smooth', block:'start' });
+if(action === 'absence') openIndex('absence');
+if(action === 'makeup') openIndex('makeup');
+if(action === 'repeat' && state.nextRepeatRequest) openRepeatRequest(state.nextRepeatRequest);
+if(action === 'copy') copyNextActionMessage();
+});
+
 $('historyFilterBar').addEventListener('click', (event) => {
 const button = event.target.closest('[data-history-filter]');
 if (!button) return;
