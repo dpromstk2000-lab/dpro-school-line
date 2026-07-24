@@ -297,6 +297,14 @@
       max-width:calc(100vw - 24px);
       text-align:center;
     }
+
+/* SCHOOL-NEXT-7: 前回と同じ入力引継ぎ */
+.repeat-notice{display:none;margin-bottom:18px;padding:15px 16px;border:1px solid #fed7aa;border-radius:18px;background:linear-gradient(135deg,#fff7ed,#fffbeb);color:#9a3412;box-shadow:0 12px 28px rgba(154,52,18,.08);}
+.repeat-notice.show{display:block;}
+.repeat-notice strong{display:block;font-size:16px;margin-bottom:5px;}
+.repeat-notice span{display:block;font-size:12px;font-weight:800;line-height:1.75;}
+.repeat-date-required{border-color:#f97316 !important;box-shadow:0 0 0 4px rgba(249,115,22,.12) !important;}
+
     .toast.show{opacity:1;bottom:30px}
     @media(max-width:900px){
       .wrap{padding:14px}
@@ -311,7 +319,7 @@
   <div class="wrap">
     <section class="hero">
       <div>
-        <div class="badge">STEP SCHOOL-6-R2 / index.html</div>
+        <div class="badge">STEP SCHOOL-NEXT-7 / index.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>保護者・生徒画面</h1>
         <p>
           体験予約、欠席連絡、振替希望をLINEからかんたん受付。<br>
@@ -357,6 +365,12 @@
             </button>
           </div>
         </section>
+
+
+<section class="repeat-notice" id="repeatNotice" aria-live="polite">
+<strong>前回の内容を反映しました</strong>
+<span id="repeatNoticeText">生徒・保護者情報、時間、連絡内容を反映しています。日付は安全のためコピーしていません。新しい日付を選んでから送信してください。</span>
+</section>
 
         <section class="card modeBlock" id="trialBlock">
           <div class="stepTitle">
@@ -617,7 +631,7 @@
   "use strict";
 
   const FALLBACK_CONFIG = {
-    version: "STEP SCHOOL-6-R2",
+    version: "STEP SCHOOL-NEXT-7",
     serviceName: "DPRO 学習塾・習い事 LINE",
     shopCode: "dpro_school_demo",
     shopName: "DPROスクール",
@@ -657,7 +671,9 @@
     selectedSlot: null,
     slots: [],
     lastMessage: ""
-  };
+  ,
+    entryFromMember: false,
+    repeatApplied: false};
 
   function endpoint(name){
     return CONFIG.endpoints?.[name] || FALLBACK_CONFIG.endpoints[name] || name;
@@ -823,6 +839,73 @@
     document.body.removeChild(ta);
     showToast("確認文面をコピーしました");
   }
+
+
+function safeEntryParam(params, name, maxLength){
+return clean(params.get(name) || '').slice(0, Number(maxLength || 200));
+}
+
+function setSelectValueIfExists(id, value){
+const select = $(id);
+if (!select || !value) return;
+const normalized = hhmm(value);
+if ([...select.options].some((option) => option.value === normalized)) {
+select.value = normalized;
+}
+}
+
+function applyMemberEntryParams(){
+const params = new URLSearchParams(location.search);
+const requestedMode = safeEntryParam(params, 'mode', 20);
+const mode = ['trial','absence','makeup'].includes(requestedMode) ? requestedMode : '';
+const phone = safeEntryParam(params, 'phone', 40);
+const studentNo = safeEntryParam(params, 'student_no', 80);
+const studentName = safeEntryParam(params, 'student_name', 100);
+const guardianName = safeEntryParam(params, 'guardian_name', 100);
+const repeat = params.get('repeat') === '1' && ['absence','makeup'].includes(mode);
+
+if (!mode && !phone && !studentNo && !studentName && !guardianName) return false;
+state.entryFromMember = true;
+if (mode) setMode(mode);
+
+if (mode === 'absence') {
+$('absencePhone').value = phone;
+$('absenceStudentNo').value = studentNo;
+$('absenceStudentName').value = studentName;
+$('absenceGuardianName').value = guardianName;
+} else if (mode === 'makeup') {
+$('makeupPhone').value = phone;
+$('makeupStudentNo').value = studentNo;
+$('makeupStudentName').value = studentName;
+$('makeupGuardianName').value = guardianName;
+} else {
+$('phone').value = phone;
+$('studentName').value = studentName;
+$('guardianName').value = guardianName;
+}
+
+if (repeat) {
+const prefix = mode === 'absence' ? 'absence' : 'makeup';
+const previousDate = safeEntryParam(params, 'previous_date', 20);
+const previousTime = safeEntryParam(params, 'previous_time', 20);
+const previousText = safeEntryParam(params, 'previous_text', 500);
+$(prefix + 'Date').value = '';
+$(prefix + 'Date').classList.add('repeat-date-required');
+setSelectValueIfExists(prefix + 'Time', previousTime);
+$(prefix + 'Text').value = previousText;
+state.repeatApplied = true;
+$('repeatNotice').classList.add('show');
+$('repeatNoticeText').textContent = `前回（${previousDate || '日付不明'}）の時間と連絡内容を反映しました。日付はコピーしていません。新しい日付を必ず選んでください。`;
+showToast('前回の内容を反映しました。日付を選び直してください');
+}
+
+updateSummary();
+setTimeout(() => {
+const targetId = mode === 'absence' ? 'absenceBlock' : mode === 'makeup' ? 'makeupBlock' : 'trialBlock';
+scrollToId(targetId);
+}, 120);
+return true;
+}
 
   function setMode(mode){
     state.mode = mode || "trial";
@@ -1353,6 +1436,9 @@
       if ($("trialDate").value) loadSlots();
     });
 
+    $("absenceDate").addEventListener("change", () => $("absenceDate").classList.remove("repeat-date-required"));
+    $("makeupDate").addEventListener("change", () => $("makeupDate").classList.remove("repeat-date-required"));
+
     $("trialDate").addEventListener("change", () => {
       if (isPastDate($("trialDate").value)) {
         $("trialDate").value = todayText();
@@ -1399,18 +1485,21 @@
     guardDateInput("makeupDate", "希望日");
     fillTimeSelect("absenceTime", "17:00");
     fillTimeSelect("makeupTime", "17:00");
+    applyMemberEntryParams();
     updateDateLabel();
     setDemoLinks();
     bind();
     updateSummary();
 
     try {
-      await loadConfig();
-      const first = await loadSlots();
-      if (!first || !first.is_available || !state.slots.length) {
-        await findOpenDay({ auto:true });
-      }
-    } catch (e) {
+await loadConfig();
+if (state.mode === "trial") {
+const first = await loadSlots();
+if (!first || !first.is_available || !state.slots.length) {
+await findOpenDay({ auto:true });
+}
+}
+} catch (e) {
       $("slotMessage").className = "alert ng";
       $("slotMessage").innerHTML = `教室設定の読み込みに失敗しました。<br>${escapeHtml(e.message)}<br><br>system-check.html で API接続と営業前デモ準備を確認してください。`;
     }

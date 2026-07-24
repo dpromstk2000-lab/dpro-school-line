@@ -1,0 +1,164 @@
+{
+  "step": "SCHOOL-NEXT-7",
+  "checked_at_jst": "2026-07-24T17:24:19+09:00",
+  "files": {
+    "member": {
+      "before_sha256": "e9a6adb883fb48a9478a2a3382a12a1f747115ac36f6eab9168ed7571bdcc079",
+      "after_sha256": "679c0bb441a2eedb423b6d2325f5539f8def0b56ed3377400ca8ddebad299c81",
+      "bytes": 58241
+    },
+    "index": {
+      "before_sha256": "64ebda9a5d49c1a6ddef921e7aca943f26fb23315eba8d772cab55bbc9c66261",
+      "after_sha256": "4303b45697ff3fc7497e94eff8a682878d01342bdd2bb98bcb537389f81f8043",
+      "bytes": 60026
+    }
+  },
+  "counts": {
+    "OK": 20,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0,
+  "results": [
+    {
+      "key": "member_existing_ids",
+      "label": "member既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 33件を維持",
+      "blocking": false
+    },
+    {
+      "key": "member_duplicate_ids",
+      "label": "member HTML ID重複",
+      "status": "OK",
+      "detail": "ID 39件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "member_javascript",
+      "label": "member JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "member_api",
+      "label": "member既存API維持",
+      "status": "OK",
+      "detail": "既存API 0件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "member_network",
+      "label": "member追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 1を維持",
+      "blocking": false
+    },
+    {
+      "key": "index_existing_ids",
+      "label": "index既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 66件を維持",
+      "blocking": false
+    },
+    {
+      "key": "index_duplicate_ids",
+      "label": "index HTML ID重複",
+      "status": "OK",
+      "detail": "ID 68件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "index_javascript",
+      "label": "index JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "index_api",
+      "label": "index既存API維持",
+      "status": "OK",
+      "detail": "既存API 5件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "index_network",
+      "label": "index追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 2を維持",
+      "blocking": false
+    },
+    {
+      "key": "member_history",
+      "label": "会員履歴・前回と同じ",
+      "status": "OK",
+      "detail": "必須マーカー 14件",
+      "blocking": false
+    },
+    {
+      "key": "index_repeat",
+      "label": "入力引継ぎ・日付安全ガード",
+      "status": "OK",
+      "detail": "必須マーカー 10件",
+      "blocking": false
+    },
+    {
+      "key": "trial_repeat_guard",
+      "label": "体験予約の前回と同じ除外",
+      "status": "OK",
+      "detail": "欠席・振替だけを対象",
+      "blocking": false
+    },
+    {
+      "key": "auto_submit_guard",
+      "label": "前回内容の自動送信防止",
+      "status": "OK",
+      "detail": "入力反映だけで送信しない",
+      "blocking": false
+    },
+    {
+      "key": "history_limit",
+      "label": "履歴初期表示上限",
+      "status": "OK",
+      "detail": "最大12件",
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "対象ファイル限定",
+      "status": "OK",
+      "detail": "本体変更はmember.html・index.htmlのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker",
+      "label": "Worker変更",
+      "status": "OK",
+      "detail": "変更なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase",
+      "label": "Supabase変更",
+      "status": "OK",
+      "detail": "変更なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "history_storage",
+      "label": "新規履歴テーブル",
+      "status": "OK",
+      "detail": "追加せず既存プロフィールデータを利用",
+      "blocking": false
+    },
+    {
+      "key": "automatic_line",
+      "label": "一括自動LINE配信",
+      "status": "OK",
+      "detail": "追加なし",
+      "blocking": false
+    }
+  ]
+}

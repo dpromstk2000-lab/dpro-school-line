@@ -196,6 +196,26 @@
 .request-guide{margin-top:10px;padding:9px 11px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;font-weight:780;line-height:1.65;}
 @media(max-width:700px){.contact-status-grid{grid-template-columns:1fr;}}
 
+
+/* SCHOOL-NEXT-7: 利用履歴・前回と同じ */
+.history-card{border-color:#bfdbfe;background:linear-gradient(135deg,rgba(239,246,255,.96),rgba(240,253,250,.96));}
+.history-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:14px;}
+.history-kpi{background:#fff;border:1px solid #dbe5f2;border-radius:16px;padding:13px;}
+.history-kpi strong{display:block;font-size:27px;line-height:1;font-weight:950;margin-bottom:7px;}
+.history-kpi span{display:block;color:#64748b;font-size:11px;font-weight:800;line-height:1.5;}
+.history-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px;}
+.history-filter button{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:999px;padding:9px 13px;font-weight:900;}
+.history-filter button.active{background:#0f172a;color:#fff;border-color:#0f172a;}
+.history-item{background:#fff;border:1px solid #dbe5f2;border-radius:17px;padding:15px;margin-bottom:10px;}
+.history-item:last-child{margin-bottom:0;}
+.history-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;}
+.history-title{font-size:15px;font-weight:950;line-height:1.5;}
+.history-meta{color:#64748b;font-size:12px;font-weight:750;line-height:1.7;margin-top:4px;}
+.history-note{margin-top:9px;padding:9px 11px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;font-weight:760;line-height:1.65;}
+.history-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;}
+.repeat-safety{margin-top:12px;padding:10px 12px;border-radius:13px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;font-weight:800;line-height:1.7;}
+@media(max-width:700px){.history-summary{grid-template-columns:1fr;}.history-head{flex-direction:column;}}
+
     .student-card {
       color: white;
       border-radius: 24px;
@@ -350,7 +370,7 @@
   <div class="wrap">
     <section class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-NEXT-6 / member.html</div>
+        <div class="version">STEP SCHOOL-NEXT-7 / member.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>生徒証・授業予定画面</h1>
         <p class="lead">保護者がLINEから、生徒証・次回授業・欠席/振替依頼・教室の確認状況を確認できます。電話番号と生徒番号で安全に表示します。</p>
       </div>
@@ -430,6 +450,25 @@
           <div class="section-title"><span class="num">5</span><h2>欠席・振替依頼状況</h2></div>
           <div class="list" id="requestList"></div>
         </div>
+
+<div class="card history-card" id="historySection">
+<div class="section-title"><span class="num">6</span><h2>利用履歴・前回と同じ</h2></div>
+<p class="hint">教室から取得した最近の授業・連絡履歴を最大12件表示します。欠席・振替は、前回の時間と連絡内容を引き継げます。</p>
+<div class="history-summary">
+  <div class="history-kpi"><strong id="historyLessonCount">0</strong><span>完了・過去の授業</span></div>
+  <div class="history-kpi"><strong id="historyRequestCount">0</strong><span>欠席・振替・体験連絡</span></div>
+  <div class="history-kpi"><strong id="historyRepeatCount">0</strong><span>前回と同じを使える連絡</span></div>
+</div>
+<div class="history-filter" id="historyFilterBar">
+  <button class="active" type="button" data-history-filter="all" aria-pressed="true">すべて</button>
+  <button type="button" data-history-filter="lesson" aria-pressed="false">授業</button>
+  <button type="button" data-history-filter="request" aria-pressed="false">連絡</button>
+</div>
+<div class="list" id="historyList"></div>
+<div class="repeat-safety">「前回と同じ」では、生徒・保護者情報、時間、連絡内容だけを反映します。日付は誤送信防止のためコピーせず、新しく選び直します。</div>
+</div>
+
+
       </section>
 
       <aside class="stack">
@@ -490,13 +529,14 @@
             <li>生徒証・授業予定を表示</li>
             <li>振替残数・チケット残数を確認</li>
             <li>必要なら欠席連絡・振替希望へ進む</li>
-            <li>確認文面をLINEでコピー</li>
+            <li>履歴から「前回と同じ」を選ぶ</li>
+              <li>確認文面をLINEでコピー</li>
           </ol>
         </div>
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-6 / member.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-7 / member.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -504,7 +544,7 @@
     (function () {
       'use strict';
 
-      const VERSION = "STEP SCHOOL-NEXT-6";
+      const VERSION = "STEP SCHOOL-NEXT-7";
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -519,7 +559,9 @@
         profile: null,
         usedFallback: false,
         lastMessage: ''
-      };
+      ,
+        historyFilter: 'all',
+        repeatMap: new Map()};
 
       function readConfig() {
         const candidates = [
@@ -872,6 +914,7 @@
         renderStudentInfo(p);
         renderLessons(p.lessons || []);
         renderRequests(p.requests || []);
+        renderHistory(p);
         renderSiblings(p.siblings || []);
         renderLineMessage(p);
       }
@@ -991,6 +1034,124 @@ $('memberContactSummary').textContent = `${source} / 教室確認中 ${pending}�
         `).join('');
       }
 
+
+function isLessonHistory(lesson) {
+const status = String(lesson && lesson.status || '').toLowerCase();
+if (['完了','done','completed','欠席','absence','取消','cancel'].some((value) => status.includes(value))) return true;
+const date = String(lesson && lesson.date || '').slice(0, 10);
+return Boolean(date && date < todayYmd());
+}
+
+function repeatModeForRequest(request) {
+const type = String(request && request.type || '').toLowerCase();
+if (type.includes('absence') || type.includes('欠席')) return 'absence';
+if (type.includes('makeup') || type.includes('振替')) return 'makeup';
+return '';
+}
+
+function historySortKey(item) {
+return `${String(item.date || '').slice(0, 10)}T${formatTime(item.time || '00:00')}`;
+}
+
+function buildHistoryItems(profile) {
+const lessons = (profile.lessons || [])
+.filter(isLessonHistory)
+.map((lesson) => ({
+  kind: 'lesson',
+  id: `lesson:${lesson.id}`,
+  date: lesson.date,
+  time: lesson.time,
+  title: lesson.course || '授業',
+  status: lesson.status || '完了',
+  meta: `担当：${lesson.teacher || '担当未定'}${lesson.room ? ' / ' + lesson.room : ''}`,
+  note: lesson.memo || ''
+}));
+const requests = (profile.requests || []).map((request) => ({
+kind: 'request',
+id: `request:${request.id}`,
+date: request.date,
+time: request.time,
+title: request.typeLabel || requestTypeLabel(request.type),
+status: request.status || '受付済み',
+meta: request.message || '内容未入力',
+note: memberRequestGuide(request.status),
+raw: request
+}));
+return lessons.concat(requests).sort((a, b) => historySortKey(b).localeCompare(historySortKey(a)));
+}
+
+function renderHistory(profile) {
+const allItems = buildHistoryItems(profile);
+const lessonCount = allItems.filter((item) => item.kind === 'lesson').length;
+const requestCount = allItems.filter((item) => item.kind === 'request').length;
+const repeatCount = allItems.filter((item) => item.kind === 'request' && repeatModeForRequest(item.raw)).length;
+$('historyLessonCount').textContent = String(lessonCount);
+$('historyRequestCount').textContent = String(requestCount);
+$('historyRepeatCount').textContent = String(repeatCount);
+
+document.querySelectorAll('#historyFilterBar [data-history-filter]').forEach((button) => {
+const active = button.dataset.historyFilter === state.historyFilter;
+button.classList.toggle('active', active);
+button.setAttribute('aria-pressed', active ? 'true' : 'false');
+});
+
+const filtered = allItems
+.filter((item) => state.historyFilter === 'all' || item.kind === state.historyFilter)
+.slice(0, 12);
+state.repeatMap = new Map();
+
+if (!filtered.length) {
+$('historyList').innerHTML = '<div class="empty">表示できる履歴はまだありません。</div>';
+return;
+}
+
+$('historyList').innerHTML = filtered.map((item, index) => {
+const repeatMode = item.kind === 'request' ? repeatModeForRequest(item.raw) : '';
+const repeatKey = repeatMode ? `repeat-${index}` : '';
+if (repeatKey) state.repeatMap.set(repeatKey, item.raw);
+const typeBadge = item.kind === 'lesson'
+  ? '<span class="badge green">授業</span>'
+  : '<span class="badge orange">連絡</span>';
+const statusBadge = item.kind === 'lesson'
+  ? lessonStatusBadge(item.status)
+  : requestBadge(item.status);
+return `
+  <div class="history-item">
+    <div class="history-head">
+      <div>
+        <div class="history-title">${escapeHtml(item.title)}：${escapeHtml(formatDate(item.date))} ${escapeHtml(formatTime(item.time))}</div>
+        <div class="history-meta">${escapeHtml(item.meta || '')}</div>
+      </div>
+      <div>${typeBadge} ${statusBadge}</div>
+    </div>
+    ${item.note ? `<div class="history-note">${escapeHtml(item.note)}</div>` : ''}
+    ${repeatKey ? `<div class="history-actions"><button class="btn small" type="button" data-repeat-request-key="${repeatKey}">前回と同じ内容で連絡</button></div>` : ''}
+  </div>
+`;
+}).join('');
+}
+
+function openRepeatRequest(request) {
+const mode = repeatModeForRequest(request);
+if (!mode) {
+showToast('この履歴は前回と同じ機能の対象外です');
+return;
+}
+const profile = state.profile || makeDemoProfile($('phoneInput').value, $('studentNoInput').value);
+const params = new URLSearchParams();
+params.set('mode', mode);
+params.set('repeat', '1');
+params.set('phone', profile.guardian.phone || $('phoneInput').value.trim());
+params.set('student_no', profile.student.no || $('studentNoInput').value.trim());
+params.set('student_name', profile.student.name || '');
+params.set('guardian_name', profile.guardian.name || '');
+params.set('previous_date', String(request.date || '').slice(0, 10));
+params.set('previous_time', formatTime(request.time || ''));
+params.set('previous_text', String(request.message || '').slice(0, 500));
+params.set('previous_type', mode);
+window.location.href = `${state.config.pagesBaseUrl}index.html?${params.toString()}`;
+}
+
       function renderSiblings(siblings) {
         const list = $('siblingList');
         if (!siblings.length) {
@@ -1061,7 +1222,20 @@ $('memberContactSummary').textContent = `${source} / 教室確認中 ${pending}�
       }
 
       function bindEvents() {
-        $('refreshMemberStatusBtn').addEventListener('click', loadProfile);
+        
+$('historyFilterBar').addEventListener('click', (event) => {
+const button = event.target.closest('[data-history-filter]');
+if (!button) return;
+state.historyFilter = button.dataset.historyFilter || 'all';
+renderHistory(state.profile || makeDemoProfile($('phoneInput').value, $('studentNoInput').value));
+});
+$('historyList').addEventListener('click', (event) => {
+const button = event.target.closest('[data-repeat-request-key]');
+if (!button) return;
+const request = state.repeatMap.get(button.dataset.repeatRequestKey);
+if (request) openRepeatRequest(request);
+});
+$('refreshMemberStatusBtn').addEventListener('click', loadProfile);
         $('loadBtn').addEventListener('click', loadProfile);
         $('demoBtn').addEventListener('click', () => {
           $('phoneInput').value = DEMO_PHONE;

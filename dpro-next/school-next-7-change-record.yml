@@ -1,0 +1,36 @@
+step: "SCHOOL-NEXT-7"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T17:24:20+09:00"
+target_files:
+  - "member.html"
+  - "index.html"
+changes:
+  - "会員画面へ利用履歴を最大12件表示"
+  - "授業・連絡履歴の絞り込み"
+  - "欠席・振替の前回と同じ"
+  - "前回の日付はコピーしない安全ガード"
+  - "前回内容からの自動送信禁止"
+  - "会員画面から渡されたモード・生徒情報の入力引継ぎ"
+  - "欠席・振替表示時の不要な体験空き枠取得を省略"
+member_before_sha256: "e9a6adb883fb48a9478a2a3382a12a1f747115ac36f6eab9168ed7571bdcc079"
+member_after_sha256: "679c0bb441a2eedb423b6d2325f5539f8def0b56ed3377400ca8ddebad299c81"
+index_before_sha256: "64ebda9a5d49c1a6ddef921e7aca943f26fb23315eba8d772cab55bbc9c66261"
+index_after_sha256: "4303b45697ff3fc7497e94eff8a682878d01342bdd2bb98bcb537389f81f8043"
+baseline_commit: "cf39b9366cabac2800c0a250e1f97cdd73b00389"
+backup_tag: "backup-school-next-before-7-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+new_history_table: false
+repeat_target:
+  - "absence"
+  - "makeup"
+repeat_trial_enabled: false
+repeat_copies_date: false
+repeat_auto_submit: false
+history_display_limit: 12
+validation_ok: 20
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-8"
