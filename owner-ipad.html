@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no" />
-  <title>DPRO 学習塾・習い事 LINE｜受付・講師iPad画面｜STEP SCHOOL-9-R1</title>
+  <title>DPRO 学習塾・習い事 LINE｜受付・講師現場画面｜STEP SCHOOL-NEXT-6</title>
   <script src="./config.js"></script>
   <style>
     :root{
@@ -132,6 +132,45 @@
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0f172a;color:#fff;border-radius:999px;padding:12px 18px;font-weight:900;box-shadow:0 18px 38px rgba(15,23,42,.24);opacity:0;pointer-events:none;transition:.18s ease;z-index:99;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .footer-note{margin:22px 0 0;text-align:center;color:#64748b;font-size:12px;font-weight:800;}
+
+/* SCHOOL-NEXT-6: iPad・現場スタッフ最適化 */
+.field-mode-bar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:0 0 18px;padding:14px 16px;border:1px solid #c7d2fe;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#ecfdf5);box-shadow:0 12px 28px rgba(15,23,42,.08);}
+.field-mode-copy strong{display:block;font-size:16px;margin-bottom:4px;}
+.field-mode-copy span{display:block;color:#64748b;font-size:12px;font-weight:800;line-height:1.6;}
+.mode-switch{display:flex;gap:8px;flex-wrap:wrap;}
+.mode-btn{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:14px;padding:12px 15px;min-height:48px;font-weight:950;box-shadow:none;}
+.mode-btn.active{background:#0f172a;color:#fff;border-color:#0f172a;}
+.field-quick-board{margin-bottom:18px;padding:16px;border:1px solid #bfdbfe;border-radius:20px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);}
+.field-quick-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px;}
+.field-quick-head strong{display:block;font-size:18px;margin-bottom:4px;}
+.field-quick-head span{display:block;color:#64748b;font-size:12px;font-weight:800;line-height:1.6;}
+.field-quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.field-quick-card{appearance:none;text-align:left;border:1px solid #dbe5f2;border-top:4px solid #2563eb;border-radius:16px;background:#fff;color:#0f172a;padding:13px;min-height:105px;box-shadow:none;}
+.field-quick-card[data-field-filter="active"]{border-top-color:#f97316;}
+.field-quick-card[data-field-filter="pending_requests"]{border-top-color:#ef4444;}
+.field-quick-card[data-field-filter="all"]{border-top-color:#10b981;}
+.field-quick-card.active{outline:3px solid rgba(37,99,235,.18);background:#eff6ff;}
+.field-quick-card strong{display:block;font-size:29px;line-height:1;margin-bottom:8px;}
+.field-quick-card b{display:block;font-size:13px;margin-bottom:4px;}
+.field-quick-card small{display:block;color:#64748b;font-size:11px;font-weight:800;line-height:1.5;}
+.field-quick-summary{margin-top:11px;padding:10px 12px;border-radius:13px;background:#fff;border:1px solid #dbe5f2;color:#475569;font-size:12px;font-weight:850;line-height:1.65;}
+.field-dock{position:sticky;bottom:8px;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0 10px;padding:10px;border-radius:18px;background:rgba(15,23,42,.94);box-shadow:0 16px 36px rgba(15,23,42,.25);backdrop-filter:blur(14px);}
+.field-dock .btn{min-height:56px;margin:0;box-shadow:none;}
+body.field-mode .management-only{display:none !important;}
+body.field-mode .grid{grid-template-columns:1.25fr .55fr;}
+body.management-mode .management-only{display:block;}
+.lesson-card.action-busy,.request-card.action-busy{opacity:.72;pointer-events:none;}
+@media(max-width:980px){
+.field-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+body.field-mode .grid{grid-template-columns:1fr;}
+}
+@media(max-width:680px){
+.field-mode-bar,.field-quick-head{flex-direction:column;}
+.mode-switch,.mode-btn{width:100%;}
+.field-quick-grid{grid-template-columns:1fr 1fr;}
+.field-dock{grid-template-columns:1fr;}
+}
+
     .quick-board{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     @media(max-width:980px){
       body{padding:16px;}
@@ -158,9 +197,9 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-9-R1 / owner-ipad.html</div>
+        <div class="version">STEP SCHOOL-NEXT-6 / owner-ipad.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>受付・講師iPad画面</h1>
-        <p class="lead">受付・講師がiPadで使う画面です。本日の授業予定、出席、授業中、完了、欠席連絡、振替希望を大きなボタンで確認・操作できます。</p>
+        <p class="lead">受付・講師がiPadで使う現場画面です。通常は授業進行と要返信だけを表示し、管理コード・デモ準備・検索は必要な時だけ管理・準備モードで開きます。</p>
         <div class="nav-row">
           <a class="btn secondary" href="./owner.html">PC管理画面へ戻る</a>
           <a class="btn secondary" href="./index.html">保護者・生徒画面へ</a>
@@ -180,7 +219,19 @@
       </div>
     </header>
 
-    <main class="grid">
+    
+<div class="field-mode-bar" id="fieldModeBar">
+<div class="field-mode-copy">
+<strong>画面モード</strong>
+<span>通常は現場モードを使用します。管理コード・デモ準備・生徒検索は管理・準備モードで表示します。</span>
+</div>
+<div class="mode-switch">
+<button class="mode-btn active" id="fieldModeBtn" type="button" aria-pressed="true">現場モード</button>
+<button class="mode-btn" id="managementModeBtn" type="button" aria-pressed="false">管理・準備モード</button>
+</div>
+</div>
+
+<main class="grid">
       <section class="stack">
         <div class="card">
           <div class="section-title"><span class="num">1</span><h2>今日の受付・授業</h2></div>
@@ -198,7 +249,33 @@
           <div class="status" id="mainStatus"></div>
         </div>
 
-        <div class="card">
+        
+<div class="field-quick-board" id="fieldQuickBoard">
+<div class="field-quick-head">
+  <div>
+    <strong>今すぐ対応</strong>
+    <span>大きなカードを押すと、必要な授業または要返信だけを表示します。</span>
+  </div>
+  <button class="btn secondary small" id="clearFieldFilterBtn" type="button">全件表示</button>
+</div>
+<div class="field-quick-grid">
+  <button class="field-quick-card" type="button" data-field-filter="scheduled" aria-pressed="false">
+    <strong id="fieldScheduledCount">0</strong><b>開始前</b><small>予定・来校待ち</small>
+  </button>
+  <button class="field-quick-card" type="button" data-field-filter="active" aria-pressed="false">
+    <strong id="fieldActiveCount">0</strong><b>授業対応中</b><small>出席・授業中</small>
+  </button>
+  <button class="field-quick-card" type="button" data-field-filter="pending_requests" aria-pressed="false">
+    <strong id="fieldPendingCount">0</strong><b>要返信</b><small>欠席・振替・体験</small>
+  </button>
+  <button class="field-quick-card active" type="button" data-field-filter="all" aria-pressed="true">
+    <strong id="fieldAllCount">0</strong><b>全件</b><small>今日の授業と受付</small>
+  </button>
+</div>
+<div class="field-quick-summary" id="fieldQuickSummary">画面を更新すると、現場対応件数を表示します。</div>
+</div>
+
+<div class="card">
           <div class="section-title"><span class="num">2</span><h2>本日の授業予定</h2></div>
           <p class="hint">授業の進行に合わせて「出席」「授業中」「完了」を押します。保護者確認用の文面もすぐ表示できます。</p>
           <div class="list" id="lessonList"></div>
@@ -217,7 +294,7 @@
       </section>
 
       <aside class="stack">
-        <div class="card">
+        <div class="card management-only">
           <div class="section-title"><span class="num">A</span><h2>管理コード</h2></div>
           <p class="hint">営業デモでは管理コード「1234」を使います。保存しておくと次回から自動入力されます。</p>
           <label for="adminCodeInput">管理コード</label>
@@ -230,7 +307,7 @@
           <div class="status" id="adminStatus"></div>
         </div>
 
-        <div class="card">
+        <div class="card management-only">
           <div class="section-title"><span class="num">B</span><h2>営業前確認</h2></div>
           <div class="quick-board">
             <button class="btn green big" id="prepareDemoBtn" type="button">営業前デモ準備</button>
@@ -239,7 +316,7 @@
           <p class="hint" style="margin-top:14px;">営業前にデモ準備を押すと、今日基準のデモ授業・欠席・振替を確認しやすくします。</p>
         </div>
 
-        <div class="card">
+        <div class="card management-only">
           <div class="section-title"><span class="num">C</span><h2>生徒検索</h2></div>
           <p class="hint">生徒名、保護者名、電話番号、生徒番号で検索できます。電話番号はハイフンあり/なし両方対応します。</p>
           <label for="searchInput">検索キーワード</label>
@@ -261,7 +338,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card management-only">
           <div class="section-title"><span class="num">E</span><h2>iPad運用の流れ</h2></div>
           <ol class="flow-list">
             <li>営業前に管理コードを保存</li>
@@ -275,7 +352,14 @@
       </aside>
     </main>
 
-    <div class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-9-R1 / owner-ipad.html</div>
+
+<div class="field-dock" id="fieldDock">
+<button class="btn" id="dockRefreshBtn" type="button">情報を更新</button>
+<button class="btn green" id="dockTodayBtn" type="button">今日の授業</button>
+<button class="btn orange" id="dockPendingBtn" type="button">要返信を表示</button>
+</div>
+
+    <div class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-6 / owner-ipad.html</div>
   </div>
 
   <div id="toast" class="toast">完了しました</div>
@@ -284,7 +368,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "STEP SCHOOL-9";
+  const VERSION = "STEP SCHOOL-NEXT-6";
   const DEMO_ADMIN_CODE = "1234";
   const DEMO_PHONE = "090-9999-0000";
   const DEMO_STUDENT_NO = "SCHOOL-DEMO-999";
@@ -314,6 +398,9 @@
     config: CONFIG,
     dashboard: makeEmptyDashboard(),
     selectedTab: "pending",
+    lessonFilter: "all",
+    fieldMode: "field",
+    actionBusy: false,
     itemMap: new Map(),
     selectedMessage: "",
     loading: false,
@@ -593,6 +680,86 @@
   function resetMap(){ state.itemMap.clear(); }
   function storeItem(type, item){ const key = `${type}-${state.itemMap.size}-${Math.random().toString(36).slice(2)}`; state.itemMap.set(key, item); return key; }
 
+
+function lessonFieldGroup(status){
+const s = String(status || "").toLowerCase();
+if(/checked|出席|in_progress|授業中/.test(s)) return "active";
+if(/completed|done|完了|absent|欠席|cancel|取消/.test(s)) return "closed";
+return "scheduled";
+}
+function getFieldCounts(){
+const lessons = state.dashboard.lessons || [];
+const requests = state.dashboard.requests || [];
+return {
+scheduled:lessons.filter((item) => lessonFieldGroup(item.status) === "scheduled").length,
+active:lessons.filter((item) => lessonFieldGroup(item.status) === "active").length,
+pending:requests.filter((item) => !boolDone(item.status)).length,
+all:lessons.length + requests.length
+};
+}
+function getFieldLessons(){
+const lessons = state.dashboard.lessons || [];
+if(state.lessonFilter === "scheduled") return lessons.filter((item) => lessonFieldGroup(item.status) === "scheduled");
+if(state.lessonFilter === "active") return lessons.filter((item) => lessonFieldGroup(item.status) === "active");
+if(state.lessonFilter === "pending_requests") return [];
+return lessons;
+}
+function renderFieldQuickBoard(){
+const counts = getFieldCounts();
+$("fieldScheduledCount").textContent = String(counts.scheduled);
+$("fieldActiveCount").textContent = String(counts.active);
+$("fieldPendingCount").textContent = String(counts.pending);
+$("fieldAllCount").textContent = String(counts.all);
+document.querySelectorAll("#fieldQuickBoard [data-field-filter]").forEach((button) => {
+const active = button.dataset.fieldFilter === state.lessonFilter;
+button.classList.toggle("active", active);
+button.setAttribute("aria-pressed", active ? "true" : "false");
+});
+const label = {
+scheduled:"開始前",
+active:"授業対応中",
+pending_requests:"要返信",
+all:"全件"
+}[state.lessonFilter] || "全件";
+$("fieldQuickSummary").textContent = `開始前 ${counts.scheduled}件 / 授業対応中 ${counts.active}件 / 要返信 ${counts.pending}件 / 表示：${label}`;
+}
+function setFieldFilter(filter, scrollTarget){
+state.lessonFilter = filter || "all";
+if(state.lessonFilter === "pending_requests") state.selectedTab = "pending";
+renderAll();
+if(scrollTarget){
+const target = $(scrollTarget);
+if(target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+}
+}
+function setFieldMode(mode, persist){
+state.fieldMode = mode === "management" ? "management" : "field";
+document.body.classList.toggle("field-mode", state.fieldMode === "field");
+document.body.classList.toggle("management-mode", state.fieldMode === "management");
+$("fieldModeBtn").classList.toggle("active", state.fieldMode === "field");
+$("managementModeBtn").classList.toggle("active", state.fieldMode === "management");
+$("fieldModeBtn").setAttribute("aria-pressed", state.fieldMode === "field" ? "true" : "false");
+$("managementModeBtn").setAttribute("aria-pressed", state.fieldMode === "management" ? "true" : "false");
+if(persist !== false) localStorage.setItem("dpro_school_ipad_mode", state.fieldMode);
+}
+function setActionBusy(busy){
+state.actionBusy = Boolean(busy);
+document.querySelectorAll("[data-action]").forEach((button) => {
+button.disabled = state.actionBusy;
+});
+document.querySelectorAll(".lesson-card,.request-card").forEach((card) => {
+card.classList.toggle("action-busy", state.actionBusy);
+});
+}
+function syncLessonActionButtons(){
+document.querySelectorAll(".lesson-card").forEach((card) => {
+const current = statusLabel(card.dataset.currentStatus || "");
+card.querySelectorAll('[data-action="lesson-status"]').forEach((button) => {
+button.disabled = current === statusLabel(button.dataset.status || "");
+});
+});
+}
+
   function renderStats(){
     const s = state.dashboard.stats || {};
     $("statsGrid").innerHTML = `
@@ -604,14 +771,14 @@
   }
   function renderLessons(){
     const list = $("lessonList");
-    const items = state.dashboard.lessons || [];
+    const items = getFieldLessons();
     if(!items.length){ list.innerHTML = '<div class="empty">この日の授業予定はありません。営業前デモ準備を押すとデモ授業が表示されます。</div>'; return; }
     list.innerHTML = items.map((item) => {
       const key = storeItem("lesson", item);
       const msgKey = storeItem("message", { message:buildMessageFromLesson(item), item });
       const cls = /授業中/.test(item.status) ? " in-progress" : (/完了/.test(item.status) ? " completed" : "");
       return `
-        <div class="lesson-card${cls}">
+        <div class="lesson-card${cls}" data-current-status="${escapeHtml(item.status || "予定")}">
           <div>
             <div class="time">${escapeHtml(formatTime(item.time))}${item.endTime ? `〜${escapeHtml(formatTime(item.endTime))}` : ""}</div>
             <div class="title-line">
@@ -630,20 +797,24 @@
             <button class="btn big" data-action="lesson-status" data-status="checked_in" data-key="${key}" type="button">出席</button>
             <button class="btn orange big" data-action="lesson-status" data-status="in_progress" data-key="${key}" type="button">授業中</button>
             <button class="btn green big" data-action="lesson-status" data-status="completed" data-key="${key}" type="button">完了</button>
+            <button class="btn red big" data-action="lesson-status" data-status="absent" data-key="${key}" type="button">欠席</button>
             <button class="btn navy big" data-action="show-message" data-key="${msgKey}" type="button">文面</button>
           </div>
         </div>
       `;
     }).join("");
+    syncLessonActionButtons();
   }
   function getFilteredRequests(){
-    const items = state.dashboard.requests || [];
-    const tab = state.selectedTab;
-    if(tab === "pending") return items.filter((x) => !boolDone(x.status));
-    if(tab === "absence") return items.filter((x) => isAbsenceType(x.type));
-    if(tab === "makeup") return items.filter((x) => isMakeupType(x.type));
-    return items;
-  }
+const items = state.dashboard.requests || [];
+if(state.lessonFilter === "scheduled" || state.lessonFilter === "active") return [];
+if(state.lessonFilter === "pending_requests") return items.filter((item) => !boolDone(item.status));
+const tab = state.selectedTab;
+if(tab === "pending") return items.filter((item) => !boolDone(item.status));
+if(tab === "absence") return items.filter((item) => isAbsenceType(item.type));
+if(tab === "makeup") return items.filter((item) => isMakeupType(item.type));
+return items;
+}
   function renderRequests(){
     const list = $("requestList");
     const items = getFilteredRequests();
@@ -698,6 +869,7 @@
   }
   function renderAll(){
     resetMap();
+    renderFieldQuickBoard();
     renderStats();
     renderLessons();
     renderRequests();
@@ -823,32 +995,48 @@
     } catch(e){ setStatus("mainStatus", `API接続エラー：${e.message}`, "err"); }
   }
   async function updateLessonStatus(item, status){
-    const statusName = statusLabel(status);
-    setStatus("mainStatus", "授業状態を更新しています。", "");
-    try{
-      if(state.usedFallback || String(item.id).startsWith("demo")) throw new Error("デモ表示中のためAPI更新は行いません。");
-      await adminPost("/api/admin/lessons/status", { lesson_id:item.id, id:item.id, status, lesson_status:status });
-      setStatus("mainStatus", `授業状態を「${statusName}」に更新しました。`, "ok");
-      await loadDashboard();
-    } catch(e){
-      item.status = statusName;
-      renderAll();
-      setStatus("mainStatus", `画面上では「${statusName}」にしました。API更新確認：${e.message}`, "warn");
-    }
-  }
+if(state.actionBusy) return;
+const statusName = statusLabel(status);
+setActionBusy(true);
+setStatus("mainStatus", "授業状態を更新しています。", "");
+try{
+if(state.usedFallback || String(item.id).startsWith("demo")){
+item.status = statusName;
+renderAll();
+setStatus("mainStatus", `デモ表示上で「${statusName}」にしました。実データは変更していません。`, "warn");
+return;
+}
+await adminPost("/api/admin/lessons/status", { lesson_id:item.id, id:item.id, status, lesson_status:status });
+setStatus("mainStatus", `授業状態を「${statusName}」に更新しました。`, "ok");
+await loadDashboard();
+} catch(e){
+setStatus("mainStatus", `授業状態を更新できませんでした。データは変更していません：${e.message}`, "err");
+} finally {
+setActionBusy(false);
+}
+}
+
   async function completeRequest(item){
-    setStatus("mainStatus", "受付を対応済みにしています。", "");
-    try{
-      if(state.usedFallback || String(item.id).startsWith("demo")) throw new Error("デモ表示中のためAPI更新は行いません。");
-      await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });
-      setStatus("mainStatus", "受付を対応済みにしました。", "ok");
-      await loadDashboard();
-    } catch(e){
-      item.status = "対応済み";
-      renderAll();
-      setStatus("mainStatus", `画面上では対応済みにしました。API更新確認：${e.message}`, "warn");
-    }
-  }
+if(state.actionBusy) return;
+setActionBusy(true);
+setStatus("mainStatus", "受付を対応済みにしています。", "");
+try{
+if(state.usedFallback || String(item.id).startsWith("demo")){
+item.status = "対応済み";
+renderAll();
+setStatus("mainStatus", "デモ表示上で対応済みにしました。実データは変更していません。", "warn");
+return;
+}
+await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });
+setStatus("mainStatus", "受付を対応済みにしました。", "ok");
+await loadDashboard();
+} catch(e){
+setStatus("mainStatus", `受付を更新できませんでした。データは変更していません：${e.message}`, "err");
+} finally {
+setActionBusy(false);
+}
+}
+
   async function searchStudents(){
     const q = $("searchInput").value.trim();
     if(!q){ setStatus("searchStatus", "検索キーワードを入力してください。", "err"); $("searchInput").focus(); return; }
@@ -867,7 +1055,24 @@
   }
 
   function bindEvents(){
-    $("saveAdminBtn").addEventListener("click", () => {
+
+$("fieldModeBtn").addEventListener("click", () => setFieldMode("field"));
+$("managementModeBtn").addEventListener("click", () => setFieldMode("management"));
+$("fieldQuickBoard").addEventListener("click", (e) => {
+const button = e.target.closest("[data-field-filter]");
+if(!button) return;
+const filter = button.dataset.fieldFilter || "all";
+setFieldFilter(filter, filter === "pending_requests" ? "requestList" : "lessonList");
+});
+$("clearFieldFilterBtn").addEventListener("click", () => setFieldFilter("all"));
+$("dockRefreshBtn").addEventListener("click", loadDashboard);
+$("dockTodayBtn").addEventListener("click", () => {
+$("dayInput").value = todayYmd();
+setFieldFilter("all");
+loadDashboard();
+});
+$("dockPendingBtn").addEventListener("click", () => setFieldFilter("pending_requests", "requestList"));
+$("saveAdminBtn").addEventListener("click", () => {
       const code = $("adminCodeInput").value.trim();
       if(!code){ setStatus("adminStatus", "保存する管理コードを入力してください。", "err"); return; }
       localStorage.setItem("dpro_school_admin_code", code);
@@ -911,6 +1116,8 @@
     $("dayInput").value = todayYmd();
     const saved = localStorage.getItem("dpro_school_admin_code") || "";
     $("adminCodeInput").value = saved;
+    const savedMode = localStorage.getItem("dpro_school_ipad_mode") || "field";
+    setFieldMode(savedMode, false);
     bindEvents();
     state.dashboard = makeDemoDashboard();
     renderAll();

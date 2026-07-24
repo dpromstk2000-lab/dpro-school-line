@@ -1,0 +1,33 @@
+step: "SCHOOL-NEXT-6"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T17:07:23+09:00"
+target_files:
+  - "owner-ipad.html"
+  - "member.html"
+changes:
+  - "iPad現場モードと管理・準備モード"
+  - "今すぐ対応カード"
+  - "開始前・授業対応中・要返信の絞り込み"
+  - "画面下部の現場操作ドック"
+  - "授業欠席ボタン"
+  - "同じ状態ボタンの無効化"
+  - "二重操作防止"
+  - "実API失敗時の誤成功表示防止"
+  - "member画面見出し番号を2・3・4・5へ修正"
+ipad_before_sha256: "7dc7586a7ef298fe85580ba528a0982c1fb3c3c1e73329a8897540a5345ff723"
+ipad_after_sha256: "bd7d9520cdf139b60a14e5322427fe81d746076802bf2029bf7f3405f9c8d645"
+member_before_sha256: "e8ba35a54f3f7c281a34004cb186698127df4f08e4384269085420bbbf7d1cb8"
+member_after_sha256: "e9a6adb883fb48a9478a2a3382a12a1f747115ac36f6eab9168ed7571bdcc079"
+baseline_commit: "5d9fab7b1017d9e1276fed1c043f8386d9010a74"
+backup_tag: "backup-school-next-before-6-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+staff_page_created: false
+staff_auth_required_for_future: true
+ipad_serves_reception_and_instructor: true
+validation_ok: 19
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-7"
