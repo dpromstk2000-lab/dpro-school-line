@@ -6,3 +6,6 @@ worker_changed: false
 supabase_changed: false
 api_changed: false
 next_step: "SCHOOL-NEXT-3-R2_REQUIRED"
+superseded_by: "SCHOOL-NEXT-3-R2"
+superseded_at_jst: "2026-07-24T14:15:20+09:00"
+note: "NEXT-3実装は既に完了済み。このNGはR1再アップロードによる台帳書戻し"

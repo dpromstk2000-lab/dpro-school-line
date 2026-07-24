@@ -1,0 +1,19 @@
+step: "SCHOOL-NEXT-3-R2"
+result: "OK"
+recovered_at_jst: "2026-07-24T14:15:20+09:00"
+purpose: "完了済みNEXT-3の台帳復旧"
+cause: "成功後にR1 YMLが再アップロードされた"
+owner_sha256: "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c"
+validation_ok: 11
+validation_warning: 0
+recovery_baseline_commit: "2dcdf9076302bf2251386682e38376aac0801b3b"
+backup_tag: "backup-school-next-3-recovery-20260724"
+owner_changed: false
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+public_owner: "PASS"
+current_step: "SCHOOL-NEXT-4"
+last_completed_step: "SCHOOL-NEXT-3"
+next_step: "SCHOOL-NEXT-4"

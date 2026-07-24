@@ -1,0 +1,80 @@
+{
+  "step": "SCHOOL-NEXT-3-R2",
+  "purpose": "完了後のR1再アップロードで書き戻された台帳の復旧",
+  "checked_at_jst": "2026-07-24T14:15:19+09:00",
+  "owner_sha256": "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c",
+  "counts": {
+    "OK": 11,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0,
+  "results": [
+    {
+      "key": "owner_markers",
+      "status": "OK",
+      "detail": "必須マーカー 19件",
+      "blocking": false
+    },
+    {
+      "key": "duplicate_ids",
+      "status": "OK",
+      "detail": "HTML ID 64件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "javascript",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "owner_sha256",
+      "status": "OK",
+      "detail": "current=ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c / recorded=ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c",
+      "blocking": false
+    },
+    {
+      "key": "change_record",
+      "status": "OK",
+      "detail": "完成記録 7項目",
+      "blocking": false
+    },
+    {
+      "key": "validation_record",
+      "status": "OK",
+      "detail": "step=SCHOOL-NEXT-3 / counts={'OK': 13, '注意': 0, 'NG': 0} / blocking=0",
+      "blocking": false
+    },
+    {
+      "key": "network_guard",
+      "status": "OK",
+      "detail": "fetch呼出数=1（期待1）",
+      "blocking": false
+    },
+    {
+      "key": "file_size",
+      "status": "OK",
+      "detail": "owner.html 104,150 bytes",
+      "blocking": false
+    },
+    {
+      "key": "worker_change",
+      "status": "OK",
+      "detail": "今回の復旧では変更なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase_change",
+      "status": "OK",
+      "detail": "今回の復旧では変更なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "api_change",
+      "status": "OK",
+      "detail": "今回の復旧では変更なし",
+      "blocking": false
+    }
+  ]
+}
