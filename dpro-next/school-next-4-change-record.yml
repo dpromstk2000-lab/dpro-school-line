@@ -1,0 +1,28 @@
+step: "SCHOOL-NEXT-4"
+revision: "R2"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T15:21:04+09:00"
+target_files:
+  - "owner.html"
+changes:
+  - "受付・授業の業務進捗ボード"
+  - "体験確認・欠席振替対応・授業予定・来校済・授業中・欠席・完了の7段階"
+  - "進捗カードから統合一覧を絞り込み"
+  - "統合一覧へ進捗バッジを表示"
+  - "既存状態更新ボタンを維持"
+  - "完了後のYML再アップロードによる台帳書戻しを防止"
+  - "進捗バッジ追加をインデント非依存の正規表現へ修正"
+  - "存在しない台帳ファイルでも失敗しない安全なロールバック"
+  - "JavaScriptのテンプレート式をGitHub Actions式として誤解析させない文字列生成"
+owner_before_sha256: "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c"
+owner_after_sha256: "63da9c02acc7f1a6a387535b0b91066332ad24042111859d6430b889d094959b"
+baseline_commit: "dce3d02734621e4ddc094af8bca25f702bded644"
+backup_tag: "backup-school-next-before-4-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+validation_ok: 14
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-5"

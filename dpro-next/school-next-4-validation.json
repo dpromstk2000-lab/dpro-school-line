@@ -1,0 +1,113 @@
+{
+  "step": "SCHOOL-NEXT-4",
+  "checked_at_jst": "2026-07-24T15:21:03+09:00",
+  "target": "owner.html",
+  "before_sha256": "ae76496f68d3a6d7c2f6648abdee38b1b0154990c775c5976203557166287f5c",
+  "after_sha256": "63da9c02acc7f1a6a387535b0b91066332ad24042111859d6430b889d094959b",
+  "counts": {
+    "OK": 14,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0,
+  "results": [
+    {
+      "key": "existing_ids",
+      "label": "既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 64件を維持",
+      "blocking": false
+    },
+    {
+      "key": "duplicate_ids",
+      "label": "HTML ID重複",
+      "status": "OK",
+      "detail": "ID 74件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "new_ids",
+      "label": "NEXT-4追加ID",
+      "status": "OK",
+      "detail": "追加ID 10件を確認",
+      "blocking": false
+    },
+    {
+      "key": "javascript",
+      "label": "JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "features",
+      "label": "進捗機能・既存機能",
+      "status": "OK",
+      "detail": "必須マーカー 24件",
+      "blocking": false
+    },
+    {
+      "key": "api",
+      "label": "既存API維持",
+      "status": "OK",
+      "detail": "既存API 12件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "network",
+      "label": "追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 1を維持",
+      "blocking": false
+    },
+    {
+      "key": "stages",
+      "label": "学習塾進捗7段階",
+      "status": "OK",
+      "detail": "体験確認・欠席振替対応・授業予定・来校済・授業中・欠席・完了",
+      "blocking": false
+    },
+    {
+      "key": "no_new_status_api",
+      "label": "新規進捗APIなし",
+      "status": "OK",
+      "detail": "新しい進捗APIは追加せず、既存状態を表示変換",
+      "blocking": false
+    },
+    {
+      "key": "size",
+      "label": "owner.html容量",
+      "status": "OK",
+      "detail": "112,964 bytes",
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "対象ファイル限定",
+      "status": "OK",
+      "detail": "本体変更はowner.htmlのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker",
+      "label": "Worker変更",
+      "status": "OK",
+      "detail": "変更なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase",
+      "label": "Supabase変更",
+      "status": "OK",
+      "detail": "変更なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "automatic_line",
+      "label": "一括自動LINE配信",
+      "status": "OK",
+      "detail": "追加なし・個別確認を維持",
+      "blocking": false
+    }
+  ]
+}

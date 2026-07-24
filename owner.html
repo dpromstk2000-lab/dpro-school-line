@@ -149,6 +149,35 @@
     .quick-note{margin-top:12px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:16px;padding:12px 14px;color:#475569;font-size:13px;line-height:1.75;font-weight:750;}
 
 
+
+/* SCHOOL-NEXT-4: 業務進捗・ステータス見える化 */
+.progress-board{margin:0 0 16px;padding:16px;border:1px solid #dbe5f2;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#f0fdf9);}
+.progress-board-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:13px;}
+.progress-board-title{display:block;font-size:17px;font-weight:950;color:#0f172a;margin-bottom:4px;}
+.progress-board-copy{display:block;color:#64748b;font-size:12px;line-height:1.65;font-weight:750;}
+.progress-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:9px;}
+.progress-stage{appearance:none;text-align:left;border:1px solid #dbe5f2;border-radius:15px;background:#fff;color:#0f172a;padding:12px;min-height:105px;box-shadow:none;transition:.15s ease;position:relative;overflow:hidden;}
+.progress-stage:hover{transform:translateY(-1px);box-shadow:0 9px 20px rgba(15,23,42,.08);}
+.progress-stage.active{outline:3px solid rgba(37,99,235,.18);border-color:#60a5fa;background:#eff6ff;}
+.progress-stage .stage-no{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:25px;padding:0 7px;border-radius:999px;background:#0f172a;color:#fff;font-size:11px;font-weight:950;margin-bottom:8px;}
+.progress-stage strong{display:block;font-size:27px;line-height:1;font-weight:950;letter-spacing:-.04em;margin-bottom:7px;}
+.progress-stage b{display:block;font-size:13px;line-height:1.35;margin-bottom:4px;}
+.progress-stage small{display:block;color:#64748b;font-size:11px;line-height:1.5;font-weight:750;}
+.progress-stage[data-progress-stage="trial"]{border-top:4px solid #2563eb;}
+.progress-stage[data-progress-stage="request"]{border-top:4px solid #f97316;}
+.progress-stage[data-progress-stage="scheduled"]{border-top:4px solid #64748b;}
+.progress-stage[data-progress-stage="checked_in"]{border-top:4px solid #0ea5e9;}
+.progress-stage[data-progress-stage="in_progress"]{border-top:4px solid #7c3aed;}
+.progress-stage[data-progress-stage="absent"]{border-top:4px solid #ef4444;}
+.progress-stage[data-progress-stage="done"]{border-top:4px solid #10b981;}
+.progress-board-summary{margin-top:11px;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #e2e8f0;color:#475569;font-size:12px;font-weight:850;line-height:1.65;}
+@media(max-width:720px){
+.progress-board-head{flex-direction:column;}
+.progress-board-head .btn{width:100%;}
+.progress-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+.progress-stage{min-height:112px;}
+}
+
 /* SCHOOL-NEXT-3: 受付・予約・授業の統合表示 */
 .unified-toolbar{display:grid;grid-template-columns:1fr minmax(260px,.8fr);gap:12px;align-items:end;margin:0 0 14px;}
 .unified-filters{display:flex;gap:8px;flex-wrap:wrap;}
@@ -202,7 +231,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-NEXT-3 / owner.html</div>
+        <div class="version">STEP SCHOOL-NEXT-4 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">未対応、今日の授業、体験・欠席・振替の受付を優先順に確認できます。普段は「今日やること」から対応し、予約・授業の追加は必要な時だけ開くDPRO NEXT型の管理画面です。</p>
         <div class="top-actions">
@@ -280,6 +309,48 @@
         <div class="card" id="requestsCard">
 <div class="section-title"><span class="num">4</span><h2>受付・予約統合一覧</h2></div>
 <p class="hint">体験予約・欠席連絡・振替希望・電話受付・教室受付・既存生徒の授業予定を共通形式で表示します。初期表示は最大30件で、追加通信は行いません。</p>
+
+<div class="progress-board" id="progressBoard">
+  <div class="progress-board-head">
+    <div>
+      <span class="progress-board-title">業務進捗ボード</span>
+      <span class="progress-board-copy">現在保存されている受付・授業状態を段階別に集計します。カードを押すと下の統合一覧を絞り込みます。</span>
+    </div>
+    <button class="btn secondary small" id="clearProgressStageBtn" type="button">全段階を表示</button>
+  </div>
+  <div class="progress-grid">
+    <button class="progress-stage" type="button" data-progress-stage="trial" aria-pressed="false">
+      <span class="stage-no">1</span><strong id="progressTrialCount">0</strong>
+      <b>体験確認</b><small>未完了の体験予約</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="request" aria-pressed="false">
+      <span class="stage-no">2</span><strong id="progressRequestCount">0</strong>
+      <b>欠席・振替対応</b><small>返信・確認が必要</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="scheduled" aria-pressed="false">
+      <span class="stage-no">3</span><strong id="progressScheduledCount">0</strong>
+      <b>授業予定</b><small>来校・開始前</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="checked_in" aria-pressed="false">
+      <span class="stage-no">4</span><strong id="progressCheckedInCount">0</strong>
+      <b>来校済</b><small>出席を確認済み</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="in_progress" aria-pressed="false">
+      <span class="stage-no">5</span><strong id="progressInProgressCount">0</strong>
+      <b>授業中</b><small>現在進行中</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="absent" aria-pressed="false">
+      <span class="stage-no">6</span><strong id="progressAbsentCount">0</strong>
+      <b>欠席</b><small>欠席記録・次対応</small>
+    </button>
+    <button class="progress-stage" type="button" data-progress-stage="done" aria-pressed="false">
+      <span class="stage-no">7</span><strong id="progressDoneCount">0</strong>
+      <b>完了</b><small>対応済み・授業完了</small>
+    </button>
+  </div>
+  <div class="progress-board-summary" id="progressBoardSummary">情報を更新すると、段階別件数を表示します。</div>
+</div>
+
 <div class="unified-toolbar">
   <div>
     <label>表示する内容</label>
@@ -452,6 +523,7 @@
           <ol class="flow-list">
             <li>「今日の情報を更新」を押す</li>
             <li>今日やることを上から確認</li>
+            <li>進捗ボードで受付・授業の滞留を確認</li>
             <li>文面を確認・コピーしてLINEで送信</li>
             <li>対応済みにして一覧を整理</li>
             <li>本日の授業を出席・授業中・完了へ更新</li>
@@ -462,7 +534,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-3 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-4 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -470,7 +542,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-NEXT-3';
+      const VERSION = 'STEP SCHOOL-NEXT-4';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -486,6 +558,7 @@
         activeTab: 'trial',
         unifiedFilter: 'all',
         unifiedQuery: '',
+        progressStage: 'all',
         dashboard: makeEmptyDashboard(),
         maps: new Map(),
         selectedMessage: '',
@@ -856,6 +929,7 @@ if(open) requestAnimationFrame(() => card.scrollIntoView({ behavior:'smooth', bl
         renderStats();
         renderPriorityGuide();
         renderTasks();
+        renderProgressBoard();
         renderUnifiedReception();
         renderRequests();
         renderLessons();
@@ -1025,14 +1099,106 @@ item.date, item.time, item.memo
 return haystack.includes(query.toLowerCase()) || Boolean(normalized && haystack.includes(normalized));
 }
 
+
+function progressStageForItem(item){
+const status = String(item && item.status || '').toLowerCase();
+if(item && item.kind === 'request'){
+if(boolDone(item.status)) return 'done';
+if(isTrialType(item.type)) return 'trial';
+return 'request';
+}
+if(status.includes('欠席') || status.includes('absent')) return 'absent';
+if(boolDone(item && item.status) || status.includes('completed') || status.includes('finished')) return 'done';
+if(status.includes('授業中') || status.includes('in_progress')) return 'in_progress';
+if(status.includes('出席') || status.includes('checked_in') || status.includes('attended')) return 'checked_in';
+return 'scheduled';
+}
+
+function progressStageLabel(stage){
+return {
+trial:'体験確認',
+request:'欠席・振替対応',
+scheduled:'授業予定',
+checked_in:'来校済',
+in_progress:'授業中',
+absent:'欠席',
+done:'完了',
+all:'全段階'
+}[stage] || '全段階';
+}
+
+function progressStageBadgeClass(stage){
+return {
+trial:'blue',
+request:'orange',
+scheduled:'gray',
+checked_in:'blue',
+in_progress:'purple',
+absent:'red',
+done:'green'
+}[stage] || 'gray';
+}
+
+function progressStageCounts(items){
+const counts = { trial:0, request:0, scheduled:0, checked_in:0, in_progress:0, absent:0, done:0 };
+(items || []).forEach((item) => {
+const stage = progressStageForItem(item);
+if(Object.prototype.hasOwnProperty.call(counts, stage)) counts[stage] += 1;
+});
+return counts;
+}
+
+function renderProgressBoard(){
+const board = $('progressBoard');
+if(!board) return;
+const items = getUnifiedItems();
+const counts = progressStageCounts(items);
+const ids = {
+trial:'progressTrialCount',
+request:'progressRequestCount',
+scheduled:'progressScheduledCount',
+checked_in:'progressCheckedInCount',
+in_progress:'progressInProgressCount',
+absent:'progressAbsentCount',
+done:'progressDoneCount'
+};
+Object.keys(ids).forEach((stage) => {
+const element = $(ids[stage]);
+if(element) element.textContent = String(counts[stage] || 0);
+});
+document.querySelectorAll('#progressBoard [data-progress-stage]').forEach((button) => {
+const active = button.dataset.progressStage === (state.progressStage || 'all');
+button.classList.toggle('active', active);
+button.setAttribute('aria-pressed', active ? 'true' : 'false');
+});
+const openCount = counts.trial + counts.request + counts.scheduled + counts.checked_in + counts.in_progress + counts.absent;
+const summary = $('progressBoardSummary');
+if(summary){
+const selected = state.progressStage && state.progressStage !== 'all' ? ` / 表示中：${progressStageLabel(state.progressStage)}` : '';
+summary.textContent = `読込対象 ${items.length}件 / 完了前 ${openCount}件 / 完了 ${counts.done}件${selected}`;
+}
+}
+
+function setProgressStage(stage){
+state.progressStage = stage || 'all';
+state.unifiedFilter = 'all';
+document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((button) => {
+button.classList.toggle('active', button.dataset.unifiedFilter === 'all');
+});
+renderProgressBoard();
+renderUnifiedReception();
+}
+
 function unifiedFilteredItems(){
 const filter = state.unifiedFilter || 'all';
 const query = String(state.unifiedQuery || '').trim();
+const progressStage = state.progressStage || 'all';
 return getUnifiedItems().filter((item) => {
 if(filter === 'request' && item.kind !== 'request') return false;
 if(filter === 'lesson' && item.kind !== 'lesson') return false;
 if(filter === 'pending' && boolDone(item.status)) return false;
 if(filter === 'done' && !boolDone(item.status)) return false;
+if(progressStage !== 'all' && progressStageForItem(item) !== progressStage) return false;
 return unifiedMatchesQuery(item, query);
 });
 }
@@ -1078,6 +1244,7 @@ return `
         <span class="badge ${typeClass}">${escapeHtml(item.kind === 'request' ? requestLabel(item.type) : '授業')}</span>
         <span class="badge unified-source">${escapeHtml(item.source)}</span>
         <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status)}</span>
+        <span class="badge ${progressStageBadgeClass(progressStageForItem(item))}">進捗：${escapeHtml(progressStageLabel(progressStageForItem(item)))}</span>
       </div>
       <div class="item-meta">
         生徒：<b>${escapeHtml(item.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(item.guardianName || '保護者確認中')}<br>
@@ -1649,11 +1816,23 @@ if(target) scrollToNextTarget(target.dataset.nextScroll);
         $('demoSearchBtn').addEventListener('click', () => { $('searchInput').value = 'テスト 太郎'; searchStudents(); });
         $('copyPreviewBtn').addEventListener('click', () => { if(!state.selectedMessage){ showToast('コピーする文面がありません'); return; } copyText(state.selectedMessage, '文面をコピーしました'); });
 
+
+$('progressBoard').addEventListener('click', (e) => {
+const button = e.target.closest('[data-progress-stage]');
+if(!button) return;
+setProgressStage(button.dataset.progressStage || 'all');
+scrollToNextTarget('unifiedReceptionList');
+});
+$('clearProgressStageBtn').addEventListener('click', () => {
+setProgressStage('all');
+});
 $('unifiedFilterBar').addEventListener('click', (e) => {
 const button = e.target.closest('[data-unified-filter]');
 if(!button) return;
 state.unifiedFilter = button.dataset.unifiedFilter || 'all';
+state.progressStage = 'all';
 document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((item) => item.classList.toggle('active', item === button));
+renderProgressBoard();
 renderUnifiedReception();
 });
 $('unifiedSearchInput').addEventListener('input', (e) => {
