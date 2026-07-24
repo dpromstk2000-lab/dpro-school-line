@@ -150,6 +150,28 @@
 
 
 
+
+/* SCHOOL-NEXT-5: 保護者確認・顧客連携 */
+.confirmation-board{margin:0 0 16px;padding:16px;border:1px solid #c7d2fe;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#f0fdfa);}
+.confirmation-board-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:13px;}
+.confirmation-board-title{display:block;font-size:17px;font-weight:950;color:#0f172a;margin-bottom:4px;}
+.confirmation-board-copy{display:block;color:#64748b;font-size:12px;line-height:1.65;font-weight:750;}
+.confirmation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
+.confirmation-stage{appearance:none;text-align:left;border:1px solid #dbe5f2;border-radius:15px;background:#fff;color:#0f172a;padding:12px;min-height:104px;box-shadow:none;transition:.15s ease;}
+.confirmation-stage:hover{transform:translateY(-1px);box-shadow:0 9px 20px rgba(15,23,42,.08);}
+.confirmation-stage.active{outline:3px solid rgba(79,70,229,.16);border-color:#818cf8;background:#eef2ff;}
+.confirmation-stage strong{display:block;font-size:28px;line-height:1;font-weight:950;letter-spacing:-.04em;margin-bottom:8px;}
+.confirmation-stage b{display:block;font-size:13px;line-height:1.4;margin-bottom:4px;}
+.confirmation-stage small{display:block;color:#64748b;font-size:11px;line-height:1.5;font-weight:750;}
+.confirmation-stage[data-confirmation-stage="pending_request"]{border-top:4px solid #f97316;}
+.confirmation-stage[data-confirmation-stage="lesson_notice"]{border-top:4px solid #2563eb;}
+.confirmation-stage[data-confirmation-stage="active"]{border-top:4px solid #7c3aed;}
+.confirmation-stage[data-confirmation-stage="completed"]{border-top:4px solid #10b981;}
+.confirmation-board-summary{margin-top:11px;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #e2e8f0;color:#475569;font-size:12px;font-weight:850;line-height:1.65;}
+.confirmation-check{margin-top:10px;padding:9px 11px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;font-weight:800;line-height:1.6;}
+@media(max-width:900px){.confirmation-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:560px){.confirmation-board-head{flex-direction:column;}.confirmation-board-head .btn{width:100%;}.confirmation-grid{grid-template-columns:1fr;}}
+
 /* SCHOOL-NEXT-4: 業務進捗・ステータス見える化 */
 .progress-board{margin:0 0 16px;padding:16px;border:1px solid #dbe5f2;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#f0fdf9);}
 .progress-board-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:13px;}
@@ -231,7 +253,7 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-main">
-        <div class="version">STEP SCHOOL-NEXT-4 / owner.html</div>
+        <div class="version">STEP SCHOOL-NEXT-5 / owner.html</div>
         <h1>DPRO 学習塾・習い事 LINE<br>教室オーナーPC管理画面</h1>
         <p class="lead">未対応、今日の授業、体験・欠席・振替の受付を優先順に確認できます。普段は「今日やること」から対応し、予約・授業の追加は必要な時だけ開くDPRO NEXT型の管理画面です。</p>
         <div class="top-actions">
@@ -309,6 +331,32 @@
         <div class="card" id="requestsCard">
 <div class="section-title"><span class="num">4</span><h2>受付・予約統合一覧</h2></div>
 <p class="hint">体験予約・欠席連絡・振替希望・電話受付・教室受付・既存生徒の授業予定を共通形式で表示します。初期表示は最大30件で、追加通信は行いません。</p>
+
+
+<div class="confirmation-board" id="confirmationBoard">
+<div class="confirmation-board-head">
+<div>
+<span class="confirmation-board-title">保護者確認・連絡ボード</span>
+<span class="confirmation-board-copy">受付内容、授業予定、当日状況、対応済みを確認します。カードを押すと下の統合一覧を絞り込みます。</span>
+</div>
+<button class="btn secondary small" id="clearConfirmationStageBtn" type="button">全確認を表示</button>
+</div>
+<div class="confirmation-grid">
+<button class="confirmation-stage" type="button" data-confirmation-stage="pending_request" aria-pressed="false">
+<strong id="confirmationPendingCount">0</strong><b>要返信</b><small>体験・欠席・振替の未対応</small>
+</button>
+<button class="confirmation-stage" type="button" data-confirmation-stage="lesson_notice" aria-pressed="false">
+<strong id="confirmationLessonCount">0</strong><b>予定連絡</b><small>保護者へ確認する授業予定</small>
+</button>
+<button class="confirmation-stage" type="button" data-confirmation-stage="active" aria-pressed="false">
+<strong id="confirmationActiveCount">0</strong><b>当日確認</b><small>来校・授業中・欠席</small>
+</button>
+<button class="confirmation-stage" type="button" data-confirmation-stage="completed" aria-pressed="false">
+<strong id="confirmationCompletedCount">0</strong><b>対応済み</b><small>返信済み・授業完了</small>
+</button>
+</div>
+<div class="confirmation-board-summary" id="confirmationBoardSummary">情報を更新すると、保護者確認の件数を表示します。</div>
+</div>
 
 <div class="progress-board" id="progressBoard">
   <div class="progress-board-head">
@@ -524,6 +572,7 @@
             <li>「今日の情報を更新」を押す</li>
             <li>今日やることを上から確認</li>
             <li>進捗ボードで受付・授業の滞留を確認</li>
+            <li>保護者確認ボードで返信・予定連絡を確認</li>
             <li>文面を確認・コピーしてLINEで送信</li>
             <li>対応済みにして一覧を整理</li>
             <li>本日の授業を出席・授業中・完了へ更新</li>
@@ -534,7 +583,7 @@
       </aside>
     </main>
 
-    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-4 / owner.html</p>
+    <p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-5 / owner.html</p>
   </div>
   <div class="toast" id="toast">コピーしました</div>
 
@@ -542,7 +591,7 @@
     (function(){
       'use strict';
 
-      const VERSION = 'STEP SCHOOL-NEXT-4';
+      const VERSION = 'STEP SCHOOL-NEXT-5';
       const DEFAULT_API_BASE = 'https://dpro-school-line-api.dpromstk2000.workers.dev';
       const DEFAULT_PAGES_BASE = 'https://dpromstk2000-lab.github.io/dpro-school-line/';
       const DEFAULT_SHOP_CODE = 'dpro_school_demo';
@@ -559,6 +608,7 @@
         unifiedFilter: 'all',
         unifiedQuery: '',
         progressStage: 'all',
+        confirmationStage: 'all',
         dashboard: makeEmptyDashboard(),
         maps: new Map(),
         selectedMessage: '',
@@ -929,6 +979,7 @@ if(open) requestAnimationFrame(() => card.scrollIntoView({ behavior:'smooth', bl
         renderStats();
         renderPriorityGuide();
         renderTasks();
+        renderConfirmationBoard();
         renderProgressBoard();
         renderUnifiedReception();
         renderRequests();
@@ -1100,6 +1151,93 @@ return haystack.includes(query.toLowerCase()) || Boolean(normalized && haystack.
 }
 
 
+
+function confirmationStageForItem(item){
+const progress = progressStageForItem(item);
+if(item && item.kind === 'request') return boolDone(item.status) ? 'completed' : 'pending_request';
+if(progress === 'scheduled') return 'lesson_notice';
+if(progress === 'checked_in' || progress === 'in_progress' || progress === 'absent') return 'active';
+return 'completed';
+}
+
+function confirmationStageLabel(stage){
+return {
+pending_request:'要返信',
+lesson_notice:'予定連絡',
+active:'当日確認',
+completed:'対応済み',
+all:'全確認'
+}[stage] || '全確認';
+}
+
+function confirmationStageBadgeClass(stage){
+return {
+pending_request:'orange',
+lesson_notice:'blue',
+active:'purple',
+completed:'green'
+}[stage] || 'gray';
+}
+
+function confirmationCheckText(item){
+if(!item) return '生徒・保護者・日時を確認';
+if(item.kind === 'lesson') return '確認項目：日時・担当・教室・保護者連絡先';
+if(isTrialType(item.type)) return '確認項目：体験日時・コース・担当・保護者連絡先';
+if(isAbsenceType(item.type)) return '確認項目：欠席日・授業時間・理由・振替要否';
+if(isMakeupType(item.type)) return '確認項目：第1希望・第2希望・空き枠・確定日時';
+return '確認項目：受付内容・対象日時・保護者連絡先';
+}
+
+function confirmationCounts(items){
+const counts = { pending_request:0, lesson_notice:0, active:0, completed:0 };
+(items || []).forEach((item) => {
+const stage = confirmationStageForItem(item);
+if(Object.prototype.hasOwnProperty.call(counts, stage)) counts[stage] += 1;
+});
+return counts;
+}
+
+function renderConfirmationBoard(){
+const board = $('confirmationBoard');
+if(!board) return;
+const items = getUnifiedItems();
+const counts = confirmationCounts(items);
+const ids = {
+pending_request:'confirmationPendingCount',
+lesson_notice:'confirmationLessonCount',
+active:'confirmationActiveCount',
+completed:'confirmationCompletedCount'
+};
+Object.keys(ids).forEach((stage) => {
+const element = $(ids[stage]);
+if(element) element.textContent = String(counts[stage] || 0);
+});
+document.querySelectorAll('#confirmationBoard [data-confirmation-stage]').forEach((button) => {
+const active = button.dataset.confirmationStage === (state.confirmationStage || 'all');
+button.classList.toggle('active', active);
+button.setAttribute('aria-pressed', active ? 'true' : 'false');
+});
+const summary = $('confirmationBoardSummary');
+if(summary){
+const selected = state.confirmationStage && state.confirmationStage !== 'all'
+? ` / 表示中：${confirmationStageLabel(state.confirmationStage)}`
+: '';
+summary.textContent = `要返信 ${counts.pending_request}件 / 予定連絡 ${counts.lesson_notice}件 / 当日確認 ${counts.active}件 / 対応済み ${counts.completed}件${selected}`;
+}
+}
+
+function setConfirmationStage(stage){
+state.confirmationStage = stage || 'all';
+state.progressStage = 'all';
+state.unifiedFilter = 'all';
+document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((button) => {
+button.classList.toggle('active', button.dataset.unifiedFilter === 'all');
+});
+renderConfirmationBoard();
+renderProgressBoard();
+renderUnifiedReception();
+}
+
 function progressStageForItem(item){
 const status = String(item && item.status || '').toLowerCase();
 if(item && item.kind === 'request'){
@@ -1181,10 +1319,12 @@ summary.textContent = `読込対象 ${items.length}件 / 完了前 ${openCount}�
 
 function setProgressStage(stage){
 state.progressStage = stage || 'all';
+state.confirmationStage = 'all';
 state.unifiedFilter = 'all';
 document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((button) => {
 button.classList.toggle('active', button.dataset.unifiedFilter === 'all');
 });
+renderConfirmationBoard();
 renderProgressBoard();
 renderUnifiedReception();
 }
@@ -1193,12 +1333,14 @@ function unifiedFilteredItems(){
 const filter = state.unifiedFilter || 'all';
 const query = String(state.unifiedQuery || '').trim();
 const progressStage = state.progressStage || 'all';
+const confirmationStage = state.confirmationStage || 'all';
 return getUnifiedItems().filter((item) => {
 if(filter === 'request' && item.kind !== 'request') return false;
 if(filter === 'lesson' && item.kind !== 'lesson') return false;
 if(filter === 'pending' && boolDone(item.status)) return false;
 if(filter === 'done' && !boolDone(item.status)) return false;
 if(progressStage !== 'all' && progressStageForItem(item) !== progressStage) return false;
+if(confirmationStage !== 'all' && confirmationStageForItem(item) !== confirmationStage) return false;
 return unifiedMatchesQuery(item, query);
 });
 }
@@ -1245,6 +1387,7 @@ return `
         <span class="badge unified-source">${escapeHtml(item.source)}</span>
         <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status)}</span>
         <span class="badge ${progressStageBadgeClass(progressStageForItem(item))}">進捗：${escapeHtml(progressStageLabel(progressStageForItem(item)))}</span>
+        <span class="badge ${confirmationStageBadgeClass(confirmationStageForItem(item))}">確認：${escapeHtml(confirmationStageLabel(confirmationStageForItem(item)))}</span>
       </div>
       <div class="item-meta">
         生徒：<b>${escapeHtml(item.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(item.guardianName || '保護者確認中')}<br>
@@ -1256,9 +1399,12 @@ return `
         ${item.studentNo ? `　生徒番号：${escapeHtml(item.studentNo)}` : ''}
       </div>
       ${item.memo ? `<div class="item-note">${escapeHtml(item.memo)}</div>` : ''}
+      <div class="confirmation-check">${escapeHtml(confirmationCheckText(item))}</div>
     </div>
     <div class="item-actions">
       <button class="btn navy small" data-action="show-message" data-key="${msgKey}" type="button">文面を見る</button>
+      <button class="btn small" data-action="copy-message" data-key="${msgKey}" type="button">文面コピー</button>
+      ${item.phone && item.studentNo ? `<a class="btn secondary small" href="./member.html?phone=${encodeURIComponent(item.phone)}&student_no=${encodeURIComponent(item.studentNo)}&auto=1" target="_blank" rel="noopener">会員画面確認</a>` : ''}
       ${item.kind === 'request' && !done ? `<button class="btn green small" data-action="complete-request" data-key="${key}" type="button">対応済みにする</button>` : ''}
       ${nextLesson ? `<button class="btn ${nextLesson.cls} small" data-action="lesson-status" data-status="${nextLesson.value}" data-key="${key}" type="button">${nextLesson.label}</button>` : ''}
     </div>
@@ -1817,6 +1963,16 @@ if(target) scrollToNextTarget(target.dataset.nextScroll);
         $('copyPreviewBtn').addEventListener('click', () => { if(!state.selectedMessage){ showToast('コピーする文面がありません'); return; } copyText(state.selectedMessage, '文面をコピーしました'); });
 
 
+
+$('confirmationBoard').addEventListener('click', (e) => {
+const button = e.target.closest('[data-confirmation-stage]');
+if(!button) return;
+setConfirmationStage(button.dataset.confirmationStage || 'all');
+scrollToNextTarget('unifiedReceptionList');
+});
+$('clearConfirmationStageBtn').addEventListener('click', () => {
+setConfirmationStage('all');
+});
 $('progressBoard').addEventListener('click', (e) => {
 const button = e.target.closest('[data-progress-stage]');
 if(!button) return;
@@ -1831,7 +1987,9 @@ const button = e.target.closest('[data-unified-filter]');
 if(!button) return;
 state.unifiedFilter = button.dataset.unifiedFilter || 'all';
 state.progressStage = 'all';
+state.confirmationStage = 'all';
 document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((item) => item.classList.toggle('active', item === button));
+renderConfirmationBoard();
 renderProgressBoard();
 renderUnifiedReception();
 });

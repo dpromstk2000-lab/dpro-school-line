@@ -1,0 +1,150 @@
+{
+  "step": "SCHOOL-NEXT-5",
+  "checked_at_jst": "2026-07-24T16:36:27+09:00",
+  "files": {
+    "owner": {
+      "before_sha256": "63da9c02acc7f1a6a387535b0b91066332ad24042111859d6430b889d094959b",
+      "after_sha256": "a6b96016e36bc05e8b587892de49dafebcac03d15425fc47f116f1d633a37941",
+      "bytes": 121477
+    },
+    "member": {
+      "before_sha256": "d82709b0e075f0cb2e7950deb5017a7e3d98826c96506bf5c8542d1a3977b041",
+      "after_sha256": "e8ba35a54f3f7c281a34004cb186698127df4f08e4384269085420bbbf7d1cb8",
+      "bytes": 49602
+    }
+  },
+  "counts": {
+    "OK": 18,
+    "注意": 0,
+    "NG": 0
+  },
+  "blocking_ng": 0,
+  "results": [
+    {
+      "key": "owner_existing_ids",
+      "label": "owner既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 74件を維持",
+      "blocking": false
+    },
+    {
+      "key": "owner_duplicate_ids",
+      "label": "owner HTML ID重複",
+      "status": "OK",
+      "detail": "ID 81件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "owner_javascript",
+      "label": "owner JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "owner_api",
+      "label": "owner既存API維持",
+      "status": "OK",
+      "detail": "既存API 12件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "owner_network",
+      "label": "owner追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 1を維持",
+      "blocking": false
+    },
+    {
+      "key": "member_existing_ids",
+      "label": "member既存HTML ID維持",
+      "status": "OK",
+      "detail": "既存ID 27件を維持",
+      "blocking": false
+    },
+    {
+      "key": "member_duplicate_ids",
+      "label": "member HTML ID重複",
+      "status": "OK",
+      "detail": "ID 33件、重複なし",
+      "blocking": false
+    },
+    {
+      "key": "member_javascript",
+      "label": "member JavaScript構文",
+      "status": "OK",
+      "detail": "インラインscript 1件 PASS",
+      "blocking": false
+    },
+    {
+      "key": "member_api",
+      "label": "member既存API維持",
+      "status": "OK",
+      "detail": "既存API 0件、追加・削除なし",
+      "blocking": false
+    },
+    {
+      "key": "member_network",
+      "label": "member追加通信なし",
+      "status": "OK",
+      "detail": "fetch呼出数 1を維持",
+      "blocking": false
+    },
+    {
+      "key": "owner_features",
+      "label": "owner確認・顧客連携機能",
+      "status": "OK",
+      "detail": "必須マーカー 20件",
+      "blocking": false
+    },
+    {
+      "key": "member_features",
+      "label": "member確認状況機能",
+      "status": "OK",
+      "detail": "必須マーカー 14件",
+      "blocking": false
+    },
+    {
+      "key": "member_admin_leak",
+      "label": "会員画面への管理情報混入",
+      "status": "OK",
+      "detail": "管理コード・管理ヘッダー混入なし",
+      "blocking": false
+    },
+    {
+      "key": "scope",
+      "label": "対象ファイル限定",
+      "status": "OK",
+      "detail": "本体変更はowner.html・member.htmlのみ",
+      "blocking": false
+    },
+    {
+      "key": "worker",
+      "label": "Worker変更",
+      "status": "OK",
+      "detail": "変更なし",
+      "blocking": false
+    },
+    {
+      "key": "supabase",
+      "label": "Supabase変更",
+      "status": "OK",
+      "detail": "変更なし・SQL不要",
+      "blocking": false
+    },
+    {
+      "key": "approval_data",
+      "label": "新規承認データ",
+      "status": "OK",
+      "detail": "追加せず既存状態を表示変換",
+      "blocking": false
+    },
+    {
+      "key": "automatic_line",
+      "label": "一括自動LINE配信",
+      "status": "OK",
+      "detail": "追加なし・個別確認を維持",
+      "blocking": false
+    }
+  ]
+}

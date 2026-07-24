@@ -1,0 +1,31 @@
+step: "SCHOOL-NEXT-5"
+revision: "R1"
+result: "PUBLIC_VERIFY_PENDING"
+applied_at_jst: "2026-07-24T16:36:27+09:00"
+target_files:
+  - "owner.html"
+  - "member.html"
+changes:
+  - "保護者確認・連絡ボード"
+  - "要返信・予定連絡・当日確認・対応済みの4分類"
+  - "受付・授業ごとの確認項目"
+  - "統合一覧から文面コピー"
+  - "統合一覧から対象生徒の会員画面を直接確認"
+  - "会員画面へ教室確認中・対応済み・今後の授業件数"
+  - "依頼状況の保護者向け説明"
+  - "setProgressStage置換を現行owner.htmlのインデントへ修正"
+owner_before_sha256: "63da9c02acc7f1a6a387535b0b91066332ad24042111859d6430b889d094959b"
+owner_after_sha256: "a6b96016e36bc05e8b587892de49dafebcac03d15425fc47f116f1d633a37941"
+member_before_sha256: "d82709b0e075f0cb2e7950deb5017a7e3d98826c96506bf5c8542d1a3977b041"
+member_after_sha256: "e8ba35a54f3f7c281a34004cb186698127df4f08e4384269085420bbbf7d1cb8"
+baseline_commit: "257cd35e70812019218fd88026c9cd0a181d32db"
+backup_tag: "backup-school-next-before-5-20260724"
+worker_changed: false
+supabase_changed: false
+sql_required: false
+api_changed: false
+added_network_request: false
+new_approval_table: false
+validation_ok: 18
+validation_warning: 0
+next_step_after_public_verify: "SCHOOL-NEXT-6"
