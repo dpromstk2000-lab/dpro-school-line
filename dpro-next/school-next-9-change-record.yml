@@ -1,6 +1,6 @@
 step: "SCHOOL-NEXT-9"
 revision: "R1"
-result: "PUBLIC_VERIFY_PENDING"
+result: "OK"
 applied_at_jst: "2026-07-24T20:22:43+09:00"
 target_files:
   - "system-check.html"
@@ -27,3 +27,9 @@ load_time_warning_ms: 2500
 validation_ok: 32
 validation_attention: 0
 next_step_after_public_verify: "SCHOOL-NEXT-10"
+completed_at_jst: "2026-07-24T20:23:28+09:00"
+public_system_check_url: "https://dpromstk2000-lab.github.io/dpro-school-line/system-check.html"
+public_verify: "PASS"
+current_step: "SCHOOL-NEXT-10"
+last_completed_step: "SCHOOL-NEXT-9"
+next_step: "SCHOOL-NEXT-10"
