@@ -1,0 +1,907 @@
+name: "STEP SCHOOL-NEXT-3 | 受付・予約データ統合"
+run-name: "SCHOOL-NEXT-3 unified reception by ${{ github.actor }}"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/step-school-next-3-unified-reception.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-next-3-unified-reception
+  cancel-in-progress: false
+
+env:
+  STEP_NAME: SCHOOL-NEXT-3
+  WORKFLOW_FILE: .github/workflows/step-school-next-3-unified-reception.yml
+  STATE_DIR: dpro-next
+  TARGET_FILE: owner.html
+  EXPECTED_CURRENT_STEP: SCHOOL-NEXT-3
+  NEXT_STEP: SCHOOL-NEXT-4
+  BASELINE_TAG: backup-school-next-before-3-20260723
+  OWNER_URL: https://dpromstk2000-lab.github.io/dpro-school-line/owner.html
+  API_BASE: https://dpro-school-line-api.dpromstk2000.workers.dev
+  EXPECTED_WORKER_VERSION: STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723
+
+jobs:
+  unified-reception:
+    name: 受付・予約・授業データ統合
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: 1. リポジトリ取得
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 2. 前STEP完了・変更前保護
+        id: preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          test "${GITHUB_REF_NAME}" = "main"
+          test -f "${WORKFLOW_FILE}"
+          test -f "${TARGET_FILE}"
+          test -f config.js
+          test -f "${STATE_DIR}/current-step.yml"
+
+          CURRENT_STEP="$(grep -E '^current_step:' "${STATE_DIR}/current-step.yml" | head -1 | cut -d: -f2- | tr -d '"' | xargs)"
+          if [ "${CURRENT_STEP}" != "${EXPECTED_CURRENT_STEP}" ]; then
+            echo "::error::current_step=${CURRENT_STEP}, expected=${EXPECTED_CURRENT_STEP}"
+            exit 1
+          fi
+
+          ruby -e 'require "yaml"; YAML.load_file(ARGV[0], aliases: true); puts "YAML syntax OK"' "${WORKFLOW_FILE}"
+
+          BEFORE_SHA256="$(sha256sum "${TARGET_FILE}" | awk '{print $1}')"
+          BEFORE_GIT_SHA="$(git rev-parse HEAD)"
+          BEFORE_BYTES="$(wc -c < "${TARGET_FILE}" | tr -d ' ')"
+
+          echo "before_sha256=${BEFORE_SHA256}" >> "${GITHUB_OUTPUT}"
+          echo "before_git_sha=${BEFORE_GIT_SHA}" >> "${GITHUB_OUTPUT}"
+          echo "before_bytes=${BEFORE_BYTES}" >> "${GITHUB_OUTPUT}"
+
+          cp "${TARGET_FILE}" "${RUNNER_TEMP}/owner-before-school-next-3.html"
+          cp "${STATE_DIR}/current-step.yml" "${RUNNER_TEMP}/current-step-before-school-next-3.yml"
+
+          if git rev-parse "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            echo "::notice::既存タグを維持: ${BASELINE_TAG}"
+          elif git ls-remote --exit-code --tags origin "refs/tags/${BASELINE_TAG}" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/${BASELINE_TAG}:refs/tags/${BASELINE_TAG}"
+          else
+            git tag -a "${BASELINE_TAG}" "${BEFORE_GIT_SHA}" -m "DPRO 学習塾 LINE / SCHOOL-NEXT-3 変更前正常版"
+            git push origin "refs/tags/${BASELINE_TAG}"
+          fi
+
+      - name: 3. owner.htmlへ受付・予約統合一覧を追加
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path("owner.html")
+          text = path.read_text(encoding="utf-8")
+          original = text
+
+          def replace_once(source, old, new, label):
+              count = source.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{label}の一致数が1ではありません: {count}")
+              return source.replace(old, new, 1)
+
+          def insert_before(source, marker, addition, label):
+              count = source.count(marker)
+              if count != 1:
+                  raise RuntimeError(f"{label}の基準位置が1件ではありません: {count}")
+              return source.replace(marker, addition + marker, 1)
+
+          if "STEP SCHOOL-NEXT-3 / owner.html" in text:
+              print("owner.htmlは既にSCHOOL-NEXT-3です。")
+              sys.exit(0)
+
+          required = [
+              '<div class="version">STEP SCHOOL-NEXT-2 / owner.html</div>',
+              '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-2 / owner.html</p>',
+              "const VERSION = 'STEP SCHOOL-NEXT-2';",
+              '<div class="card" id="requestsCard">',
+              '<div class="card next-collapsed" id="createLessonCard">',
+              "      function renderAll(){",
+              "      function renderRequests(){",
+              "      function renderLessons(){",
+              "      function bindEvents(){",
+              "        $('requestTabs').addEventListener('click', (e) => {",
+          ]
+          missing = [marker for marker in required if marker not in text]
+          if missing:
+              raise RuntimeError("必要な現行マーカーが不足: " + " / ".join(missing))
+
+          text = replace_once(
+              text,
+              '<div class="version">STEP SCHOOL-NEXT-2 / owner.html</div>',
+              '<div class="version">STEP SCHOOL-NEXT-3 / owner.html</div>',
+              "画面バージョン",
+          )
+          text = replace_once(
+              text,
+              '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-2 / owner.html</p>',
+              '<p class="footer-note">DPRO 学習塾・習い事 LINE / STEP SCHOOL-NEXT-3 / owner.html</p>',
+              "フッターバージョン",
+          )
+          text = replace_once(
+              text,
+              "const VERSION = 'STEP SCHOOL-NEXT-2';",
+              "const VERSION = 'STEP SCHOOL-NEXT-3';",
+              "JavaScriptバージョン",
+          )
+          text = replace_once(
+              text,
+              '<b>受付を確認</b><small>体験・欠席・振替の内容と返信状況を確認</small>',
+              '<b>受付・予約を確認</b><small>体験・欠席・振替・授業予定を同じ一覧で確認</small>',
+              "優先カード文言",
+          )
+
+          css = r'''
+          /* SCHOOL-NEXT-3: 受付・予約・授業の統合表示 */
+          .unified-toolbar{display:grid;grid-template-columns:1fr minmax(260px,.8fr);gap:12px;align-items:end;margin:0 0 14px;}
+          .unified-filters{display:flex;gap:8px;flex-wrap:wrap;}
+          .unified-filter{appearance:none;border:1px solid #cfd9e8;background:#fff;color:#334155;border-radius:999px;padding:10px 13px;min-height:42px;font-weight:900;box-shadow:none;}
+          .unified-filter.active{background:#0f172a;border-color:#0f172a;color:#fff;}
+          .unified-search-row{display:flex;gap:8px;align-items:center;}
+          .unified-search-row input{min-width:0;}
+          .unified-summary{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 12px;color:#475569;font-size:13px;font-weight:850;}
+          .unified-source{background:#e0f2fe;color:#0369a1;border-color:#bae6fd;}
+          .unified-kind-request{border-left:5px solid #2563eb;}
+          .unified-kind-lesson{border-left:5px solid #0f8b7e;}
+          .unified-detail{margin-top:16px;border:1px solid #dbe5f2;border-radius:16px;background:#f8fafc;overflow:hidden;}
+          .unified-detail summary{cursor:pointer;padding:14px 16px;font-weight:900;color:#334155;}
+          .unified-detail > div{padding:0 14px 14px;}
+          .unified-limit-note{padding:10px 12px;border-radius:12px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:800;text-align:center;}
+          @media(max-width:820px){
+          .unified-toolbar{grid-template-columns:1fr;}
+          .unified-search-row{flex-direction:column;align-items:stretch;}
+          .unified-search-row .btn{width:100%;}
+          }
+
+          '''
+          text = insert_before(
+              text,
+              "    /* SCHOOL-NEXT-2: 今日やること中心のPCオーナー画面 */",
+              css,
+              "NEXT-3 CSS",
+          )
+
+          start_marker = '        <div class="card" id="requestsCard">'
+          end_marker = '        <div class="card next-collapsed" id="createLessonCard">'
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+          old_block = text[start:end]
+
+          if old_block.count('id="requestTabs"') != 1 or old_block.count('id="requestList"') != 1:
+              raise RuntimeError("既存受付一覧のID構成が想定と異なります。")
+
+          new_block = '''        <div class="card" id="requestsCard">
+          <div class="section-title"><span class="num">4</span><h2>受付・予約統合一覧</h2></div>
+          <p class="hint">体験予約・欠席連絡・振替希望・電話受付・教室受付・既存生徒の授業予定を共通形式で表示します。初期表示は最大30件で、追加通信は行いません。</p>
+          <div class="unified-toolbar">
+            <div>
+              <label>表示する内容</label>
+              <div class="unified-filters" id="unifiedFilterBar">
+                <button class="unified-filter active" type="button" data-unified-filter="all">すべて</button>
+                <button class="unified-filter" type="button" data-unified-filter="request">受付連絡</button>
+                <button class="unified-filter" type="button" data-unified-filter="lesson">予約・授業</button>
+                <button class="unified-filter" type="button" data-unified-filter="pending">未対応・進行中</button>
+                <button class="unified-filter" type="button" data-unified-filter="done">完了</button>
+              </div>
+            </div>
+            <div>
+              <label for="unifiedSearchInput">生徒・保護者・電話・生徒番号・コースで検索</label>
+              <div class="unified-search-row">
+                <input id="unifiedSearchInput" type="search" autocomplete="off" placeholder="例：テスト 太郎 / 09099990000 / 算数" />
+                <button class="btn secondary small" id="clearUnifiedSearchBtn" type="button">検索解除</button>
+              </div>
+            </div>
+          </div>
+          <div class="unified-summary">
+            <span id="unifiedCountLabel">0件を表示</span>
+            <span>同一データの重複表示を防止</span>
+          </div>
+          <div class="list" id="unifiedReceptionList"></div>
+
+          <details class="unified-detail">
+            <summary>体験・欠席・振替を種類別に見る</summary>
+            <div>
+              <div class="tabs" id="requestTabs">
+                <button class="tab active" type="button" data-tab="trial">体験予約</button>
+                <button class="tab" type="button" data-tab="absence">欠席連絡</button>
+                <button class="tab" type="button" data-tab="makeup">振替希望</button>
+                <button class="tab" type="button" data-tab="all">すべて</button>
+              </div>
+              <div class="list" id="requestList"></div>
+            </div>
+          </details>
+          </div>
+
+          '''
+          text = text[:start] + new_block + text[end:]
+
+          text = replace_once(
+              text,
+              "        activeTab: 'trial',\n        dashboard: makeEmptyDashboard(),",
+              "        activeTab: 'trial',\n"
+              "        unifiedFilter: 'all',\n"
+              "        unifiedQuery: '',\n"
+              "        dashboard: makeEmptyDashboard(),",
+              "state統合条件",
+          )
+
+          text = replace_once(
+              text,
+              "        renderTasks();\n        renderRequests();\n        renderLessons();",
+              "        renderTasks();\n"
+              "        renderUnifiedReception();\n"
+              "        renderRequests();\n"
+              "        renderLessons();",
+              "統合一覧描画",
+          )
+
+          text = replace_once(
+              text,
+              "      function storeItem(prefix, item){ const key = `${prefix}-${state.maps.size + 1}`; state.maps.set(key, item); return key; }\n",
+              "      function storeItem(prefix, item){ const key = `${prefix}-${state.maps.size + 1}`; state.maps.set(key, item); return key; }\n"
+              "      function storeNamedItem(prefix, id, item){ const key = `${prefix}-${String(id || '').replace(/[^a-zA-Z0-9_-]/g,'_')}`; state.maps.set(key, item); return key; }\n",
+              "統合一覧Map",
+          )
+
+          unified_functions = r'''
+          function unifiedSourceLabel(item, kind){
+          const raw = item && item.raw ? item.raw : {};
+          const source = String(first(raw.create_type, raw.reception_type, raw.source, raw.channel, raw.entry_type, '')).toLowerCase();
+          if(source.includes('phone') || source.includes('電話')) return '電話受付';
+          if(source.includes('walkin') || source.includes('counter') || source.includes('教室') || source.includes('店頭')) return '教室受付';
+          if(source.includes('manual') || source.includes('staff') || source.includes('owner')) return '教室登録';
+          if(kind === 'lesson') return '授業予定';
+          if(isAbsenceType(item.type) || isMakeupType(item.type)) return 'LINE会員';
+          if(isTrialType(item.type)) return 'LINE体験予約';
+          return 'LINE受付';
+          }
+
+          function unifiedRequestItem(item){
+          return {
+          key:`request:${item.id}`,
+          kind:'request',
+          rawItem:item,
+          type:item.type,
+          label:item.label || requestLabel(item.type),
+          source:unifiedSourceLabel(item, 'request'),
+          studentName:item.studentName,
+          guardianName:item.guardianName,
+          phone:item.phone,
+          studentNo:item.studentNo,
+          course:item.course,
+          teacher:item.teacher,
+          room:'',
+          date:item.date,
+          time:item.time,
+          endTime:'',
+          secondDate:item.secondDate,
+          secondTime:item.secondTime,
+          memo:item.memo,
+          status:item.status || '未対応',
+          createdAt:item.createdAt || ''
+          };
+          }
+
+          function unifiedLessonItem(item){
+          return {
+          key:`lesson:${item.id}`,
+          kind:'lesson',
+          rawItem:item,
+          type:'lesson',
+          label:'予約・授業',
+          source:unifiedSourceLabel(item, 'lesson'),
+          studentName:item.studentName,
+          guardianName:item.guardianName,
+          phone:item.phone,
+          studentNo:item.studentNo,
+          course:item.course,
+          teacher:item.teacher,
+          room:item.room,
+          date:item.date,
+          time:item.time,
+          endTime:item.endTime,
+          secondDate:'',
+          secondTime:'',
+          memo:item.memo,
+          status:item.status || '予定',
+          createdAt:''
+          };
+          }
+
+          function unifiedUnique(items){
+          const seen = new Set();
+          return items.filter((item) => {
+          const key = [
+            item.kind,
+            item.rawItem && item.rawItem.id,
+            normalizePhone(item.phone),
+            item.studentNo,
+            item.studentName,
+            item.date,
+            item.time,
+            item.label
+          ].join('|');
+          if(seen.has(key)) return false;
+          seen.add(key);
+          return true;
+          });
+          }
+
+          function getUnifiedItems(){
+          const requests = (state.dashboard.allRequests || []).map(unifiedRequestItem);
+          const lessons = (state.dashboard.lessons || []).map(unifiedLessonItem);
+          return unifiedUnique([...requests, ...lessons]).sort((a,b) => {
+          const ad = `${a.date || '9999-12-31'} ${a.time || '99:99'}`;
+          const bd = `${b.date || '9999-12-31'} ${b.time || '99:99'}`;
+          const aOpen = boolDone(a.status) ? 1 : 0;
+          const bOpen = boolDone(b.status) ? 1 : 0;
+          return aOpen - bOpen || ad.localeCompare(bd) || a.studentName.localeCompare(b.studentName, 'ja');
+          });
+          }
+
+          function unifiedMatchesQuery(item, query){
+          if(!query) return true;
+          const normalized = normalizePhone(query);
+          const haystack = [
+          item.label, item.source, item.studentName, item.guardianName,
+          item.phone, normalizePhone(item.phone), item.studentNo,
+          item.course, item.teacher, item.room, item.status,
+          item.date, item.time, item.memo
+          ].join(' ').toLowerCase();
+          return haystack.includes(query.toLowerCase()) || Boolean(normalized && haystack.includes(normalized));
+          }
+
+          function unifiedFilteredItems(){
+          const filter = state.unifiedFilter || 'all';
+          const query = String(state.unifiedQuery || '').trim();
+          return getUnifiedItems().filter((item) => {
+          if(filter === 'request' && item.kind !== 'request') return false;
+          if(filter === 'lesson' && item.kind !== 'lesson') return false;
+          if(filter === 'pending' && boolDone(item.status)) return false;
+          if(filter === 'done' && !boolDone(item.status)) return false;
+          return unifiedMatchesQuery(item, query);
+          });
+          }
+
+          function unifiedNextLessonStatus(status){
+          const value = String(status || '');
+          if(boolDone(value) || value.includes('欠席')) return null;
+          if(value.includes('授業中')) return { value:'completed', label:'完了にする', cls:'green' };
+          if(value.includes('出席')) return { value:'in_progress', label:'授業中にする', cls:'orange' };
+          return { value:'checked_in', label:'出席にする', cls:'' };
+          }
+
+          function renderUnifiedReception(){
+          const list = $('unifiedReceptionList');
+          const count = $('unifiedCountLabel');
+          if(!list || !count) return;
+
+          const filtered = unifiedFilteredItems();
+          const visible = filtered.slice(0, 30);
+          count.textContent = `${visible.length}件を表示${filtered.length > visible.length ? ` / 全${filtered.length}件` : ''}`;
+
+          if(!visible.length){
+          list.innerHTML = '<div class="empty">条件に一致する受付・予約・授業はありません。</div>';
+          return;
+          }
+
+          list.innerHTML = visible.map((item) => {
+          const raw = item.rawItem;
+          const key = storeNamedItem(`unified-${item.kind}`, raw.id, raw);
+          const message = item.kind === 'request' ? buildMessageFromRequest(raw) : buildMessageFromLesson(raw);
+          const msgKey = storeNamedItem(`unified-message-${item.kind}`, raw.id, { message, item:raw });
+          const done = boolDone(item.status);
+          const nextLesson = item.kind === 'lesson' ? unifiedNextLessonStatus(item.status) : null;
+          const typeClass = item.kind === 'request' ? badgeClassForType(item.type) : 'green';
+          const secondChoice = item.secondDate ? ` / 第2希望：${escapeHtml(formatDateTime(item.secondDate, item.secondTime))}` : '';
+          const endTime = item.endTime ? `〜${escapeHtml(formatTime(item.endTime))}` : '';
+
+          return `
+            <div class="item unified-kind-${item.kind} ${done ? 'done' : ''}">
+              <div class="item-main">
+                <div class="item-title">
+                  <span>${escapeHtml(item.label)}</span>
+                  <span class="badge ${typeClass}">${escapeHtml(item.kind === 'request' ? requestLabel(item.type) : '授業')}</span>
+                  <span class="badge unified-source">${escapeHtml(item.source)}</span>
+                  <span class="badge ${badgeClassForStatus(item.status)}">${escapeHtml(item.status)}</span>
+                </div>
+                <div class="item-meta">
+                  生徒：<b>${escapeHtml(item.studentName || '対象者確認中')}</b>　保護者：${escapeHtml(item.guardianName || '保護者確認中')}<br>
+                  日時：${escapeHtml(formatDateTime(item.date, item.time))}${endTime}${secondChoice}<br>
+                  コース：${escapeHtml(item.course || '未設定')}
+                  ${item.teacher ? `　担当：${escapeHtml(item.teacher)}` : ''}
+                  ${item.room ? `　教室：${escapeHtml(item.room)}` : ''}<br>
+                  ${item.phone ? `電話：${escapeHtml(formatPhone(item.phone))}` : ''}
+                  ${item.studentNo ? `　生徒番号：${escapeHtml(item.studentNo)}` : ''}
+                </div>
+                ${item.memo ? `<div class="item-note">${escapeHtml(item.memo)}</div>` : ''}
+              </div>
+              <div class="item-actions">
+                <button class="btn navy small" data-action="show-message" data-key="${msgKey}" type="button">文面を見る</button>
+                ${item.kind === 'request' && !done ? `<button class="btn green small" data-action="complete-request" data-key="${key}" type="button">対応済みにする</button>` : ''}
+                ${nextLesson ? `<button class="btn ${nextLesson.cls} small" data-action="lesson-status" data-status="${nextLesson.value}" data-key="${key}" type="button">${nextLesson.label}</button>` : ''}
+              </div>
+            </div>
+          `;
+          }).join('') + (filtered.length > visible.length ? '<div class="unified-limit-note">初期表示を軽くするため30件まで表示しています。検索または絞り込みで対象を表示してください。</div>' : '');
+          }
+
+          '''
+          text = insert_before(
+              text,
+              "      function renderRequests(){",
+              unified_functions,
+              "統合一覧関数",
+          )
+
+          events = r'''
+          $('unifiedFilterBar').addEventListener('click', (e) => {
+          const button = e.target.closest('[data-unified-filter]');
+          if(!button) return;
+          state.unifiedFilter = button.dataset.unifiedFilter || 'all';
+          document.querySelectorAll('#unifiedFilterBar [data-unified-filter]').forEach((item) => item.classList.toggle('active', item === button));
+          renderUnifiedReception();
+          });
+          $('unifiedSearchInput').addEventListener('input', (e) => {
+          state.unifiedQuery = e.target.value || '';
+          renderUnifiedReception();
+          });
+          $('clearUnifiedSearchBtn').addEventListener('click', () => {
+          $('unifiedSearchInput').value = '';
+          state.unifiedQuery = '';
+          renderUnifiedReception();
+          $('unifiedSearchInput').focus();
+          });
+          '''
+          text = insert_before(
+              text,
+              "        $('requestTabs').addEventListener('click', (e) => {",
+              events,
+              "統合一覧イベント",
+          )
+
+          if text == original:
+              raise RuntimeError("owner.htmlに変更がありません。")
+
+          path.write_text(text, encoding="utf-8", newline="\n")
+          print("SCHOOL-NEXT-3 patch complete")
+          PY
+
+      - name: 4. HTML・JavaScript・ID・既存機能維持検査
+        id: validate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "${STATE_DIR}"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from datetime import datetime, timezone, timedelta
+          import hashlib
+          import json
+          import os
+          import re
+          import subprocess
+
+          before = Path(os.environ["RUNNER_TEMP"]) / "owner-before-school-next-3.html"
+          after = Path("owner.html")
+          out = Path(os.environ["STATE_DIR"])
+          JST = timezone(timedelta(hours=9))
+          results = []
+
+          def add(key, label, status, detail, blocking=False):
+              results.append({
+                  "key":key,
+                  "label":label,
+                  "status":status,
+                  "detail":detail,
+                  "blocking":bool(blocking and status == "NG"),
+              })
+
+          class Inspector(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.ids = []
+                  self.scripts = []
+                  self.in_script = False
+                  self.external_script = False
+                  self.parts = []
+
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  if data.get("id"):
+                      self.ids.append(data["id"])
+                  if tag.lower() == "script":
+                      self.in_script = True
+                      self.external_script = bool(data.get("src"))
+                      self.parts = []
+
+              def handle_data(self, data):
+                  if self.in_script and not self.external_script:
+                      self.parts.append(data)
+
+              def handle_endtag(self, tag):
+                  if tag.lower() == "script" and self.in_script:
+                      if not self.external_script:
+                          self.scripts.append("".join(self.parts))
+                      self.in_script = False
+                      self.external_script = False
+                      self.parts = []
+
+          before_text = before.read_text(encoding="utf-8")
+          after_text = after.read_text(encoding="utf-8")
+          bp = Inspector()
+          ap = Inspector()
+          bp.feed(before_text)
+          ap.feed(after_text)
+          bp.close()
+          ap.close()
+
+          old_ids = set(bp.ids)
+          new_ids = set(ap.ids)
+          missing_old = sorted(old_ids - new_ids)
+          duplicates = sorted({item for item in ap.ids if ap.ids.count(item) > 1})
+          required_new = {
+              "unifiedFilterBar", "unifiedSearchInput", "clearUnifiedSearchBtn",
+              "unifiedCountLabel", "unifiedReceptionList"
+          }
+          missing_new = sorted(required_new - new_ids)
+
+          add("existing_ids", "既存HTML ID維持", "NG" if missing_old else "OK",
+              "削除: " + ", ".join(missing_old) if missing_old else f"既存ID {len(old_ids)}件を維持",
+              bool(missing_old))
+          add("duplicate_ids", "HTML ID重複", "NG" if duplicates else "OK",
+              ", ".join(duplicates) if duplicates else f"ID {len(ap.ids)}件、重複なし",
+              bool(duplicates))
+          add("new_ids", "NEXT-3追加ID", "NG" if missing_new else "OK",
+              "不足: " + ", ".join(missing_new) if missing_new else f"追加ID {len(required_new)}件を確認",
+              bool(missing_new))
+
+          errors = []
+          for index, script in enumerate(ap.scripts, 1):
+              if not script.strip():
+                  continue
+              temp = out / f".school-next-3-{index}.js"
+              temp.write_text(script, encoding="utf-8")
+              proc = subprocess.run(["node", "--check", str(temp)], capture_output=True, text=True)
+              temp.unlink(missing_ok=True)
+              if proc.returncode:
+                  errors.append((proc.stderr or proc.stdout)[-1800:])
+          add("javascript", "JavaScript構文", "NG" if errors else "OK",
+              " / ".join(errors) if errors else f"インラインscript {len(ap.scripts)}件 PASS",
+              bool(errors))
+
+          required_markers = [
+              "STEP SCHOOL-NEXT-3 / owner.html",
+              "const VERSION = 'STEP SCHOOL-NEXT-3';",
+              "受付・予約統合一覧",
+              "renderUnifiedReception",
+              "getUnifiedItems",
+              "unifiedUnique",
+              "unifiedNextLessonStatus",
+              "初期表示は最大30件",
+              'id="requestTabs"',
+              'id="requestList"',
+              'id="lessonList"',
+              'id="createLessonCard"',
+              'id="clearAdminBtn"',
+          ]
+          missing_markers = [item for item in required_markers if item not in after_text]
+          add("features", "統合機能・既存機能", "NG" if missing_markers else "OK",
+              "不足: " + ", ".join(missing_markers) if missing_markers else f"必須マーカー {len(required_markers)}件",
+              bool(missing_markers))
+
+          api_pattern = re.compile(r"['\"](/api/[a-zA-Z0-9_./-]+)['\"]")
+          before_api = sorted(set(api_pattern.findall(before_text)))
+          after_api = sorted(set(api_pattern.findall(after_text)))
+          api_changed = before_api != after_api
+          add("api_unchanged", "既存API維持", "NG" if api_changed else "OK",
+              f"before={before_api} / after={after_api}" if api_changed else f"既存API {len(after_api)}件、追加・削除なし",
+              api_changed)
+
+          fetch_before = before_text.count("fetch(")
+          fetch_after = after_text.count("fetch(")
+          fetch_changed = fetch_before != fetch_after
+          add("network", "追加通信なし", "NG" if fetch_changed else "OK",
+              f"before={fetch_before}, after={fetch_after}" if fetch_changed else f"fetch呼出数 {fetch_after}を維持",
+              fetch_changed)
+
+          size = after.stat().st_size
+          if size > 180000:
+              add("size", "owner.html容量", "注意", f"{size:,} bytes")
+          else:
+              add("size", "owner.html容量", "OK", f"{size:,} bytes")
+
+          changed = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True, check=True).stdout.splitlines()
+          forbidden = [name for name in ["index.html","member.html","owner-ipad.html","system-check.html","config.js"] if name in changed]
+          add("scope", "対象ファイル限定", "NG" if forbidden else "OK",
+              "意図しない変更: " + ", ".join(forbidden) if forbidden else "本体変更はowner.htmlのみ",
+              bool(forbidden))
+
+          add("worker", "Worker変更", "OK", "変更なし")
+          add("supabase", "Supabase変更", "OK", "変更なし・SQL不要")
+          add("line", "一括自動LINE配信", "OK", "追加なし・個別確認を維持")
+          add("limit", "初期表示件数", "OK" if "slice(0, 30)" in after_text else "NG",
+              "最大30件" if "slice(0, 30)" in after_text else "30件制限が見つかりません",
+              "slice(0, 30)" not in after_text)
+
+          counts = {name:sum(1 for row in results if row["status"] == name) for name in ["OK","注意","NG"]}
+          blocking = sum(1 for row in results if row["blocking"])
+          payload = {
+              "step":"SCHOOL-NEXT-3",
+              "checked_at_jst":datetime.now(JST).isoformat(timespec="seconds"),
+              "target":"owner.html",
+              "before_sha256":hashlib.sha256(before.read_bytes()).hexdigest(),
+              "after_sha256":hashlib.sha256(after.read_bytes()).hexdigest(),
+              "counts":counts,
+              "blocking_ng":blocking,
+              "results":results,
+          }
+          (out / "school-next-3-validation.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"after_sha256={payload['after_sha256']}\n")
+              fh.write(f"ok_count={counts['OK']}\n")
+              fh.write(f"warning_count={counts['注意']}\n")
+              fh.write(f"ng_count={counts['NG']}\n")
+
+          if blocking:
+              raise SystemExit(f"blocking NG: {blocking}")
+          PY
+
+      - name: 5. Worker・Supabase接続確認
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+          HEALTH="${RUNNER_TEMP}/school-next-3-health.json"
+
+          STATUS="$(curl -sS -L --retry 2 --max-time 25 \
+            -A "${UA}" \
+            -H "Accept: application/json,text/plain,*/*" \
+            -H "Cache-Control: no-cache" \
+            -o "${HEALTH}" -w '%{http_code}' \
+            "${API_BASE}/api/health?next_check=school-next-3-${GITHUB_RUN_ID}")"
+
+          test "${STATUS}" = "200"
+
+          python3 - "${HEALTH}" "${EXPECTED_WORKER_VERSION}" <<'PY'
+          import json
+          import sys
+
+          data = json.load(open(sys.argv[1], encoding="utf-8"))
+          expected = sys.argv[2]
+          if data.get("version") != expected:
+              raise SystemExit(f"Worker version mismatch: {data.get('version')} != {expected}")
+          if data.get("db_ok") is not True:
+              raise SystemExit("db_ok is not true")
+          print("Worker / Supabase OK")
+          PY
+
+      - name: 6. 変更を仮Commit・Push
+        id: apply
+        shell: bash
+        env:
+          BEFORE_SHA256: ${{ steps.preflight.outputs.before_sha256 }}
+          BEFORE_GIT_SHA: ${{ steps.preflight.outputs.before_git_sha }}
+          AFTER_SHA256: ${{ steps.validate.outputs.after_sha256 }}
+          OK_COUNT: ${{ steps.validate.outputs.ok_count }}
+          WARNING_COUNT: ${{ steps.validate.outputs.warning_count }}
+        run: |
+          set -Eeuo pipefail
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import os
+
+          out = Path(os.environ["STATE_DIR"])
+          now = datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
+          record = f'''step: "SCHOOL-NEXT-3"
+          result: "PUBLIC_VERIFY_PENDING"
+          applied_at_jst: "{now}"
+          target_files:
+            - "owner.html"
+          changes:
+            - "体験・欠席・振替・授業予定を共通一覧へ統合"
+            - "受付・予約・授業の種類フィルター"
+            - "未対応・進行中・完了フィルター"
+            - "生徒・保護者・電話・生徒番号・コース検索"
+            - "初期表示最大30件"
+            - "既存種類別一覧と授業操作を維持"
+          owner_before_sha256: "{os.environ.get('BEFORE_SHA256','')}"
+          owner_after_sha256: "{os.environ.get('AFTER_SHA256','')}"
+          baseline_commit: "{os.environ.get('BEFORE_GIT_SHA','')}"
+          backup_tag: "backup-school-next-before-3-20260723"
+          worker_changed: false
+          supabase_changed: false
+          sql_required: false
+          api_changed: false
+          added_network_request: false
+          validation_ok: {os.environ.get('OK_COUNT','0')}
+          validation_warning: {os.environ.get('WARNING_COUNT','0')}
+          next_step_after_public_verify: "SCHOOL-NEXT-4"
+          '''
+          record = "\n".join(line[10:] if line.startswith("          ") else line for line in record.splitlines()) + "\n"
+          (out / "school-next-3-change-record.yml").write_text(record, encoding="utf-8")
+          PY
+
+          git add owner.html \
+            "${STATE_DIR}/school-next-3-validation.json" \
+            "${STATE_DIR}/school-next-3-change-record.yml"
+
+          git commit -m "feat(school-next): apply NEXT-3 unified reception"
+          git push origin main
+          echo "applied=true" >> "${GITHUB_OUTPUT}"
+
+      - name: 7. GitHub Pages公開反映確認
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+          PAGE="${RUNNER_TEMP}/school-next-3-public.html"
+          PASS=0
+
+          for attempt in $(seq 1 24); do
+            STATUS="$(curl -sS -L --max-time 25 \
+              -A "${UA}" \
+              -H "Accept: text/html,application/xhtml+xml" \
+              -H "Cache-Control: no-cache" \
+              -o "${PAGE}" -w '%{http_code}' \
+              "${OWNER_URL}?next_check=school-next-3-${GITHUB_RUN_ID}-${attempt}")" || STATUS="000"
+
+            if [ "${STATUS}" = "200" ] \
+              && grep -q 'STEP SCHOOL-NEXT-3 / owner.html' "${PAGE}" \
+              && grep -q 'id="unifiedReceptionList"' "${PAGE}" \
+              && grep -q '受付・予約統合一覧' "${PAGE}"; then
+              PASS=1
+              break
+            fi
+            sleep 5
+          done
+
+          if [ "${PASS}" != "1" ]; then
+            echo "::error::GitHub PagesへSCHOOL-NEXT-3が反映されませんでした。"
+            exit 1
+          fi
+
+      - name: 8. 完成台帳更新・YML削除・自動Commit
+        if: success()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import re
+
+          out = Path("dpro-next")
+          now = datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
+
+          current_path = out / "current-step.yml"
+          current = current_path.read_text(encoding="utf-8")
+          current = re.sub(r'^current_step:.*$', 'current_step: "SCHOOL-NEXT-4"', current, flags=re.M)
+          current = re.sub(r'^last_completed_step:.*$', 'last_completed_step: "SCHOOL-NEXT-3"', current, flags=re.M)
+          current = re.sub(r'^last_result:.*$', 'last_result: "OK"', current, flags=re.M)
+          current = re.sub(r'^updated_at_jst:.*$', f'updated_at_jst: "{now}"', current, flags=re.M)
+          current = re.sub(r'^worker_changed:.*$', 'worker_changed: false', current, flags=re.M)
+          current = re.sub(r'^supabase_changed:.*$', 'supabase_changed: false', current, flags=re.M)
+          current = re.sub(r'^api_changed:.*$', 'api_changed: false', current, flags=re.M)
+          current_path.write_text(current, encoding="utf-8")
+
+          record_path = out / "school-next-3-change-record.yml"
+          record = record_path.read_text(encoding="utf-8")
+          record = record.replace('result: "PUBLIC_VERIFY_PENDING"', 'result: "OK"')
+          record += f'completed_at_jst: "{now}"\npublic_owner_url: "https://dpromstk2000-lab.github.io/dpro-school-line/owner.html"\npublic_verify: "PASS"\nnext_step: "SCHOOL-NEXT-4"\n'
+          record_path.write_text(record, encoding="utf-8")
+          PY
+
+          rm -f "${WORKFLOW_FILE}"
+
+          git add "${STATE_DIR}/current-step.yml" \
+            "${STATE_DIR}/school-next-3-change-record.yml" \
+            "${WORKFLOW_FILE}"
+
+          git commit -m "feat(school-next): complete NEXT-3 unified reception"
+          git push origin main
+
+          {
+            echo "## SCHOOL-NEXT-3 完了"
+            echo ""
+            echo "- 受付・予約統合一覧: 公開確認PASS"
+            echo "- Worker変更: なし"
+            echo "- Supabase変更: なし"
+            echo "- API変更: なし"
+            echo "- 次のSTEP: SCHOOL-NEXT-4"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: 9. 失敗時ロールバック・R1台帳
+        if: failure()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --ff-only origin main || true
+
+          if [ -f "${RUNNER_TEMP}/owner-before-school-next-3.html" ]; then
+            cp "${RUNNER_TEMP}/owner-before-school-next-3.html" owner.html
+          fi
+          if [ -f "${RUNNER_TEMP}/current-step-before-school-next-3.yml" ]; then
+            cp "${RUNNER_TEMP}/current-step-before-school-next-3.yml" "${STATE_DIR}/current-step.yml"
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import re
+
+          out = Path("dpro-next")
+          out.mkdir(exist_ok=True)
+          now = datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
+
+          current_path = out / "current-step.yml"
+          current = current_path.read_text(encoding="utf-8")
+          current = re.sub(r'^current_step:.*$', 'current_step: "SCHOOL-NEXT-3-R1_REQUIRED"', current, flags=re.M)
+          current = re.sub(r'^last_result:.*$', 'last_result: "NG"', current, flags=re.M)
+          current = re.sub(r'^updated_at_jst:.*$', f'updated_at_jst: "{now}"', current, flags=re.M)
+          current_path.write_text(current, encoding="utf-8")
+
+          failure = f'''step: "SCHOOL-NEXT-3"
+          result: "NG"
+          checked_at_jst: "{now}"
+          rollback: "owner.htmlとcurrent-stepを変更前へ復元"
+          worker_changed: false
+          supabase_changed: false
+          api_changed: false
+          next_step: "SCHOOL-NEXT-3-R1_REQUIRED"
+          '''
+          failure = "\n".join(line[10:] if line.startswith("          ") else line for line in failure.splitlines()) + "\n"
+          (out / "school-next-3-failure-record.yml").write_text(failure, encoding="utf-8")
+          PY
+
+          git add owner.html \
+            "${STATE_DIR}/current-step.yml" \
+            "${STATE_DIR}/school-next-3-failure-record.yml"
+
+          if [ -f "${STATE_DIR}/school-next-3-change-record.yml" ]; then
+            git add "${STATE_DIR}/school-next-3-change-record.yml"
+          fi
+          if [ -f "${STATE_DIR}/school-next-3-validation.json" ]; then
+            git add "${STATE_DIR}/school-next-3-validation.json"
+          fi
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(school-next): rollback NEXT-3 and record failure"
+            git push origin main
+          fi
