@@ -1,13 +1,13 @@
 // =========================================================
 // STEP SCHOOL-NEXT-9
 // DPRO 学習塾・習い事 LINE
-// config.js 完全版
-// 作成日：20260709
+// config.js / Product READY remediation
+// 2026-08-23
 //
-// 役割：
-// GitHub Pages 側の各画面から共通で読み込む設定ファイル。
-// Service Role Key や Supabase Key は絶対に置かない。
-// 画面は Cloudflare Worker API だけを呼び出す。
+// 既存画面のWorker API利用は維持。
+// system-check.html のみ、非機密のProduct READY version/safety metadataを
+// SCHOOL専用 DPRO Control Adapterから追加確認できる。
+// Service Role Key / Supabase Key / LINE secret は置かない。
 // =========================================================
 
 window.DPRO_SCHOOL_CONFIG = {
@@ -21,14 +21,12 @@ window.DPRO_SCHOOL_CONFIG = {
   timezone: "Asia/Tokyo",
 
   // Cloudflare Worker API
-  // Worker名：dpro-school-line-api
   apiBaseUrl: "https://dpro-school-line-api.dpromstk2000.workers.dev",
 
   // GitHub Pages
   pagesBaseUrl: "https://dpromstk2000-lab.github.io/dpro-school-line/",
 
-  // 管理コードは画面に固定表示しない。
-  // 入力された管理コードを localStorage に保存して使う。
+  // 公開デモ用ヒント。本番credentialではない。
   defaultAdminCodeHint: "1234",
 
   demoStudent: {
@@ -37,6 +35,7 @@ window.DPRO_SCHOOL_CONFIG = {
     guardianName: "テスト 保護者",
     phone: "090-9999-0000"
   },
+
   nextAudit: {
     expectedWorkerVersion: "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
     fileSizeWarnBytes: 240000,
@@ -50,6 +49,17 @@ window.DPRO_SCHOOL_CONFIG = {
     }
   },
 
+  // Product READY / DPRO-CONTROL-ADAPTER-1.0
+  // 顧客固有LINE channel bindingは契約成立までdeferredのまま。
+  productReady: {
+    adapterVersion: "DPRO-CONTROL-ADAPTER-1.0-SCHOOL-20260823-R2",
+    controlAdapterUrl: "https://cbknucemarcpbscirzyv.supabase.co/functions/v1/school-control-adapter",
+    expectedWorkerVersion: "STEP-SCHOOL-NEXT-1-R1-WORKER-SECURITY-20260723",
+    expectedDatabaseVersion: "SCHOOL-DB-BASELINE-e45db2989f33-20260823",
+    expectedFrontendVersion: "STEP SCHOOL-NEXT-9",
+    customerBinding: "deferred_until_contract",
+    lineIdentityPolicy: "server_verified_id_token_only"
+  },
 
   endpoints: {
     health: "/api/health",
@@ -143,7 +153,7 @@ window.DPRO_SCHOOL_CONFIG = {
   ]
 };
 
-// 旧コードや画面側で CONFIG として参照しやすいように別名も用意
+// 旧コード互換
 window.CONFIG = window.DPRO_SCHOOL_CONFIG;
 
 
@@ -305,3 +315,95 @@ window.DPRO_SCHOOL_UTILS = {
     return url.toString();
   }
 };
+
+
+// =========================================================
+// Product READY diagnostic extension
+// system-check.htmlのみで動作し、通常顧客画面には影響しない。
+// =========================================================
+
+(function installSchoolProductReadyDiagnostic() {
+  if (typeof window === "undefined" || !/system-check\.html$/i.test(location.pathname)) return;
+
+  const cfg = window.DPRO_SCHOOL_CONFIG.productReady || {};
+  if (!cfg.controlAdapterUrl) return;
+
+  async function readJson(url, options = {}) {
+    const res = await fetch(url, { cache: "no-store", ...options });
+    const data = await res.json().catch(() => ({}));
+    return { status: res.status, ok: res.ok, data };
+  }
+
+  async function runProductReadyContract() {
+    const base = String(cfg.controlAdapterUrl).replace(/\/+$/, "");
+    const [health, line] = await Promise.all([
+      readJson(base + "/health"),
+      readJson(base + "/line/capability")
+    ]);
+
+    const safeLine =
+      line.data?.clientSuppliedIdentityAccepted === false &&
+      line.data?.browserChannelSecretExposure === false &&
+      line.data?.browserAccessTokenExposure === false;
+
+    const versionMatch =
+      health.data?.versionsAligned === true &&
+      health.data?.current?.workerVersion === cfg.expectedWorkerVersion &&
+      health.data?.current?.databaseVersion === cfg.expectedDatabaseVersion &&
+      health.data?.current?.frontendVersion === cfg.expectedFrontendVersion;
+
+    const result = {
+      ok: versionMatch && safeLine,
+      adapterVersion: health.data?.adapterVersion || cfg.adapterVersion || null,
+      versionsAligned: versionMatch,
+      current: health.data?.current || null,
+      expected: health.data?.expected || null,
+      database: health.data?.database || null,
+      lineSafety: line.data || null,
+      customerBinding: cfg.customerBinding
+    };
+
+    window.DPRO_SCHOOL_PRODUCT_READY_LAST = result;
+
+    const box = document.getElementById("dproProductReadyContract");
+    if (box) {
+      box.className = "status " + (result.ok ? "ok" : "ng");
+      box.innerHTML = result.ok
+        ? `Product READY version/safety contract: <b>OK</b><small>${result.adapterVersion} / DB ${result.current?.databaseVersion || "-"} / LINE binding ${result.customerBinding}</small>`
+        : `Product READY version/safety contract: <b>要確認</b><small>${result.adapterVersion || "adapter unavailable"}</small>`;
+    }
+
+    return result;
+  }
+
+  window.DPRO_SCHOOL_PRODUCT_READY = {
+    run: runProductReadyContract,
+    config: cfg
+  };
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector("main.grid") || document.querySelector("main");
+    if (!main || document.getElementById("dproProductReadyContract")) return;
+
+    const section = document.createElement("section");
+    section.className = "card wide";
+    section.innerHTML =
+      `<div class="section-title"><span class="letter">PR</span><h2>PRODUCT READY 契約確認</h2></div>` +
+      `<p class="note">Worker / Database / Frontend のversion整合と、LINE本人確認の安全境界を確認します。顧客固有LINE設定は契約成立まで有効化しません。</p>` +
+      `<div id="dproProductReadyContract" class="status">確認中です...</div>` +
+      `<div class="btns" style="margin-top:10px"><button class="btn primary" id="dproProductReadyRun" type="button">PRODUCT READY確認</button></div>`;
+    main.appendChild(section);
+
+    document.getElementById("dproProductReadyRun")?.addEventListener("click", () => {
+      runProductReadyContract().catch((e) => {
+        const box = document.getElementById("dproProductReadyContract");
+        if (box) {
+          box.className = "status ng";
+          box.textContent = "PRODUCT READY確認に失敗しました: " + String(e);
+        }
+      });
+    });
+
+    runProductReadyContract().catch(() => {});
+  });
+})();
