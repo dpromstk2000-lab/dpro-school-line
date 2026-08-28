@@ -407,3 +407,25 @@ window.DPRO_SCHOOL_UTILS = {
     runProductReadyContract().catch(() => {});
   });
 })();
+
+// =========================================================
+// DPRO TUTORIAL / SCHOOL / STANDARD V1.1 / R3 loader
+// Read-only Tutorial assets. No Worker/DB/business writes are performed here.
+// =========================================================
+(function installSchoolTutorialAssets(){
+  if(typeof window==='undefined'||typeof document==='undefined')return;
+  const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const supported=new Set(['index.html','member.html','owner-ipad.html','guide-center.html']);
+  if(!supported.has(page))return;
+  const base=String(window.DPRO_SCHOOL_CONFIG?.pagesBaseUrl||location.origin+location.pathname.replace(/[^/]*$/,'')).replace(/\/+$/,'/');
+  if(!document.querySelector('link[data-dpro-school-tutorial-style]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';link.href=new URL('dpro-tutorial-school-v1.css',base).toString();link.dataset.dproSchoolTutorialStyle='1';
+    document.head.appendChild(link);
+  }
+  if(!document.querySelector('script[data-dpro-school-tutorial-runtime]')){
+    const script=document.createElement('script');
+    script.src=new URL('dpro-tutorial-school-v1.js',base).toString();script.defer=true;script.dataset.dproSchoolTutorialRuntime='1';
+    document.head.appendChild(script);
+  }
+})();
