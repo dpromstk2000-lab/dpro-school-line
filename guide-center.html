@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>DPRO 学習塾・習い事 LINE｜Guide Center</title>
+  <script src="./config.js"></script>
+  <style>
+    :root{
+      color-scheme:light;
+      --bg:#f4f8ff;
+      --card:#fff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#dbe5f2;
+      --blue:#2563eb;
+      --blue-dark:#1d4ed8;
+      --green:#047857;
+      --shadow:0 18px 46px rgba(15,23,42,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box;min-width:0;}
+    html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#eef5ff 0,#f8fbff 45%,#f4fbf8 100%);
+      padding:20px;
+    }
+    button,a{font:inherit;}
+    button{cursor:pointer;}
+    button:disabled{cursor:not-allowed;opacity:.55;}
+    a{color:inherit;text-decoration:none;}
+    button:focus-visible,a:focus-visible{outline:3px solid #f59e0b;outline-offset:3px;}
+    .shell{width:min(1120px,100%);margin:0 auto;}
+    .hero,.panel{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+    .hero{padding:28px;margin-bottom:18px;display:grid;grid-template-columns:1.35fr .65fr;gap:20px;align-items:center;}
+    .eyebrow{margin:0 0 8px;color:var(--blue-dark);font-size:12px;font-weight:950;letter-spacing:.08em;}
+    h1{margin:0 0 12px;font-size:clamp(30px,5vw,50px);line-height:1.08;letter-spacing:-.045em;overflow-wrap:anywhere;}
+    .lead{margin:0;color:#334155;font-weight:700;line-height:1.8;}
+    .hero-meta{display:grid;gap:10px;}
+    .meta{border:1px solid #bfdbfe;background:#eff6ff;border-radius:17px;padding:14px;}
+    .meta strong{display:block;font-size:12px;color:#1d4ed8;margin-bottom:5px;}
+    .meta span{display:block;font-size:18px;font-weight:950;overflow-wrap:anywhere;}
+    .panel{padding:22px;margin-bottom:18px;}
+    .panel h2{margin:0 0 6px;font-size:23px;letter-spacing:-.02em;}
+    .panel-note{margin:0 0 16px;color:var(--muted);font-size:13px;font-weight:700;line-height:1.75;}
+    .actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+    .action-btn{appearance:none;border:0;border-radius:16px;min-height:58px;padding:14px 16px;font-weight:950;background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(37,99,235,.18);}
+    .action-btn.secondary{background:#fff;color:#0f172a;border:1px solid #cbd5e1;box-shadow:none;}
+    .action-btn.green{background:var(--green);}
+    .status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}
+    .status-item{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:13px;}
+    .status-item small{display:block;color:var(--muted);font-size:11px;font-weight:900;margin-bottom:5px;}
+    .status-item b{display:block;font-size:14px;overflow-wrap:anywhere;}
+    .ready{margin-top:12px;border-radius:14px;padding:11px 13px;font-size:13px;font-weight:850;background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe;}
+    .ready.ok{background:#ecfdf5;color:#047857;border-color:#bbf7d0;}
+    .ready.err{background:#fef2f2;color:#b91c1c;border-color:#fecaca;}
+    .steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+    .guide-step{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;display:grid;grid-template-columns:auto 1fr;gap:13px;align-items:start;}
+    .step-no{width:38px;height:38px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#dbeafe;color:#1d4ed8;font-weight:950;flex:0 0 auto;}
+    .guide-step h3{margin:0 0 6px;font-size:16px;line-height:1.4;overflow-wrap:anywhere;}
+    .guide-step p{margin:0;color:#475569;font-size:12px;line-height:1.7;font-weight:700;overflow-wrap:anywhere;}
+    .route{display:inline-block;margin-top:8px;border-radius:999px;background:#f1f5f9;padding:5px 8px;font-size:10px;font-weight:900;color:#475569;max-width:100%;overflow-wrap:anywhere;}
+    .links{display:flex;gap:9px;flex-wrap:wrap;}
+    .link-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:14px;border:1px solid #cbd5e1;background:#fff;padding:10px 13px;font-size:12px;font-weight:900;}
+    .foot{padding:8px 4px 18px;text-align:center;color:var(--muted);font-size:11px;font-weight:800;}
+    [data-dpro-tutorial-launcher]{display:none!important;}
+    @media(max-width:760px){
+      body{padding:12px;}
+      .hero{grid-template-columns:1fr;padding:20px;}
+      .panel{padding:18px;}
+      .actions,.status-grid,.steps{grid-template-columns:1fr;}
+      .action-btn{width:100%;}
+    }
+    @media(max-width:360px){
+      body{padding:10px;}
+      .hero,.panel{border-radius:18px;}
+      .hero{padding:17px;}
+      .panel{padding:15px;}
+      .guide-step{padding:13px;gap:10px;}
+      .step-no{width:34px;height:34px;}
+      h1{font-size:30px;}
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DPRO TUTORIAL / SCHOOL / GUIDE CENTER / R4</p>
+        <h1>操作ガイドセンター</h1>
+        <p class="lead">学習塾・習い事LINEのFirst10を、Start・Resume・Replayから安全に確認できます。Tutorialは表示案内だけを行い、予約・欠席・振替・管理操作を自動実行しません。</p>
+      </div>
+      <div class="hero-meta">
+        <div class="meta"><strong>STANDARD</strong><span>V1.1 LOCKED</span></div>
+        <div class="meta"><strong>FIRST10</strong><span id="first10Meta">10 steps</span></div>
+        <div class="meta"><strong>BUSINESS MUTATION</strong><span>0 required</span></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="actionsTitle">
+      <h2 id="actionsTitle">Tutorialを開く</h2>
+      <p class="panel-note">StartはStep 1から開始、Resumeは保存済みの続き、ReplayはTutorial状態だけをリセットしてStep 1から再開します。</p>
+      <div class="actions">
+        <button class="action-btn" type="button" data-guide-action="start" disabled>Start</button>
+        <button class="action-btn secondary" type="button" data-guide-action="resume" disabled>Resume</button>
+        <button class="action-btn green" type="button" data-guide-action="replay" disabled>Replay</button>
+      </div>
+      <div class="status-grid" aria-live="polite">
+        <div class="status-item"><small>状態</small><b id="guideState">確認中</b></div>
+        <div class="status-item"><small>現在位置</small><b id="guideStep">-</b></div>
+        <div class="status-item"><small>保存キー</small><b id="guideStorage">Tutorial専用</b></div>
+      </div>
+      <div class="ready" id="guideReady" data-guide-ready="false">Tutorial runtimeを確認しています。</div>
+    </section>
+
+    <section class="panel" aria-labelledby="first10Title">
+      <h2 id="first10Title">First10</h2>
+      <p class="panel-note">Guide Centerの10項目はR3 runtimeのcanonical First10と1対1で照合されます。</p>
+      <div class="steps" id="guideSteps">
+        <article class="guide-step" data-guide-step data-step-key="school.first10.01" data-route="/index.html" data-primary=".hero h1" data-fallback=".hero"><span class="step-no">1</span><div><h3>全体像を確認</h3><p>保護者・生徒画面の役割を確認します。</p><span class="route">/index.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.02" data-route="/index.html" data-primary="#trialBlock" data-fallback="[data-switch-mode=&quot;trial&quot;]"><span class="step-no">2</span><div><h3>体験予約の入口</h3><p>体験授業の入力領域の位置を確認します。</p><span class="route">/index.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.03" data-route="/index.html" data-primary="#absenceBlock" data-fallback="[data-mode=&quot;absence&quot;]"><span class="step-no">3</span><div><h3>欠席受付の場所</h3><p>欠席連絡の入力領域を確認します。</p><span class="route">/index.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.04" data-route="/index.html" data-primary="#makeupBlock" data-fallback="[data-mode=&quot;makeup&quot;]"><span class="step-no">4</span><div><h3>振替受付の場所</h3><p>振替希望の入力領域を確認します。</p><span class="route">/index.html → member</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.05" data-route="/member.html" data-primary="#loadBtn" data-fallback=".hero-main"><span class="step-no">5</span><div><h3>生徒証の確認入口</h3><p>生徒証と授業予定を確認する入口を把握します。</p><span class="route">/member.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.06" data-route="/member.html" data-primary="#contactStatusSection" data-fallback="#lessonList"><span class="step-no">6</span><div><h3>教室確認と授業予定</h3><p>教室確認状況と授業予定の見方を確認します。</p><span class="route">/member.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.07" data-route="/member.html" data-primary="#lineMessageBox" data-fallback=".hero-side"><span class="step-no">7</span><div><h3>保護者LINE文面</h3><p>保護者向け確認文面の位置を確認します。</p><span class="route">/member.html → owner-ipad</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.08" data-route="/owner-ipad.html" data-primary=".hero h1" data-fallback=".hero-main"><span class="step-no">8</span><div><h3>受付・講師iPadの全体像</h3><p>受付・講師向け現場画面の役割を確認します。</p><span class="route">/owner-ipad.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.09" data-route="/owner-ipad.html" data-primary="#fieldModeBar" data-fallback=".field-mode-copy"><span class="step-no">9</span><div><h3>現場モードと管理・準備モード</h3><p>2つの画面モードの役割を確認します。</p><span class="route">/owner-ipad.html</span></div></article>
+        <article class="guide-step" data-guide-step data-step-key="school.first10.10" data-route="/owner-ipad.html" data-primary="#statsGrid" data-fallback="main.grid .card:first-child"><span class="step-no">10</span><div><h3>今日の受付・授業を読む</h3><p>本日の受付・授業情報の集約位置を確認します。</p><span class="route">/owner-ipad.html</span></div></article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="linksTitle">
+      <h2 id="linksTitle">関連画面</h2>
+      <p class="panel-note">通常画面へ戻るリンクです。ここから業務操作を自動実行することはありません。</p>
+      <div class="links">
+        <a class="link-btn" href="./index.html">保護者・生徒画面</a>
+        <a class="link-btn" href="./member.html">生徒証</a>
+        <a class="link-btn" href="./owner-ipad.html">受付・講師iPad</a>
+      </div>
+    </section>
+
+    <div class="foot">DPRO TUTORIAL / SCHOOL / GUIDE CENTER / R4 / business mutation 0</div>
+  </main>
+
+  <script>
+  (()=>{
+    'use strict';
+    const READY_MARKER='DPRO_TUTORIAL_SCHOOL_R4_GUIDE_CENTER_V1_0';
+    const ready=document.getElementById('guideReady');
+    const stateEl=document.getElementById('guideState');
+    const stepEl=document.getElementById('guideStep');
+    const storageEl=document.getElementById('guideStorage');
+    const first10Meta=document.getElementById('first10Meta');
+    const buttons=[...document.querySelectorAll('[data-guide-action]')];
+    const rows=[...document.querySelectorAll('[data-guide-step]')];
+    window.DPRO_SCHOOL_GUIDE_CENTER={marker:READY_MARKER,first10Count:rows.length,ready:false,aligned:false};
+
+    function modeForState(api,s){
+      const exists=localStorage.getItem(api.stateKey())!==null;
+      if(!exists)return 'start';
+      if(s.complete||s.skipped)return 'replay';
+      return 'resume';
+    }
+    function labelForState(s,mode){
+      if(mode==='start')return '未開始 / Start可能';
+      if(s.complete)return '完了 / Replay可能';
+      if(s.skipped)return 'スキップ / Replay可能';
+      if(s.closed)return '中断 / Resume可能';
+      return '進行中 / Resume可能';
+    }
+    function refreshStatus(api){
+      const s=api.readState();
+      const mode=modeForState(api,s);
+      stateEl.textContent=labelForState(s,mode);
+      stepEl.textContent=s.currentStepKey||'school.first10.01';
+      storageEl.textContent=api.stateKey();
+      first10Meta.textContent=`${api.first10Count} steps`;
+      buttons.forEach(b=>b.disabled=b.dataset.guideAction!==mode);
+      window.DPRO_SCHOOL_GUIDE_CENTER.stateMode=mode;
+    }
+    function verifyAlignment(api){
+      if(api.first10Count!==10||rows.length!==10||api.steps.length!==10)return false;
+      return rows.every((row,i)=>{
+        const s=api.steps[i];
+        return row.dataset.stepKey===s.key && row.dataset.route===s.route && row.dataset.primary===s.primary && row.dataset.fallback===s.fallback && row.querySelector('h3')?.textContent?.trim()===s.title;
+      });
+    }
+    function bind(api){
+      if(window.DPRO_SCHOOL_GUIDE_CENTER.ready)return;
+      const aligned=verifyAlignment(api);
+      window.DPRO_SCHOOL_GUIDE_CENTER.ready=true;
+      window.DPRO_SCHOOL_GUIDE_CENTER.aligned=aligned;
+      window.DPRO_SCHOOL_GUIDE_CENTER.apiVersion=api.version;
+      ready.dataset.guideReady=aligned?'true':'false';
+      ready.className='ready '+(aligned?'ok':'err');
+      ready.textContent=aligned?'Guide Centerはcanonical First10（10件）と一致しています。':'Guide CenterとTutorial runtimeのFirst10が一致しません。';
+      buttons.forEach(b=>b.disabled=true);
+      buttons.forEach(b=>b.addEventListener('click',()=>{
+        const action=b.dataset.guideAction;
+        if(action==='start')api.start();
+        else if(action==='resume')api.resume();
+        else if(action==='replay')api.replay();
+      }));
+      refreshStatus(api);
+    }
+    const started=Date.now();
+    const timer=setInterval(()=>{
+      const api=window.DPRO_TUTORIAL_SCHOOL;
+      if(api&&api.first10Count===10){clearInterval(timer);bind(api);return;}
+      if(Date.now()-started>15000){clearInterval(timer);ready.className='ready err';ready.textContent='Tutorial runtimeを確認できませんでした。';}
+    },50);
+    window.addEventListener('pageshow',()=>{const api=window.DPRO_TUTORIAL_SCHOOL;if(api)refreshStatus(api);});
+    window.addEventListener('storage',()=>{const api=window.DPRO_TUTORIAL_SCHOOL;if(api)refreshStatus(api);});
+  })();
+  </script>
+</body>
+</html>
