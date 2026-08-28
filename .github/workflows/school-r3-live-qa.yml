@@ -1,3 +1,4 @@
+# DPRO SCHOOL R3 LIVE QA WORKFLOW FIX V1.1 / 2026-08-29
 name: SCHOOL Tutorial R3 LIVE QA
 
 on:
@@ -55,9 +56,12 @@ jobs:
           ok=0
           for i in $(seq 1 36); do
             cb="qa=$(date +%s)-$i"
-            if curl -fsS "${PUBLIC_BASE}config.js?${cb}" | grep -q 'DPRO TUTORIAL / SCHOOL / STANDARD V1.1 / R3 loader' \
-              && curl -fsS "${PUBLIC_BASE}dpro-tutorial-school-v1.js?${cb}" | grep -q "TUTORIAL_ID='school-first10-v1'" \
-              && curl -fsS "${PUBLIC_BASE}dpro-tutorial-school-v1.css?${cb}" | grep -q 'DPRO TUTORIAL SCHOOL / STANDARD V1.1 / R3'; then
+            if curl -fsS -o /tmp/school-r3-config.js "${PUBLIC_BASE}config.js?${cb}" \
+              && curl -fsS -o /tmp/school-r3-tutorial.js "${PUBLIC_BASE}dpro-tutorial-school-v1.js?${cb}" \
+              && curl -fsS -o /tmp/school-r3-tutorial.css "${PUBLIC_BASE}dpro-tutorial-school-v1.css?${cb}" \
+              && grep -q 'DPRO TUTORIAL / SCHOOL / STANDARD V1.1 / R3 loader' /tmp/school-r3-config.js \
+              && grep -q "TUTORIAL_ID='school-first10-v1'" /tmp/school-r3-tutorial.js \
+              && grep -q 'DPRO TUTORIAL SCHOOL / STANDARD V1.1 / R3' /tmp/school-r3-tutorial.css; then
               ok=1
               break
             fi
@@ -306,6 +310,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$(dirname "$QA_RESULT")"
           test -s "$QA_RESULT" || printf '%s\n' '{"schema":"DPRO_TUTORIAL_SCHOOL_R3_LIVE_QA_V1_0","pass":false,"failures":["QA result file missing"],"businessMutation":0}' > "$QA_RESULT"
           pass=$(node -e "const r=require('./$QA_RESULT');process.stdout.write(r.pass?'true':'false')")
           git config user.name "github-actions[bot]"
