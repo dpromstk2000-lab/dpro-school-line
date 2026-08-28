@@ -1,1 +1,2310 @@
-{"schema":"DPRO_TUTORIAL_SCHOOL_R3_LIVE_QA_V1_0","pass":false,"failures":["QA result file missing"],"businessMutation":0}
+{
+  "schema": "DPRO_TUTORIAL_SCHOOL_R3_LIVE_QA_V1_0",
+  "publicBase": "https://dpromstk2000-lab.github.io/dpro-school-line/",
+  "qaUploadHead": "55b926199fa8133ad342319fa7b6a413bc9c7858",
+  "r3ImplementationHead": "5e837573a40ab669a8a1bfc6fac36cc72b34dca4",
+  "exactViewports": [
+    {
+      "name": "1440",
+      "width": 1440,
+      "height": 1000,
+      "input": "mouse"
+    },
+    {
+      "name": "1024",
+      "width": 1024,
+      "height": 768,
+      "input": "pointer"
+    },
+    {
+      "name": "390",
+      "width": 390,
+      "height": 844,
+      "input": "touch-pointer"
+    },
+    {
+      "name": "320",
+      "width": 320,
+      "height": 720,
+      "input": "touch-pointer"
+    }
+  ],
+  "first10Expected": 10,
+  "widths": [
+    {
+      "viewport": {
+        "name": "1440",
+        "width": 1440,
+        "height": 1000,
+        "input": "mouse"
+      },
+      "steps": [
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 1034,
+            "top": 642.921875,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 81,
+            "right": 842.5,
+            "bottom": 187.5,
+            "width": 639.5,
+            "height": 106.5,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 1050,
+            "top": 658.921875,
+            "right": 1440,
+            "bottom": 1000,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 81,
+            "right": 842.5,
+            "bottom": 187.5,
+            "width": 639.5,
+            "height": 106.5,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 1000,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 81,
+            "right": 842.5,
+            "bottom": 187.5,
+            "width": 639.5,
+            "height": 106.5,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 1000,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 178,
+            "top": 283.328125,
+            "right": 914,
+            "bottom": 716.640625,
+            "width": 736,
+            "height": 433.3125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 980.203125,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 2,
+            "right": 842.5,
+            "bottom": 8,
+            "width": 639.5,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 1000,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 57.640625,
+            "right": 842.5,
+            "bottom": 132.65625,
+            "width": 639.5,
+            "height": 75.015625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 3,
+          "title": "欠席受付の場所",
+          "target": "[data-mode=\"absence\"]",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 955.703125,
+            "width": 390,
+            "height": 316.578125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 191.296875,
+            "top": 163.1875,
+            "right": 875.921875,
+            "bottom": 405.765625,
+            "width": 684.625,
+            "height": 242.578125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 4,
+          "title": "振替受付の場所",
+          "target": "[data-mode=\"makeup\"]",
+          "card": {
+            "left": 1050,
+            "top": 639.125,
+            "right": 1440,
+            "bottom": 975.5,
+            "width": 390,
+            "height": 336.375,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 302.875,
+            "top": 329.703125,
+            "right": 669.1875,
+            "bottom": 458.421875,
+            "width": 366.3125,
+            "height": 128.71875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 1034,
+            "top": 623.125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 147,
+            "top": 505.59375,
+            "right": 367,
+            "bottom": 564.59375,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 1034,
+            "top": 623.125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 147,
+            "top": 487.59375,
+            "right": 367,
+            "bottom": 546.59375,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 6,
+          "title": "教室確認と授業予定",
+          "target": "#contactStatusSection",
+          "card": {
+            "left": 1034,
+            "top": 642.921875,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 147,
+            "top": 486.28125,
+            "right": 367,
+            "bottom": 545.28125,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 7,
+          "title": "保護者LINE文面",
+          "target": "#lineMessageBox",
+          "card": {
+            "left": 1034,
+            "top": 603.328125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 380.671875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 136.234375,
+            "top": 550.53125,
+            "right": 570.34375,
+            "bottom": 753.859375,
+            "width": 434.109375,
+            "height": 203.328125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 8,
+          "title": "受付・講師iPadの全体像",
+          "target": ".hero h1",
+          "card": {
+            "left": 1034,
+            "top": 623.125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 131,
+            "top": 81,
+            "right": 860.421875,
+            "bottom": 196.65625,
+            "width": 729.421875,
+            "height": 115.65625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 9,
+          "title": "現場モードと管理・準備モード",
+          "target": "#fieldModeBar",
+          "card": {
+            "left": 1034,
+            "top": 623.125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 131,
+            "top": 81,
+            "right": 860.421875,
+            "bottom": 196.65625,
+            "width": 729.421875,
+            "height": 115.65625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 10,
+          "title": "今日の受付・授業を読む",
+          "target": "#statsGrid",
+          "card": {
+            "left": 1034,
+            "top": 623.125,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 111.953125,
+            "top": 285.40625,
+            "right": 1195.8125,
+            "bottom": 382.953125,
+            "width": 1083.859375,
+            "height": 97.546875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 1034,
+            "top": 642.921875,
+            "right": 1424,
+            "bottom": 984,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 203,
+            "top": 81,
+            "right": 842.5,
+            "bottom": 187.5,
+            "width": 639.5,
+            "height": 106.5,
+            "display": "block"
+          }
+        }
+      ],
+      "routes": {
+        "index": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960341941",
+          "innerWidth": 1440,
+          "innerHeight": 1000,
+          "documentScrollWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "first10Count": 10
+        },
+        "member": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "innerWidth": 1440,
+          "innerHeight": 1000,
+          "documentScrollWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "first10Count": 10
+        },
+        "ownerIpad": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "innerWidth": 1440,
+          "innerHeight": 1000,
+          "documentScrollWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "first10Count": 10
+        }
+      },
+      "drag": {
+        "input": "mouse",
+        "before": {
+          "x": 1034,
+          "y": 642.921875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "after": {
+          "x": 720,
+          "y": 497.421875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "clamped": {
+          "x": 1050,
+          "y": 658.921875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "handleOnly": true
+      },
+      "resume": {
+        "close": true,
+        "esc": true,
+        "reload": true
+      },
+      "crossPage": {
+        "indexToMember": true,
+        "memberToOwner": true
+      },
+      "replay": {
+        "afterSkip": true,
+        "afterComplete": true
+      },
+      "pageErrors": [],
+      "consoleErrors": [],
+      "network": [
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960341941",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        }
+      ],
+      "keyboard": {
+        "complete": false,
+        "focusVisible": true
+      }
+    },
+    {
+      "viewport": {
+        "name": "1024",
+        "width": 1024,
+        "height": 768,
+        "input": "pointer"
+      },
+      "steps": [
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 618,
+            "top": 410.921875,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 81,
+            "right": 622.5,
+            "bottom": 179,
+            "width": 579.5,
+            "height": 98,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 634,
+            "top": 426.921875,
+            "right": 1024,
+            "bottom": 768,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 81,
+            "right": 622.5,
+            "bottom": 179,
+            "width": 579.5,
+            "height": 98,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 768,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 81,
+            "right": 622.5,
+            "bottom": 179,
+            "width": 579.5,
+            "height": 98,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 768,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 18,
+            "top": 167.21875,
+            "right": 658,
+            "bottom": 600.53125,
+            "width": 640,
+            "height": 433.3125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 748.203125,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 2,
+            "right": 622.5,
+            "bottom": 8,
+            "width": 579.5,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 768,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 69.34375,
+            "right": 622.5,
+            "bottom": 152.875,
+            "width": 579.5,
+            "height": 83.53125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 3,
+          "title": "欠席受付の場所",
+          "target": "[data-mode=\"absence\"]",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 723.703125,
+            "width": 390,
+            "height": 316.578125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 38.90625,
+            "top": 85.3125,
+            "right": 628.265625,
+            "bottom": 225.921875,
+            "width": 589.359375,
+            "height": 140.609375,
+            "display": "block"
+          }
+        },
+        {
+          "step": 4,
+          "title": "振替受付の場所",
+          "target": "[data-mode=\"makeup\"]",
+          "card": {
+            "left": 634,
+            "top": 407.125,
+            "right": 1024,
+            "bottom": 743.5,
+            "width": 390,
+            "height": 336.375,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 131.4375,
+            "top": 260.90625,
+            "right": 447.75,
+            "bottom": 372.03125,
+            "width": 316.3125,
+            "height": 111.125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 618,
+            "top": 391.125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 41,
+            "top": 513.125,
+            "right": 261,
+            "bottom": 572.125,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 618,
+            "top": 391.125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 41,
+            "top": 494.125,
+            "right": 261,
+            "bottom": 553.125,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 6,
+          "title": "教室確認と授業予定",
+          "target": "#contactStatusSection",
+          "card": {
+            "left": 618,
+            "top": 410.921875,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 41,
+            "top": 494.125,
+            "right": 261,
+            "bottom": 553.125,
+            "width": 220,
+            "height": 59,
+            "display": "block"
+          }
+        },
+        {
+          "step": 7,
+          "title": "保護者LINE文面",
+          "target": "#lineMessageBox",
+          "card": {
+            "left": 618,
+            "top": 371.328125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 380.671875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 30.21875,
+            "top": 594.875,
+            "right": 409.671875,
+            "bottom": 652.78125,
+            "width": 379.453125,
+            "height": 57.90625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 8,
+          "title": "受付・講師iPadの全体像",
+          "target": ".hero h1",
+          "card": {
+            "left": 618,
+            "top": 391.125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 41,
+            "top": 81,
+            "right": 618.703125,
+            "bottom": 185.90625,
+            "width": 577.703125,
+            "height": 104.90625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 9,
+          "title": "現場モードと管理・準備モード",
+          "target": "#fieldModeBar",
+          "card": {
+            "left": 618,
+            "top": 391.125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 41,
+            "top": 81,
+            "right": 618.703125,
+            "bottom": 185.90625,
+            "width": 577.703125,
+            "height": 104.90625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 10,
+          "title": "今日の受付・授業を読む",
+          "target": "#statsGrid",
+          "card": {
+            "left": 618,
+            "top": 391.125,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 360.875,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 28.359375,
+            "top": 253.40625,
+            "right": 801.671875,
+            "bottom": 351.328125,
+            "width": 773.3125,
+            "height": 97.921875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 618,
+            "top": 410.921875,
+            "right": 1008,
+            "bottom": 752,
+            "width": 390,
+            "height": 341.078125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 43,
+            "top": 81,
+            "right": 622.5,
+            "bottom": 179,
+            "width": 579.5,
+            "height": 98,
+            "display": "block"
+          }
+        }
+      ],
+      "routes": {
+        "index": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960346399",
+          "innerWidth": 1024,
+          "innerHeight": 768,
+          "documentScrollWidth": 1024,
+          "bodyScrollWidth": 1024,
+          "first10Count": 10
+        },
+        "member": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "innerWidth": 1024,
+          "innerHeight": 768,
+          "documentScrollWidth": 1024,
+          "bodyScrollWidth": 1024,
+          "first10Count": 10
+        },
+        "ownerIpad": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "innerWidth": 1024,
+          "innerHeight": 768,
+          "documentScrollWidth": 1024,
+          "bodyScrollWidth": 1024,
+          "first10Count": 10
+        }
+      },
+      "drag": {
+        "input": "pointer",
+        "before": {
+          "x": 618,
+          "y": 410.921875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "after": {
+          "x": 304,
+          "y": 265.421875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "clamped": {
+          "x": 634,
+          "y": 426.921875,
+          "width": 390,
+          "height": 341.078125
+        },
+        "handleOnly": true
+      },
+      "resume": {
+        "close": true,
+        "esc": true,
+        "reload": true
+      },
+      "crossPage": {
+        "indexToMember": true,
+        "memberToOwner": true
+      },
+      "replay": {
+        "afterSkip": true,
+        "afterComplete": true
+      },
+      "pageErrors": [],
+      "consoleErrors": [],
+      "network": [
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960346399",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        }
+      ],
+      "keyboard": {
+        "complete": false,
+        "focusVisible": true
+      }
+    },
+    {
+      "viewport": {
+        "name": "390",
+        "width": 390,
+        "height": 844,
+        "input": "touch-pointer"
+      },
+      "steps": [
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 448.96875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 385.03125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 71,
+            "right": 357,
+            "bottom": 168.03125,
+            "width": 324,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 20,
+            "top": 458.96875,
+            "right": 390,
+            "bottom": 844,
+            "width": 370,
+            "height": 385.03125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 71,
+            "right": 357,
+            "bottom": 168.03125,
+            "width": 324,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 844,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 71,
+            "right": 357,
+            "bottom": 168.03125,
+            "width": 324,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 844,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 8,
+            "top": 117.671875,
+            "right": 382,
+            "bottom": 726.421875,
+            "width": 374,
+            "height": 608.75,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 824.203125,
+            "width": 370,
+            "height": 385.03125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 2,
+            "right": 357,
+            "bottom": 8,
+            "width": 324,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 844,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 13.21875,
+            "right": 357,
+            "bottom": 28.984375,
+            "width": 324,
+            "height": 15.765625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 3,
+          "title": "欠席受付の場所",
+          "target": "[data-mode=\"absence\"]",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 799.703125,
+            "width": 370,
+            "height": 360.53125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 28.9375,
+            "top": 30.140625,
+            "right": 361.03125,
+            "bottom": 142.015625,
+            "width": 332.09375,
+            "height": 111.875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 4,
+          "title": "振替受付の場所",
+          "target": "[data-mode=\"makeup\"]",
+          "card": {
+            "left": 20,
+            "top": 439.171875,
+            "right": 390,
+            "bottom": 819.5,
+            "width": 370,
+            "height": 380.328125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 28.625,
+            "top": 86.984375,
+            "right": 361.359375,
+            "bottom": 193.921875,
+            "width": 332.734375,
+            "height": 106.9375,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 10,
+            "top": 429.171875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 851.8125,
+            "right": 363,
+            "bottom": 857.8125,
+            "width": 336,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 10,
+            "top": 429.171875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 833.8125,
+            "right": 363,
+            "bottom": 842,
+            "width": 336,
+            "height": 8.1875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 6,
+          "title": "教室確認と授業予定",
+          "target": "#contactStatusSection",
+          "card": {
+            "left": 10,
+            "top": 448.96875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 385.03125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 833.484375,
+            "right": 363,
+            "bottom": 841.984375,
+            "width": 336,
+            "height": 8.5,
+            "display": "block"
+          }
+        },
+        {
+          "step": 7,
+          "title": "保護者LINE文面",
+          "target": "#lineMessageBox",
+          "card": {
+            "left": 10,
+            "top": 409.375,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 424.625,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 18.109375,
+            "top": 914.109375,
+            "right": 371.875,
+            "bottom": 920.109375,
+            "width": 353.765625,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 8,
+          "title": "受付・講師iPadの全体像",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 429.171875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 25,
+            "top": 65,
+            "right": 365,
+            "bottom": 180.640625,
+            "width": 340,
+            "height": 115.640625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 9,
+          "title": "現場モードと管理・準備モード",
+          "target": "#fieldModeBar",
+          "card": {
+            "left": 10,
+            "top": 429.171875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 25,
+            "top": 65,
+            "right": 365,
+            "bottom": 180.640625,
+            "width": 340,
+            "height": 115.640625,
+            "display": "block"
+          }
+        },
+        {
+          "step": 10,
+          "title": "今日の受付・授業を読む",
+          "target": "#statsGrid",
+          "card": {
+            "left": 10,
+            "top": 429.171875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 21.90625,
+            "top": 186.15625,
+            "right": 368.078125,
+            "bottom": 288.1875,
+            "width": 346.171875,
+            "height": 102.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 448.96875,
+            "right": 380,
+            "bottom": 834,
+            "width": 370,
+            "height": 385.03125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 71,
+            "right": 357,
+            "bottom": 168.03125,
+            "width": 324,
+            "height": 97.03125,
+            "display": "block"
+          }
+        }
+      ],
+      "routes": {
+        "index": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960348729",
+          "innerWidth": 390,
+          "innerHeight": 844,
+          "documentScrollWidth": 390,
+          "bodyScrollWidth": 390,
+          "first10Count": 10
+        },
+        "member": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "innerWidth": 390,
+          "innerHeight": 844,
+          "documentScrollWidth": 390,
+          "bodyScrollWidth": 390,
+          "first10Count": 10
+        },
+        "ownerIpad": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "innerWidth": 390,
+          "innerHeight": 844,
+          "documentScrollWidth": 390,
+          "bodyScrollWidth": 390,
+          "first10Count": 10
+        }
+      },
+      "drag": {
+        "input": "touch-pointer",
+        "before": {
+          "x": 10,
+          "y": 448.96875,
+          "width": 370,
+          "height": 385.03125
+        },
+        "after": {
+          "x": 0,
+          "y": 0,
+          "width": 370,
+          "height": 385.03125
+        },
+        "clamped": {
+          "x": 20,
+          "y": 458.96875,
+          "width": 370,
+          "height": 385.03125
+        },
+        "handleOnly": true
+      },
+      "resume": {
+        "close": true,
+        "esc": true,
+        "reload": true
+      },
+      "crossPage": {
+        "indexToMember": true,
+        "memberToOwner": true
+      },
+      "replay": {
+        "afterSkip": true,
+        "afterComplete": true
+      },
+      "pageErrors": [],
+      "consoleErrors": [],
+      "network": [
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960348729",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        }
+      ],
+      "keyboard": {
+        "complete": false,
+        "focusVisible": false
+      }
+    },
+    {
+      "viewport": {
+        "name": "320",
+        "width": 320,
+        "height": 720,
+        "input": "touch-pointer"
+      },
+      "steps": [
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 280.671875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 429.328125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 85,
+            "right": 287,
+            "bottom": 182.03125,
+            "width": 254,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 720,
+            "width": 300,
+            "height": 429.328125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 85,
+            "right": 287,
+            "bottom": 182.03125,
+            "width": 254,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 695.5,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 85,
+            "right": 287,
+            "bottom": 182.03125,
+            "width": 254,
+            "height": 97.03125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 695.5,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 8,
+            "top": 55.90625,
+            "right": 312,
+            "bottom": 664.65625,
+            "width": 304,
+            "height": 608.75,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 720,
+            "width": 300,
+            "height": 429.328125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 2,
+            "right": 287,
+            "bottom": 8,
+            "width": 254,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 2,
+          "title": "体験予約の入口",
+          "target": "#trialBlock",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 695.5,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 15.578125,
+            "right": 287,
+            "bottom": 31.453125,
+            "width": 254,
+            "height": 15.875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 3,
+          "title": "欠席受付の場所",
+          "target": "[data-mode=\"absence\"]",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 695.5,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 28.921875,
+            "top": 22.140625,
+            "right": 291.046875,
+            "bottom": 134.4375,
+            "width": 262.125,
+            "height": 112.296875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 4,
+          "title": "振替受付の場所",
+          "target": "[data-mode=\"makeup\"]",
+          "card": {
+            "left": 20,
+            "top": 290.671875,
+            "right": 320,
+            "bottom": 715.296875,
+            "width": 300,
+            "height": 424.625,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 28.609375,
+            "top": 70.265625,
+            "right": 291.359375,
+            "bottom": 177.546875,
+            "width": 262.75,
+            "height": 107.28125,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 10,
+            "top": 285.375,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 424.625,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 905.875,
+            "right": 293,
+            "bottom": 911.875,
+            "width": 266,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 5,
+          "title": "生徒証の確認入口",
+          "target": "#loadBtn",
+          "card": {
+            "left": 10,
+            "top": 285.375,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 424.625,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 873.875,
+            "right": 293,
+            "bottom": 879.875,
+            "width": 266,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 6,
+          "title": "教室確認と授業予定",
+          "target": "#contactStatusSection",
+          "card": {
+            "left": 10,
+            "top": 305.171875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 27,
+            "top": 873.875,
+            "right": 293,
+            "bottom": 879.875,
+            "width": 266,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 7,
+          "title": "保護者LINE文面",
+          "target": "#lineMessageBox",
+          "card": {
+            "left": 10,
+            "top": 285.375,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 424.625,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 23.90625,
+            "top": 922.859375,
+            "right": 296.0625,
+            "bottom": 928.859375,
+            "width": 272.15625,
+            "height": 6,
+            "display": "block"
+          }
+        },
+        {
+          "step": 8,
+          "title": "受付・講師iPadの全体像",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 305.171875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 25,
+            "top": 79,
+            "right": 295,
+            "bottom": 229.1875,
+            "width": 270,
+            "height": 150.1875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 9,
+          "title": "現場モードと管理・準備モード",
+          "target": "#fieldModeBar",
+          "card": {
+            "left": 10,
+            "top": 305.171875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 25,
+            "top": 79,
+            "right": 295,
+            "bottom": 229.1875,
+            "width": 270,
+            "height": 150.1875,
+            "display": "block"
+          }
+        },
+        {
+          "step": 10,
+          "title": "今日の受付・授業を読む",
+          "target": "#statsGrid",
+          "card": {
+            "left": 10,
+            "top": 305.171875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 404.828125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 21.90625,
+            "top": 210.140625,
+            "right": 298.0625,
+            "bottom": 335.984375,
+            "width": 276.15625,
+            "height": 125.84375,
+            "display": "block"
+          }
+        },
+        {
+          "step": 1,
+          "title": "全体像を確認",
+          "target": ".hero h1",
+          "card": {
+            "left": 10,
+            "top": 280.671875,
+            "right": 310,
+            "bottom": 710,
+            "width": 300,
+            "height": 429.328125,
+            "hidden": false
+          },
+          "highlight": {
+            "left": 33,
+            "top": 85,
+            "right": 287,
+            "bottom": 182.03125,
+            "width": 254,
+            "height": 97.03125,
+            "display": "block"
+          }
+        }
+      ],
+      "routes": {
+        "index": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960351487",
+          "innerWidth": 320,
+          "innerHeight": 720,
+          "documentScrollWidth": 320,
+          "bodyScrollWidth": 320,
+          "first10Count": 10
+        },
+        "member": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "innerWidth": 320,
+          "innerHeight": 720,
+          "documentScrollWidth": 320,
+          "bodyScrollWidth": 320,
+          "first10Count": 10
+        },
+        "ownerIpad": {
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "innerWidth": 320,
+          "innerHeight": 720,
+          "documentScrollWidth": 354,
+          "bodyScrollWidth": 354,
+          "first10Count": 10
+        }
+      },
+      "drag": {
+        "input": "touch-pointer",
+        "before": {
+          "x": 10,
+          "y": 280.671875,
+          "width": 300,
+          "height": 429.328125
+        },
+        "after": {
+          "x": 0,
+          "y": 0,
+          "width": 300,
+          "height": 429.328125
+        },
+        "clamped": {
+          "x": 20,
+          "y": 290.671875,
+          "width": 300,
+          "height": 429.328125
+        },
+        "handleOnly": true
+      },
+      "resume": {
+        "close": true,
+        "esc": true,
+        "reload": true
+      },
+      "crossPage": {
+        "indexToMember": true,
+        "memberToOwner": true
+      },
+      "replay": {
+        "afterSkip": true,
+        "afterComplete": true
+      },
+      "pageErrors": [],
+      "consoleErrors": [],
+      "network": [
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960351487",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html",
+          "type": "document"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/config.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.css",
+          "type": "stylesheet"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/dpro-tutorial-school-v1.js",
+          "type": "script"
+        },
+        {
+          "method": "GET",
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/config?shop_code=dpro_school_demo",
+          "type": "fetch"
+        }
+      ],
+      "keyboard": {
+        "complete": false,
+        "focusVisible": false
+      }
+    }
+  ],
+  "unsafeWrites": [],
+  "failures": [
+    "1440: card outside viewport after handle drag",
+    "1440: viewport clamp failed",
+    "1440-keyboard: cannot tab to next at step 2",
+    "1440-keyboard: keyboard-only completion did not reach complete",
+    "1024: card outside viewport after handle drag",
+    "1024: viewport clamp failed",
+    "1024-keyboard: cannot tab to next at step 2",
+    "1024-keyboard: keyboard-only completion did not reach complete",
+    "390: card outside viewport after handle drag",
+    "390: viewport clamp failed",
+    "390-keyboard: cannot tab to next at step 1",
+    "390-keyboard: visible focus not proven",
+    "390-keyboard: keyboard-only completion did not reach complete",
+    "320: card outside viewport after handle drag",
+    "320: viewport clamp failed",
+    "320: ownerIpad document overflow 34",
+    "320: ownerIpad body overflow 34",
+    "320-keyboard: cannot tab to next at step 1",
+    "320-keyboard: visible focus not proven",
+    "320-keyboard: keyboard-only completion did not reach complete"
+  ],
+  "businessMutation": 0,
+  "standard": "V1.1_LOCKED",
+  "pass": false,
+  "completedAt": "2026-08-28T23:39:13.374Z"
+}
