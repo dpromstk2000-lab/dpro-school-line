@@ -191,6 +191,21 @@ body.field-mode .grid{grid-template-columns:1fr;}
       .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}
       .tab{white-space:nowrap;}
     }
+
+/* DPRO TUTORIAL R3 / 320px overflow containment / 2026-08-29 */
+@media(max-width:360px){
+  .wrap,.wrap *{min-width:0;max-width:100%;}
+  .wrap{width:100%;}
+  .tabs{width:100%;max-width:100%;}
+  .tab{max-width:100%;}
+  .field-mode-bar,.field-mode-copy,.mode-switch,.field-quick-board,.field-quick-head,
+  .field-quick-grid,.field-dock,.grid,.stack,.card,.row,.actions,.nav-row{min-width:0;max-width:100%;}
+  h1,h2,h3,.lead,.hint,.field-mode-copy span,.field-quick-head span,.footer-note{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+}
+
   </style>
 </head>
 <body>

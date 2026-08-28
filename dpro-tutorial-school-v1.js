@@ -1,4 +1,4 @@
-/* DPRO TUTORIAL SCHOOL / STANDARD V1.1 / R3
+/* DPRO TUTORIAL SCHOOL / STANDARD V1.1 / R3 FIX V1.1 / 2026-08-29
  * First10 exactly 10. Tutorial-local state only. Business mutation = 0.
  */
 (function(){
@@ -6,7 +6,7 @@
   if (window.DPRO_TUTORIAL_SCHOOL) return;
 
   const TUTORIAL_ID='school-first10-v1';
-  const VERSION='1.0.0-r3';
+  const VERSION='1.0.1-r3';
   const DEVICE_KEY='dpro_tutorial_device_key';
   const allowedRoutes=new Set(['/index.html','/member.html','/owner-ipad.html']);
   const forbiddenIds=new Set(['submitTrialBtn','sendAbsenceBtn','sendMakeupBtn','saveAdminBtn','fillAdminBtn','clearAdminBtn']);
@@ -80,7 +80,7 @@
     opts=opts||{};currentIndex=Math.max(0,Math.min(steps.length-1,i));const s=steps[currentIndex];persistForIndex(currentIndex);lastFocus=opts.keepLastFocus?lastFocus:document.activeElement;
     card.hidden=false;launcher.hidden=true;countEl.textContent=`${s.step} / ${steps.length}`;titleEl.textContent=s.title;purposeEl.textContent=s.purpose;safetyEl.textContent=s.safety;backBtn.disabled=currentIndex===0;nextBtn.textContent=currentIndex===steps.length-1?'完了':'次へ';nextBtn.setAttribute('data-dpro-tutorial-action',currentIndex===steps.length-1?'complete':'next');
     const resolved=resolveTarget(s);currentTarget=resolved?.el||null;if(resolved){warningEl.classList.remove('show');warningEl.textContent='';positionHighlight(resolved.el);try{resolved.el.scrollIntoView({block:'center',inline:'nearest',behavior:'auto'});}catch(_){}}else{highlight.style.display='none';warningEl.textContent='対象が現在表示されていないため、安全な案内モードで続行します。業務操作は実行しません。';warningEl.classList.add('show');}
-    clampCard();setTimeout(()=>{updateHighlight();titleEl.focus({preventScroll:true});},30);
+    clampCard();titleEl.focus({preventScroll:true});setTimeout(updateHighlight,30);
   }
   function positionHighlight(el){if(!isVisible(el)){highlight.style.display='none';return;}const r=el.getBoundingClientRect();const pad=6;const l=Math.max(2,r.left-pad),t=Math.max(2,r.top-pad),rr=Math.min(innerWidth-2,r.right+pad),bb=Math.min(innerHeight-2,r.bottom+pad);highlight.style.left=l+'px';highlight.style.top=t+'px';highlight.style.width=Math.max(0,rr-l)+'px';highlight.style.height=Math.max(0,bb-t)+'px';highlight.style.display='block';}
   function updateHighlight(){if(card&&!card.hidden&&currentTarget)positionHighlight(currentTarget);}
