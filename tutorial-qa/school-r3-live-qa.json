@@ -1,8 +1,8 @@
 {
   "schema": "DPRO_TUTORIAL_SCHOOL_R3_LIVE_QA_V1_0",
   "publicBase": "https://dpromstk2000-lab.github.io/dpro-school-line/",
-  "qaUploadHead": "55b926199fa8133ad342319fa7b6a413bc9c7858",
-  "r3ImplementationHead": "5e837573a40ab669a8a1bfc6fac36cc72b34dca4",
+  "qaUploadHead": "5ae3acdc750723a978850eedf1a57337c258b172",
+  "r3ImplementationHead": "0b04b21550a54e525f03a8d918319ce82c2014dc",
   "exactViewports": [
     {
       "name": "1440",
@@ -169,11 +169,11 @@
           },
           "highlight": {
             "left": 203,
-            "top": 57.640625,
+            "top": 57.734375,
             "right": 842.5,
-            "bottom": 132.65625,
+            "bottom": 132.875,
             "width": 639.5,
-            "height": 75.015625,
+            "height": 75.140625,
             "display": "block"
           }
         },
@@ -191,12 +191,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 191.296875,
-            "top": 163.1875,
-            "right": 875.921875,
-            "bottom": 405.765625,
-            "width": 684.625,
-            "height": 242.578125,
+            "left": 178,
+            "top": 283.21875,
+            "right": 913.953125,
+            "bottom": 716.375,
+            "width": 735.953125,
+            "height": 433.15625,
             "display": "block"
           }
         },
@@ -214,12 +214,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 302.875,
-            "top": 329.703125,
-            "right": 669.1875,
-            "bottom": 458.421875,
-            "width": 366.3125,
-            "height": 128.71875,
+            "left": 391.921875,
+            "top": 381.84375,
+            "right": 700.0625,
+            "bottom": 515.1875,
+            "width": 308.140625,
+            "height": 133.34375,
             "display": "block"
           }
         },
@@ -261,9 +261,9 @@
           },
           "highlight": {
             "left": 147,
-            "top": 487.59375,
+            "top": 505.59375,
             "right": 367,
-            "bottom": 546.59375,
+            "bottom": 564.59375,
             "width": 220,
             "height": 59,
             "display": "block"
@@ -284,9 +284,9 @@
           },
           "highlight": {
             "left": 147,
-            "top": 486.28125,
+            "top": 505.59375,
             "right": 367,
-            "bottom": 545.28125,
+            "bottom": 564.59375,
             "width": 220,
             "height": 59,
             "display": "block"
@@ -306,12 +306,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 136.234375,
-            "top": 550.53125,
-            "right": 570.34375,
-            "bottom": 753.859375,
-            "width": 434.109375,
-            "height": 203.328125,
+            "left": 124.375,
+            "top": 616.640625,
+            "right": 794.640625,
+            "bottom": 967.265625,
+            "width": 670.265625,
+            "height": 350.625,
             "display": "block"
           }
         },
@@ -375,11 +375,11 @@
             "hidden": false
           },
           "highlight": {
-            "left": 111.953125,
-            "top": 285.40625,
-            "right": 1195.8125,
-            "bottom": 382.953125,
-            "width": 1083.859375,
+            "left": 111.9375,
+            "top": 285.515625,
+            "right": 1195.96875,
+            "bottom": 383.0625,
+            "width": 1084.03125,
             "height": 97.546875,
             "display": "block"
           }
@@ -410,7 +410,7 @@
       ],
       "routes": {
         "index": {
-          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960341941",
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960864197",
           "innerWidth": 1440,
           "innerHeight": 1000,
           "documentScrollWidth": 1440,
@@ -474,7 +474,7 @@
       "network": [
         {
           "method": "GET",
-          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960341941",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1440-1787960864197",
           "type": "document"
         },
         {
@@ -499,13 +499,13 @@
         },
         {
           "method": "GET",
-          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
-          "type": "fetch"
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
+          "type": "document"
         },
         {
           "method": "GET",
-          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
-          "type": "document"
+          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
+          "type": "fetch"
         },
         {
           "method": "GET",
@@ -594,7 +594,7 @@
         }
       ],
       "keyboard": {
-        "complete": false,
+        "complete": true,
         "focusVisible": true
       }
     },
@@ -758,12 +758,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 38.90625,
-            "top": 85.3125,
-            "right": 628.265625,
-            "bottom": 225.921875,
-            "width": 589.359375,
-            "height": 140.609375,
+            "left": 31.3125,
+            "top": 115.0625,
+            "right": 639.0625,
+            "bottom": 361.96875,
+            "width": 607.75,
+            "height": 246.90625,
             "display": "block"
           }
         },
@@ -781,12 +781,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 131.4375,
-            "top": 260.90625,
-            "right": 447.75,
-            "bottom": 372.03125,
-            "width": 316.3125,
-            "height": 111.125,
+            "left": 64.65625,
+            "top": 150.609375,
+            "right": 606.640625,
+            "bottom": 373.515625,
+            "width": 541.984375,
+            "height": 222.90625,
             "display": "block"
           }
         },
@@ -828,9 +828,9 @@
           },
           "highlight": {
             "left": 41,
-            "top": 494.125,
+            "top": 513.125,
             "right": 261,
-            "bottom": 553.125,
+            "bottom": 572.125,
             "width": 220,
             "height": 59,
             "display": "block"
@@ -851,9 +851,9 @@
           },
           "highlight": {
             "left": 41,
-            "top": 494.125,
+            "top": 513.125,
             "right": 261,
-            "bottom": 553.125,
+            "bottom": 572.125,
             "width": 220,
             "height": 59,
             "display": "block"
@@ -873,12 +873,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 30.21875,
-            "top": 594.875,
-            "right": 409.671875,
-            "bottom": 652.78125,
-            "width": 379.453125,
-            "height": 57.90625,
+            "left": 30.25,
+            "top": 607.09375,
+            "right": 409.3125,
+            "bottom": 662.671875,
+            "width": 379.0625,
+            "height": 55.578125,
             "display": "block"
           }
         },
@@ -942,12 +942,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 28.359375,
-            "top": 253.40625,
-            "right": 801.671875,
-            "bottom": 351.328125,
-            "width": 773.3125,
-            "height": 97.921875,
+            "left": 28.390625,
+            "top": 190.65625,
+            "right": 801.21875,
+            "bottom": 288.59375,
+            "width": 772.828125,
+            "height": 97.9375,
             "display": "block"
           }
         },
@@ -977,7 +977,7 @@
       ],
       "routes": {
         "index": {
-          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960346399",
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960868632",
           "innerWidth": 1024,
           "innerHeight": 768,
           "documentScrollWidth": 1024,
@@ -1041,7 +1041,7 @@
       "network": [
         {
           "method": "GET",
-          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960346399",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-1024-1787960868632",
           "type": "document"
         },
         {
@@ -1066,18 +1066,8 @@
         },
         {
           "method": "GET",
-          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
-          "type": "fetch"
-        },
-        {
-          "method": "GET",
           "url": "https://dpromstk2000-lab.github.io/dpro-school-line/member.html",
           "type": "document"
-        },
-        {
-          "method": "GET",
-          "url": "https://dpro-school-line-api.dpromstk2000.workers.dev/api/public/lesson-options?shop_code=dpro_school_demo&date=2026-08-29&course_code=trial_math&teacher_preference=any",
-          "type": "fetch"
         },
         {
           "method": "GET",
@@ -1161,7 +1151,7 @@
         }
       ],
       "keyboard": {
-        "complete": false,
+        "complete": true,
         "focusVisible": true
       }
     },
@@ -1303,11 +1293,11 @@
           },
           "highlight": {
             "left": 33,
-            "top": 13.21875,
+            "top": 13.28125,
             "right": 357,
-            "bottom": 28.984375,
+            "bottom": 29.15625,
             "width": 324,
-            "height": 15.765625,
+            "height": 15.875,
             "display": "block"
           }
         },
@@ -1325,12 +1315,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 28.9375,
-            "top": 30.140625,
-            "right": 361.03125,
-            "bottom": 142.015625,
-            "width": 332.09375,
-            "height": 111.875,
+            "left": 28.921875,
+            "top": 30.265625,
+            "right": 361.046875,
+            "bottom": 142.5625,
+            "width": 332.125,
+            "height": 112.296875,
             "display": "block"
           }
         },
@@ -1348,12 +1338,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 28.625,
-            "top": 86.984375,
-            "right": 361.359375,
-            "bottom": 193.921875,
-            "width": 332.734375,
-            "height": 106.9375,
+            "left": 28.015625,
+            "top": 194.234375,
+            "right": 361.953125,
+            "bottom": 292.078125,
+            "width": 333.9375,
+            "height": 97.84375,
             "display": "block"
           }
         },
@@ -1395,11 +1385,11 @@
           },
           "highlight": {
             "left": 27,
-            "top": 833.8125,
+            "top": 807.8125,
             "right": 363,
             "bottom": 842,
             "width": 336,
-            "height": 8.1875,
+            "height": 34.1875,
             "display": "block"
           }
         },
@@ -1418,11 +1408,11 @@
           },
           "highlight": {
             "left": 27,
-            "top": 833.484375,
+            "top": 807.484375,
             "right": 363,
             "bottom": 841.984375,
             "width": 336,
-            "height": 8.5,
+            "height": 34.5,
             "display": "block"
           }
         },
@@ -1440,12 +1430,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 18.109375,
-            "top": 914.109375,
-            "right": 371.875,
-            "bottom": 920.109375,
-            "width": 353.765625,
-            "height": 6,
+            "left": 23.90625,
+            "top": 851.328125,
+            "right": 366.0625,
+            "bottom": 869.71875,
+            "width": 342.15625,
+            "height": 18.390625,
             "display": "block"
           }
         },
@@ -1509,12 +1499,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 21.90625,
-            "top": 186.15625,
-            "right": 368.078125,
-            "bottom": 288.1875,
-            "width": 346.171875,
-            "height": 102.03125,
+            "left": 16.109375,
+            "top": 287.609375,
+            "right": 373.875,
+            "bottom": 378.53125,
+            "width": 357.765625,
+            "height": 90.921875,
             "display": "block"
           }
         },
@@ -1544,7 +1534,7 @@
       ],
       "routes": {
         "index": {
-          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960348729",
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960871986",
           "innerWidth": 390,
           "innerHeight": 844,
           "documentScrollWidth": 390,
@@ -1608,7 +1598,7 @@
       "network": [
         {
           "method": "GET",
-          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960348729",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-390-1787960871986",
           "type": "document"
         },
         {
@@ -1718,8 +1708,8 @@
         }
       ],
       "keyboard": {
-        "complete": false,
-        "focusVisible": false
+        "complete": true,
+        "focusVisible": true
       }
     },
     {
@@ -1860,11 +1850,11 @@
           },
           "highlight": {
             "left": 33,
-            "top": 15.578125,
+            "top": 40.953125,
             "right": 287,
-            "bottom": 31.453125,
+            "bottom": 86.484375,
             "width": 254,
-            "height": 15.875,
+            "height": 45.53125,
             "display": "block"
           }
         },
@@ -1882,12 +1872,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 28.921875,
-            "top": 22.140625,
-            "right": 291.046875,
-            "bottom": 134.4375,
-            "width": 262.125,
-            "height": 112.296875,
+            "left": 21.328125,
+            "top": 47.921875,
+            "right": 298.640625,
+            "bottom": 356.203125,
+            "width": 277.3125,
+            "height": 308.28125,
             "display": "block"
           }
         },
@@ -1905,12 +1895,12 @@
             "hidden": false
           },
           "highlight": {
-            "left": 28.609375,
-            "top": 70.265625,
-            "right": 291.359375,
-            "bottom": 177.546875,
-            "width": 262.75,
-            "height": 107.28125,
+            "left": 23.984375,
+            "top": 174.75,
+            "right": 296,
+            "bottom": 376.921875,
+            "width": 272.015625,
+            "height": 202.171875,
             "display": "block"
           }
         },
@@ -1952,9 +1942,9 @@
           },
           "highlight": {
             "left": 27,
-            "top": 873.875,
+            "top": 861.875,
             "right": 293,
-            "bottom": 879.875,
+            "bottom": 867.875,
             "width": 266,
             "height": 6,
             "display": "block"
@@ -1975,9 +1965,9 @@
           },
           "highlight": {
             "left": 27,
-            "top": 873.875,
+            "top": 861.546875,
             "right": 293,
-            "bottom": 879.875,
+            "bottom": 867.546875,
             "width": 266,
             "height": 6,
             "display": "block"
@@ -1997,11 +1987,11 @@
             "hidden": false
           },
           "highlight": {
-            "left": 23.90625,
-            "top": 922.859375,
-            "right": 296.0625,
-            "bottom": 928.859375,
-            "width": 272.15625,
+            "left": 18.125,
+            "top": 948.515625,
+            "right": 301.84375,
+            "bottom": 954.515625,
+            "width": 283.71875,
             "height": 6,
             "display": "block"
           }
@@ -2067,11 +2057,11 @@
           },
           "highlight": {
             "left": 21.90625,
-            "top": 210.140625,
-            "right": 298.0625,
-            "bottom": 335.984375,
-            "width": 276.15625,
-            "height": 125.84375,
+            "top": 210.578125,
+            "right": 298.078125,
+            "bottom": 336.328125,
+            "width": 276.171875,
+            "height": 125.75,
             "display": "block"
           }
         },
@@ -2101,7 +2091,7 @@
       ],
       "routes": {
         "index": {
-          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960351487",
+          "href": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960874753",
           "innerWidth": 320,
           "innerHeight": 720,
           "documentScrollWidth": 320,
@@ -2120,8 +2110,8 @@
           "href": "https://dpromstk2000-lab.github.io/dpro-school-line/owner-ipad.html",
           "innerWidth": 320,
           "innerHeight": 720,
-          "documentScrollWidth": 354,
-          "bodyScrollWidth": 354,
+          "documentScrollWidth": 320,
+          "bodyScrollWidth": 320,
           "first10Count": 10
         }
       },
@@ -2165,7 +2155,7 @@
       "network": [
         {
           "method": "GET",
-          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960351487",
+          "url": "https://dpromstk2000-lab.github.io/dpro-school-line/index.html?qa=r3-320-1787960874753",
           "type": "document"
         },
         {
@@ -2275,36 +2265,15 @@
         }
       ],
       "keyboard": {
-        "complete": false,
-        "focusVisible": false
+        "complete": true,
+        "focusVisible": true
       }
     }
   ],
   "unsafeWrites": [],
-  "failures": [
-    "1440: card outside viewport after handle drag",
-    "1440: viewport clamp failed",
-    "1440-keyboard: cannot tab to next at step 2",
-    "1440-keyboard: keyboard-only completion did not reach complete",
-    "1024: card outside viewport after handle drag",
-    "1024: viewport clamp failed",
-    "1024-keyboard: cannot tab to next at step 2",
-    "1024-keyboard: keyboard-only completion did not reach complete",
-    "390: card outside viewport after handle drag",
-    "390: viewport clamp failed",
-    "390-keyboard: cannot tab to next at step 1",
-    "390-keyboard: visible focus not proven",
-    "390-keyboard: keyboard-only completion did not reach complete",
-    "320: card outside viewport after handle drag",
-    "320: viewport clamp failed",
-    "320: ownerIpad document overflow 34",
-    "320: ownerIpad body overflow 34",
-    "320-keyboard: cannot tab to next at step 1",
-    "320-keyboard: visible focus not proven",
-    "320-keyboard: keyboard-only completion did not reach complete"
-  ],
+  "failures": [],
   "businessMutation": 0,
   "standard": "V1.1_LOCKED",
-  "pass": false,
-  "completedAt": "2026-08-28T23:39:13.374Z"
+  "pass": true,
+  "completedAt": "2026-08-28T23:47:57.475Z"
 }
