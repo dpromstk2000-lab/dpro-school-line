@@ -1,0 +1,365 @@
+name: SCHOOL Tutorial R5 Manual Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/school-r5-manual-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-manuals:
+    runs-on: ubuntu-24.04
+    env:
+      PUBLIC_BASE: https://dpromstk2000-lab.github.io/dpro-school-line/
+      GUIDE_URL: https://dpromstk2000-lab.github.io/dpro-school-line/guide-center.html
+      TUTORIAL_START_URL: https://dpromstk2000-lab.github.io/dpro-school-line/index.html
+      WORKFLOW_PATH: .github/workflows/school-r5-manual-build.yml
+      R3_RESULT: tutorial-qa/school-r3-live-qa.json
+      R4_RESULT: tutorial-qa/school-r4-guide-center-qa.json
+      QA_RESULT: tutorial-qa/school-r5-manual-qa.json
+    steps:
+      - name: Checkout newest SCHOOL main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify R4 accepted evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          for(const p of [process.env.R3_RESULT,process.env.R4_RESULT]){
+            const r=JSON.parse(fs.readFileSync(p,'utf8'));
+            if(r.pass!==true)throw new Error(`${p}: pass != true`);
+            if((r.failures||[]).length)throw new Error(`${p}: failures not empty`);
+            if((r.unsafeWrites||[]).length)throw new Error(`${p}: unsafeWrites not empty`);
+            if(r.businessMutation!==0)throw new Error(`${p}: businessMutation != 0`);
+          }
+          NODE
+          git rev-parse HEAD > /tmp/r5-start-head.txt
+          git rev-parse HEAD^{tree} > /tmp/r5-start-tree.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser and document dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk poppler-utils zbar-tools
+          python -m pip install --disable-pip-version-check reportlab qrcode pillow pypdf
+
+      - name: Capture current LIVE demo screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p r5-build/source
+          cat > ./school-r5-capture.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const context=await browser.newContext({viewport:{width:1440,height:1000}});
+          const pages=[
+            ['guide-center',process.env.GUIDE_URL],
+            ['index',process.env.TUTORIAL_START_URL]
+          ];
+          for(const [name,url] of pages){
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto(url,{waitUntil:'networkidle',timeout:30000});
+            if(name==='guide-center'){
+              await page.waitForFunction(()=>window.DPRO_SCHOOL_GUIDE_CENTER?.ready===true && window.DPRO_TUTORIAL_SCHOOL?.first10Count===10);
+            }else{
+              await page.waitForFunction(()=>window.DPRO_TUTORIAL_SCHOOL?.first10Count===10);
+            }
+            await page.screenshot({path:`r5-build/source/${name}.png`,fullPage:false});
+            if(errors.length)throw new Error(`${name} pageerror: ${errors.join(' | ')}`);
+            await page.close();
+          }
+          await context.close();
+          await browser.close();
+          NODE
+          node ./school-r5-capture.mjs
+
+      - name: Build A4 manuals with live screenshots and QR
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > ./school-r5-build.py <<'PY'
+          import os, json, hashlib
+          from pathlib import Path
+          from reportlab.pdfgen import canvas
+          from reportlab.lib.pagesizes import A4
+          from reportlab.lib.colors import HexColor, black, white
+          from reportlab.pdfbase.ttfonts import TTFont
+          from reportlab.pdfbase import pdfmetrics
+          from reportlab.lib.utils import ImageReader
+          from PIL import Image, ImageOps
+          import qrcode
+
+          base=Path('r5-build'); out=base/'out'; renders=base/'renders'; qrdir=base/'qr'
+          out.mkdir(parents=True,exist_ok=True); renders.mkdir(parents=True,exist_ok=True); qrdir.mkdir(parents=True,exist_ok=True)
+          guide=os.environ['GUIDE_URL']; start=os.environ['TUTORIAL_START_URL']
+          font_candidates=[
+            '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+            '/usr/share/fonts/opentype/noto/NotoSansCJKjp-Regular.otf',
+            '/usr/share/fonts/opentype/noto/NotoSansJP-Regular.otf'
+          ]
+          bold_candidates=[
+            '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc',
+            '/usr/share/fonts/opentype/noto/NotoSansCJKjp-Bold.otf',
+            '/usr/share/fonts/opentype/noto/NotoSansJP-Bold.otf'
+          ]
+          reg=next((p for p in font_candidates if Path(p).exists()),None)
+          bold=next((p for p in bold_candidates if Path(p).exists()),reg)
+          if not reg: raise SystemExit('Japanese font not found')
+          pdfmetrics.registerFont(TTFont('JP',reg,subfontIndex=0))
+          pdfmetrics.registerFont(TTFont('JPB',bold,subfontIndex=0))
+          W,H=A4
+          navy=HexColor('#16324F'); blue=HexColor('#2166F3'); pale=HexColor('#EDF4FF'); gray=HexColor('#5A6772'); line=HexColor('#D9E2EC'); green=HexColor('#167C4B')
+
+          def qr(path,url):
+            q=qrcode.QRCode(version=None,error_correction=qrcode.constants.ERROR_CORRECT_M,box_size=10,border=4); q.add_data(url); q.make(fit=True)
+            q.make_image(fill_color='black',back_color='white').convert('RGB').save(path)
+          qr(qrdir/'guide.png',guide)
+
+          def header(c,kicker,title,sub=''):
+            c.setFillColor(navy); c.rect(0,H-98,W,98,fill=1,stroke=0)
+            c.setFillColor(white); c.setFont('JPB',9); c.drawString(36,H-32,kicker)
+            c.setFont('JPB',22); c.drawString(36,H-58,title)
+            if sub:
+              c.setFont('JP',9); c.drawString(36,H-79,sub)
+
+          def footer(c,page,total):
+            c.setStrokeColor(line); c.line(36,28,W-36,28)
+            c.setFillColor(gray); c.setFont('JP',7.4)
+            c.drawString(36,15,'DPRO TUTORIAL / SCHOOL - current LIVE/demo manual - read-only orientation')
+            c.drawRightString(W-36,15,f'{page} / {total}')
+
+          def rounded(c,x,y,w,h,fill=pale,stroke=line,r=10):
+            c.setFillColor(fill); c.setStrokeColor(stroke); c.roundRect(x,y,w,h,r,fill=1,stroke=1)
+
+          def fit_img(c,path,x,y,w,h):
+            im=Image.open(path).convert('RGB')
+            ratio=min(w/im.width,h/im.height); nw=im.width*ratio; nh=im.height*ratio
+            c.drawImage(ImageReader(im),x+(w-nw)/2,y+(h-nh)/2,nw,nh,preserveAspectRatio=True,mask='auto')
+
+          def line_text(c,text,x,y,max_chars=42,font='JP',size=9.2,leading=14,color=black):
+            c.setFillColor(color); c.setFont(font,size); cy=y
+            buf=''
+            for ch in text:
+              if ch=='\n':
+                c.drawString(x,cy,buf); cy-=leading; buf=''; continue
+              buf+=ch
+              if len(buf)>=max_chars:
+                c.drawString(x,cy,buf); cy-=leading; buf=''
+            if buf: c.drawString(x,cy,buf); cy-=leading
+            return cy
+
+          # QUICK START one page
+          quick=out/'DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.pdf'
+          c=canvas.Canvas(str(quick),pagesize=A4,pageCompression=1)
+          header(c,'QUICK START / A4 PORTRAIT','SCHOOL 操作ガイド Quick Start','First10 exactly 10 / Guide Center / Start・Resume・Replay')
+          y=H-126
+          rounded(c,36,y-78,W-72,78)
+          c.setFillColor(navy); c.setFont('JPB',12); c.drawString(50,y-22,'1. Guide Center を開く')
+          c.setFont('JP',9.2); c.setFillColor(black); c.drawString(50,y-42,'QRまたは公開URLからGuide Centerへ。現在のFirst10と操作状態を確認できます。')
+          c.setFillColor(blue); c.setFont('JP',7.7); c.drawString(50,y-60,guide)
+          y-=94
+          # screenshot
+          rounded(c,36,y-210,W-72,210,fill=white)
+          fit_img(c,Path('r5-build/source/guide-center.png'),46,y-200,W-92,190)
+          y-=226
+          # controls cards
+          cardw=(W-84)/3
+          labels=[('START','最初から開始','未開始時。Step 1から開始します。'),('RESUME','続きから','Close/Esc/再読込後も保存位置へ戻ります。'),('REPLAY','もう一度','Complete/Skip後に状態だけを初期化します。')]
+          for i,(a,b,d) in enumerate(labels):
+            x=36+i*(cardw+6); rounded(c,x,y-82,cardw,82,fill=white)
+            c.setFillColor(blue if i==0 else navy); c.setFont('JPB',10); c.drawString(x+10,y-20,a)
+            c.setFillColor(black); c.setFont('JPB',9); c.drawString(x+10,y-38,b)
+            line_text(c,d,x+10,y-54,max_chars=16,size=7.2,leading=10,color=gray)
+          y-=96
+          rounded(c,36,y-102,W-155,102,fill=HexColor('#F6FAF8'))
+          c.setFillColor(green); c.setFont('JPB',10); c.drawString(50,y-20,'安全な操作')
+          line_text(c,'カード上部の専用ハンドルで移動。Next / Backで進退。CloseまたはEscで閉じても続きは保存。キーボードはTabでボタンへ移動しEnterで実行できます。チュートリアルは説明用で、体験予約・欠席・振替などを自動送信しません。',50,y-39,max_chars=38,size=8.2,leading=12)
+          c.drawImage(str(qrdir/'guide.png'),W-108,y-93,72,72,mask='auto')
+          c.setFillColor(gray); c.setFont('JP',6.8); c.drawCentredString(W-72,y-100,'Guide Center')
+          footer(c,1,1); c.showPage(); c.save()
+
+          # DETAILED 4 pages
+          detail=out/'DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0.pdf'
+          c=canvas.Canvas(str(detail),pagesize=A4,pageCompression=1)
+          total=4
+          header(c,'DETAILED MANUAL / CURRENT LIVE','SCHOOL 操作ガイド 詳細マニュアル','R4 accepted behavior / read-only orientation')
+          rounded(c,36,H-310,W-72,180,fill=white); fit_img(c,Path('r5-build/source/guide-center.png'),46,H-300,W-92,160)
+          c.setFillColor(navy); c.setFont('JPB',13); c.drawString(36,H-342,'このマニュアルの正本')
+          line_text(c,'Guide CenterとR3/R4で受理されたFirst10 exactly 10を基準に説明します。Tutorialはindex → member → owner-iPadへページをまたいで進み、状態を保存します。',36,H-365,max_chars=48,size=9,leading=14)
+          rounded(c,36,H-485,W-155,92,fill=pale)
+          c.setFillColor(blue); c.setFont('JPB',10); c.drawString(50,H-416,'開始方法')
+          line_text(c,'Start: Step 1から開始 / Resume: 保存されたStepから再開 / Replay: 完了・スキップ後にTutorial状態だけをリセット。',50,H-437,max_chars=36,size=8.6,leading=13)
+          c.drawImage(str(qrdir/'guide.png'),W-108,H-480,72,72,mask='auto'); c.setFillColor(gray); c.setFont('JP',6.8); c.drawCentredString(W-72,H-488,'Guide Center')
+          c.setFillColor(navy); c.setFont('JPB',12); c.drawString(36,H-530,'基本操作')
+          basics=['Next / Back: ステップ移動','Close / Esc: 閉じる。続きは保存','専用ハンドル: カードをドラッグ','Tab / Enter: キーボード操作','Skip: ガイドを終了しReplay可能にする']
+          yy=H-553
+          for b in basics:
+            c.setFillColor(black); c.setFont('JP',9); c.drawString(48,yy,'• '+b); yy-=20
+          footer(c,1,total); c.showPage()
+
+          steps=[
+            (1,'全体像を確認','index.html','.hero h1'),
+            (2,'体験予約の入口','index.html','#trialBlock'),
+            (3,'欠席受付の場所','index.html','#absenceBlock'),
+            (4,'振替受付の場所','index.html','#makeupBlock'),
+            (5,'生徒証の確認入口','member.html','#loadBtn'),
+            (6,'教室確認と授業予定','member.html','#contactStatusSection'),
+            (7,'保護者LINE文面','member.html','#lineMessageBox'),
+            (8,'受付・講師iPadの全体像','owner-ipad.html','.hero h1'),
+            (9,'現場モードと管理・準備モード','owner-ipad.html','#fieldModeBar'),
+            (10,'今日の受付・授業を読む','owner-ipad.html','#statsGrid'),
+          ]
+          for page_num, subset, title in [(2,steps[:5],'First10 - Step 1〜5'),(3,steps[5:],'First10 - Step 6〜10')]:
+            header(c,'FIRST10 / EXACTLY 10',title,'受理済みの順序・ページ遷移を変更しない')
+            yy=H-135
+            for no,name,route,target in subset:
+              rounded(c,36,yy-100,W-72,92,fill=white)
+              c.setFillColor(blue); c.circle(58,yy-34,15,fill=1,stroke=0); c.setFillColor(white); c.setFont('JPB',10); c.drawCentredString(58,yy-38,str(no))
+              c.setFillColor(navy); c.setFont('JPB',11); c.drawString(84,yy-27,name)
+              c.setFillColor(gray); c.setFont('JP',7.8); c.drawString(84,yy-47,f'Page: {route}')
+              c.drawString(84,yy-64,f'Target: {target}')
+              note='確認対象を読むためのガイド。自動送信・自動保存は行いません。'
+              if no==5: note='「生徒証を表示」ボタンは確認対象。Tutorialが自動クリックすることはありません。'
+              c.setFillColor(black); c.setFont('JP',8.2); c.drawString(84,yy-82,note)
+              yy-=112
+            if page_num==3:
+              c.setFillColor(gray); c.setFont('JP',7.6); c.drawString(36,45,'Step 4→5、Step 7→8ではGET遷移し、遷移前にTutorial状態を保存して続行します。')
+            footer(c,page_num,total); c.showPage()
+
+          header(c,'ACCESSIBILITY / SAFETY','モバイル・キーボード・安全境界','390/320px対応 / business mutation 0')
+          rounded(c,36,H-286,W-72,156,fill=white); fit_img(c,Path('r5-build/source/index.png'),46,H-276,W-92,136)
+          y=H-320
+          blocks=[
+            ('モバイル','390px / 320pxでもカードとハイライトを画面内にclamp。横スクロールを発生させない設計です。'),
+            ('キーボード','Tabで操作ボタンへ移動し、Enterで実行。Step移動後はタイトルへフォーカスが戻り、visible focusを維持します。'),
+            ('安全境界','Tutorialは説明・移動・状態保存のみ。予約、欠席、振替、生徒証読込、管理保存などの業務操作を自動実行しません。'),
+            ('困ったとき','Close/Esc後はGuide CenterのResume。完了/Skip後はReplay。対象が見つからない場合は受理済みfallbackで安全に案内します。')
+          ]
+          for head,desc in blocks:
+            rounded(c,36,y-88,W-72,78,fill=pale if head!='安全境界' else HexColor('#F6FAF8'))
+            c.setFillColor(green if head=='安全境界' else navy); c.setFont('JPB',10); c.drawString(50,y-31,head)
+            line_text(c,desc,50,y-49,max_chars=44,size=8.4,leading=12)
+            y-=94
+          c.setFillColor(gray); c.setFont('JP',7.4); c.drawString(36,42,'実データ・個人情報・production secretをマニュアルには含めません。画面例は公開LIVE/demoの安全な範囲のみ使用。')
+          footer(c,4,total); c.showPage(); c.save()
+
+          # Basic metadata manifest
+          manifest={}
+          for p in out.glob('*'):
+            manifest[p.name]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          (base/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+          python ./school-r5-build.py
+
+      - name: Render every PDF page and export PNG deliverables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p r5-build/renders/quick r5-build/renders/detail
+          pdftoppm -png -r 180 -singlefile r5-build/out/DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.pdf r5-build/renders/quick/page >/dev/null
+          cp r5-build/renders/quick/page.png r5-build/out/DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.png
+          pdftoppm -png -r 180 r5-build/out/DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0.pdf r5-build/renders/detail/page >/dev/null
+          i=1
+          for p in r5-build/renders/detail/page-*.png; do
+            printf -v n '%02d' "$i"
+            cp "$p" "r5-build/out/DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_${n}.png"
+            i=$((i+1))
+          done
+          test "$((i-1))" -eq 4
+
+      - name: Decode every QR from rendered PDF output and record QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          quick_qr=$(zbarimg --quiet --raw r5-build/renders/quick/page.png | head -1)
+          detail_qr=$(zbarimg --quiet --raw r5-build/renders/detail/page-1.png | head -1)
+          test "$quick_qr" = "$GUIDE_URL"
+          test "$detail_qr" = "$GUIDE_URL"
+          python - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          from PIL import Image,ImageStat
+          from pypdf import PdfReader
+          base=Path('r5-build')
+          quick=base/'out/DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.pdf'
+          detail=base/'out/DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0.pdf'
+          qpages=sorted((base/'renders/quick').glob('*.png'))
+          dpages=sorted((base/'renders/detail').glob('*.png'))
+          def metrics(p):
+            im=Image.open(p).convert('L'); st=ImageStat.Stat(im)
+            return {'file':str(p),'width':im.width,'height':im.height,'mean':round(st.mean[0],2),'stddev':round(st.stddev[0],2),'nonblank':st.stddev[0]>5}
+          qa={
+            'schema':'DPRO_TUTORIAL_SCHOOL_R5_MANUAL_QA_V1_0',
+            'industryStartHead':Path('/tmp/r5-start-head.txt').read_text().strip(),
+            'industryStartTree':Path('/tmp/r5-start-tree.txt').read_text().strip(),
+            'quickPdfPages':len(PdfReader(str(quick)).pages),
+            'detailPdfPages':len(PdfReader(str(detail)).pages),
+            'quickRenderedPages':[metrics(p) for p in qpages],
+            'detailRenderedPages':[metrics(p) for p in dpages],
+            'qr':[{'renderedPage':'quick/page.png','decoded':os.environ['GUIDE_URL'],'expected':os.environ['GUIDE_URL'],'pass':True},
+                  {'renderedPage':'detail/page-1.png','decoded':os.environ['GUIDE_URL'],'expected':os.environ['GUIDE_URL'],'pass':True}],
+            'sourceScreenshots':['guide-center.png','index.png'],
+            'sourcePolicy':'current public LIVE/demo only; no real student/guardian/customer records intentionally used',
+            'automatedBlankPageCheck':True,
+            'unsafeWrites':[],
+            'businessMutation':0,
+            'visualReview':'PENDING_ASSISTANT_FULL_PAGE_REVIEW',
+            'pass':False
+          }
+          if qa['quickPdfPages']!=1 or qa['detailPdfPages']!=4: raise SystemExit('page count mismatch')
+          if not all(x['nonblank'] for x in qa['quickRenderedPages']+qa['detailRenderedPages']): raise SystemExit('blank render detected')
+          Path(os.environ['QA_RESULT']).parent.mkdir(parents=True,exist_ok=True)
+          Path(os.environ['QA_RESULT']).write_text(json.dumps(qa,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+      - name: Commit candidate manuals and evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp r5-build/out/DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.pdf .
+          cp r5-build/out/DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.png .
+          cp r5-build/out/DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0.pdf .
+          cp r5-build/out/DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_*.png .
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f ./school-r5-capture.mjs ./school-r5-build.py
+          rm -f "$WORKFLOW_PATH"
+          git add \
+            DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.pdf \
+            DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.png \
+            DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0.pdf \
+            DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_*.png \
+            "$QA_RESULT" "$WORKFLOW_PATH"
+          git commit -m 'Add SCHOOL R5 candidate manuals and QA evidence [skip ci]'
+          git push origin HEAD:main
+
+      - name: Upload rendered-page visual review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: school-r5-manual-visual-qa
+          path: |
+            r5-build/source/*.png
+            r5-build/renders/**/*.png
+            r5-build/out/*
+            r5-build/build-manifest.json
+            tutorial-qa/school-r5-manual-qa.json
+          if-no-files-found: error
+          retention-days: 7
