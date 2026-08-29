@@ -1,7 +1,7 @@
 {
   "schema": "DPRO_TUTORIAL_SCHOOL_R5_MANUAL_QA_V1_0",
-  "industryStartHead": "8b204fffa7cc088985fcc58f5f4839ba6559f368",
-  "industryStartTree": "8a7738383552b943b7802f8e8fc29c096967fc61",
+  "industryStartHead": "f999f5083736bdd8f16ba24212aeeeb61cd5dda7",
+  "industryStartTree": "ae7d04de11dbaf0ee11c38fdb2003cf45e99d9d6",
   "quickPdfPages": 1,
   "detailPdfPages": 4,
   "quickRenderedPages": [
@@ -9,7 +9,7 @@
       "file": "r5-build/renders/quick/page.png",
       "width": 1489,
       "height": 2105,
-      "mean": 225.54,
+      "mean": 225.53,
       "stddev": 68.95,
       "nonblank": true
     }
@@ -19,8 +19,8 @@
       "file": "r5-build/renders/detail/page-1.png",
       "width": 1489,
       "height": 2105,
-      "mean": 226.64,
-      "stddev": 69.15,
+      "mean": 226.66,
+      "stddev": 69.14,
       "nonblank": true
     },
     {
