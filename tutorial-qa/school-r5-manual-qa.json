@@ -70,6 +70,73 @@
   "automatedBlankPageCheck": true,
   "unsafeWrites": [],
   "businessMutation": 0,
-  "visualReview": "PENDING_ASSISTANT_FULL_PAGE_REVIEW",
-  "pass": false
+  "visualReview": "PASS_ASSISTANT_FULL_PAGE_REVIEW",
+  "pass": true,
+  "visualPageQA": [
+    {
+      "file": "DPRO_TUTORIAL_SCHOOL_QUICK_START_V1.0.png",
+      "page": 1,
+      "pass": true,
+      "clipping": 0,
+      "missingGlyphs": 0,
+      "brokenImages": 0,
+      "overlap": 0,
+      "unreadableText": 0,
+      "blankAccidentalPage": 0
+    },
+    {
+      "file": "DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_01.png",
+      "page": 1,
+      "pass": true,
+      "clipping": 0,
+      "missingGlyphs": 0,
+      "brokenImages": 0,
+      "overlap": 0,
+      "unreadableText": 0,
+      "blankAccidentalPage": 0
+    },
+    {
+      "file": "DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_02.png",
+      "page": 2,
+      "pass": true,
+      "clipping": 0,
+      "missingGlyphs": 0,
+      "brokenImages": 0,
+      "overlap": 0,
+      "unreadableText": 0,
+      "blankAccidentalPage": 0
+    },
+    {
+      "file": "DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_03.png",
+      "page": 3,
+      "pass": true,
+      "clipping": 0,
+      "missingGlyphs": 0,
+      "brokenImages": 0,
+      "overlap": 0,
+      "unreadableText": 0,
+      "blankAccidentalPage": 0
+    },
+    {
+      "file": "DPRO_TUTORIAL_SCHOOL_DETAILED_MANUAL_V1.0_04.png",
+      "page": 4,
+      "pass": true,
+      "clipping": 0,
+      "missingGlyphs": 0,
+      "brokenImages": 0,
+      "overlap": 0,
+      "unreadableText": 0,
+      "blankAccidentalPage": 0
+    }
+  ],
+  "manualSha256": {
+    "quickPdf": "2ed27cd7b128c5c56b4a8cb6cb8b8aeff87a437e359964af5ec48835046975e1",
+    "detailedPdf": "ca0688c73372b176363601c5dd9cee079e50eded4cf7a5fb01b239fd03b91236"
+  },
+  "personalSensitiveDataReview": "PASS_NO_REAL_STUDENT_GUARDIAN_CUSTOMER_OR_PRODUCTION_SECRET_OBSERVED",
+  "first10Count": 10,
+  "standard": "V1.1_LOCKED",
+  "forwardOnly": true,
+  "r7": "NOT_AUTHORIZED_NOT_EXECUTED",
+  "completedAt": "2026-08-29T02:24:23.954Z"
 }
