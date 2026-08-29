@@ -1,0 +1,75 @@
+{
+  "schema": "DPRO_TUTORIAL_SCHOOL_R5_MANUAL_QA_V1_0",
+  "industryStartHead": "8b204fffa7cc088985fcc58f5f4839ba6559f368",
+  "industryStartTree": "8a7738383552b943b7802f8e8fc29c096967fc61",
+  "quickPdfPages": 1,
+  "detailPdfPages": 4,
+  "quickRenderedPages": [
+    {
+      "file": "r5-build/renders/quick/page.png",
+      "width": 1489,
+      "height": 2105,
+      "mean": 225.54,
+      "stddev": 68.95,
+      "nonblank": true
+    }
+  ],
+  "detailRenderedPages": [
+    {
+      "file": "r5-build/renders/detail/page-1.png",
+      "width": 1489,
+      "height": 2105,
+      "mean": 226.64,
+      "stddev": 69.15,
+      "nonblank": true
+    },
+    {
+      "file": "r5-build/renders/detail/page-2.png",
+      "width": 1489,
+      "height": 2105,
+      "mean": 227.64,
+      "stddev": 69.1,
+      "nonblank": true
+    },
+    {
+      "file": "r5-build/renders/detail/page-3.png",
+      "width": 1489,
+      "height": 2105,
+      "mean": 227.36,
+      "stddev": 69.24,
+      "nonblank": true
+    },
+    {
+      "file": "r5-build/renders/detail/page-4.png",
+      "width": 1489,
+      "height": 2105,
+      "mean": 224.49,
+      "stddev": 67.6,
+      "nonblank": true
+    }
+  ],
+  "qr": [
+    {
+      "renderedPage": "quick/page.png",
+      "decoded": "https://dpromstk2000-lab.github.io/dpro-school-line/guide-center.html",
+      "expected": "https://dpromstk2000-lab.github.io/dpro-school-line/guide-center.html",
+      "pass": true
+    },
+    {
+      "renderedPage": "detail/page-1.png",
+      "decoded": "https://dpromstk2000-lab.github.io/dpro-school-line/guide-center.html",
+      "expected": "https://dpromstk2000-lab.github.io/dpro-school-line/guide-center.html",
+      "pass": true
+    }
+  ],
+  "sourceScreenshots": [
+    "guide-center.png",
+    "index.png"
+  ],
+  "sourcePolicy": "current public LIVE/demo only; no real student/guardian/customer records intentionally used",
+  "automatedBlankPageCheck": true,
+  "unsafeWrites": [],
+  "businessMutation": 0,
+  "visualReview": "PENDING_ASSISTANT_FULL_PAGE_REVIEW",
+  "pass": false
+}
