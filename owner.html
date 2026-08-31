@@ -2110,6 +2110,7 @@ return `
         try{
           const id = item.requestId || item.id;
           if(state.usedFallback || String(id).startsWith('request-demo') || String(id).startsWith('demo')) throw new Error('デモ表示中のためAPI更新は行いません。');
+          if(!confirm('このタスクを対応済みにしますか？'))return;
           await adminPost('/api/admin/tasks/status', { task_id:item.id, id:item.id, status:'done', task_status:'done' });
           setStatus('mainStatus', 'タスクを対応済みにしました。', 'ok');
           await loadDashboard();
@@ -2124,6 +2125,7 @@ return `
         setStatus('mainStatus', '受付を対応済みにしています。', '');
         try{
           if(state.usedFallback || String(item.id).startsWith('demo')) throw new Error('デモ表示中のためAPI更新は行いません。');
+          if(!confirm('この受付を対応済みにしますか？'))return;
           await adminPost('/api/admin/requests/status', { request_id:item.id, id:item.id, status:'replied', request_status:'replied' });
           setStatus('mainStatus', '受付を対応済みにしました。', 'ok');
           await loadDashboard();
@@ -2139,6 +2141,7 @@ return `
         const statusLabel = { scheduled:'予定', checked_in:'出席', in_progress:'授業中', completed:'完了', absent:'欠席' }[status] || status;
         try{
           if(state.usedFallback || String(item.id).startsWith('demo')) throw new Error('デモ表示中のためAPI更新は行いません。');
+          if(['completed','absent'].includes(status)&&!confirm(`授業状態を「${statusLabel}」へ変更しますか？`))return;
           await adminPost('/api/admin/lessons/status', { lesson_id:item.id, id:item.id, status, lesson_status:status });
           setStatus('mainStatus', `授業状態を「${statusLabel}」に更新しました。`, 'ok');
           await loadDashboard();

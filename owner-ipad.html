@@ -1042,6 +1042,7 @@ renderAll();
 setStatus("mainStatus", "デモ表示上で対応済みにしました。実データは変更していません。", "warn");
 return;
 }
+if(!confirm("この受付を対応済みにしますか？"))return;
 await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });
 setStatus("mainStatus", "受付を対応済みにしました。", "ok");
 await loadDashboard();
