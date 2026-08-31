@@ -76,8 +76,11 @@ jobs:
           '''          if(!confirm('この受付を対応済みにしますか？'))return;\n          await adminPost('/api/admin/requests/status', { request_id:item.id, id:item.id, status:'replied', request_status:'replied' });''','SCHOOL request guard')
           write(p,t)
           p='owner-ipad.html'; t=read(p)
-          # iPad request may use same endpoint/body; insert before exact first matching request status call.
-          t=sub_once(t,r'''(if\(state\.usedFallback \|\| String\(item\.id\)\.startsWith\("demo"\)\)\{[^}]*\}\s*)(await adminPost\('/api/admin/requests/status')''', r'''\1if(!confirm("この受付を対応済みにしますか？")){setActionBusy(false);return;}\n\2''', 'SCHOOL ipad request guard', flags=re.S)
+          # iPad uses double quotes for this endpoint. Guard the exact single request call.
+          t=replace_once(t,
+          '''await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });''',
+          '''if(!confirm("この受付を対応済みにしますか？"))return;
+          await adminPost("/api/admin/requests/status", { request_id:item.id, id:item.id, status:"replied", request_status:"replied" });''','SCHOOL ipad request guard')
           write(p,t)
           PY
 
