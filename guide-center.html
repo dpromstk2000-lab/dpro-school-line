@@ -137,6 +137,9 @@
     <section class="panel" aria-labelledby="linksTitle">
       <h2 id="linksTitle">関連画面</h2>
       <p class="panel-note">通常画面へ戻るリンクです。ここから業務操作を自動実行することはありません。</p>
+      <div data-dpro-chat-b-owner-return hidden style="margin-bottom:10px">
+        <a class="link-btn" href="./owner.html">Owner PCへ戻る</a>
+      </div>
       <div class="links">
         <a class="link-btn" href="./index.html">保護者・生徒画面</a>
         <a class="link-btn" href="./member.html">生徒証</a>
@@ -151,6 +154,9 @@
   (()=>{
     'use strict';
     const READY_MARKER='DPRO_TUTORIAL_SCHOOL_R4_GUIDE_CENTER_V1_0';
+    const FROM_OWNER=new URLSearchParams(location.search).get('from')==='owner';
+    const ownerReturn=document.querySelector('[data-dpro-chat-b-owner-return]');
+    if(ownerReturn) ownerReturn.hidden=!FROM_OWNER;
     const ready=document.getElementById('guideReady');
     const stateEl=document.getElementById('guideState');
     const stepEl=document.getElementById('guideStep');
