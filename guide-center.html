@@ -90,36 +90,36 @@
   <main class="shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">DPRO TUTORIAL / SCHOOL / GUIDE CENTER / R4</p>
+        <p class="eyebrow">DPRO 学習塾・習い事 LINE / 操作ガイド</p>
         <h1>操作ガイドセンター</h1>
-        <p class="lead">学習塾・習い事LINEのFirst10を、Start・Resume・Replayから安全に確認できます。Tutorialは表示案内だけを行い、予約・欠席・振替・管理操作を自動実行しません。</p>
+        <p class="lead">学習塾・習い事LINEの最初の10項目を、最初から・続きから・もう一度見る、の操作で安全に確認できます。ガイドは表示案内だけを行い、予約・欠席・振替・管理操作を自動実行しません。</p>
       </div>
       <div class="hero-meta">
-        <div class="meta"><strong>STANDARD</strong><span>V1.1 LOCKED</span></div>
-        <div class="meta"><strong>FIRST10</strong><span id="first10Meta">10 steps</span></div>
-        <div class="meta"><strong>BUSINESS MUTATION</strong><span>0 required</span></div>
+        <div class="meta"><strong>操作ガイド</strong><span>安全な案内</span></div>
+        <div class="meta"><strong>最初の10項目</strong><span id="first10Meta">10項目</span></div>
+        <div class="meta"><strong>自動操作</strong><span>行いません</span></div>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="actionsTitle">
-      <h2 id="actionsTitle">Tutorialを開く</h2>
-      <p class="panel-note">StartはStep 1から開始、Resumeは保存済みの続き、ReplayはTutorial状態だけをリセットしてStep 1から再開します。</p>
+      <h2 id="actionsTitle">操作ガイドを開く</h2>
+      <p class="panel-note">最初から開始すると1番目から、続きから再開すると保存済みの位置から確認できます。もう一度見る場合も業務データは変更しません。</p>
       <div class="actions">
-        <button class="action-btn" type="button" data-guide-action="start" disabled>Start</button>
-        <button class="action-btn secondary" type="button" data-guide-action="resume" disabled>Resume</button>
-        <button class="action-btn green" type="button" data-guide-action="replay" disabled>Replay</button>
+        <button class="action-btn" type="button" data-guide-action="start" disabled>最初から開始</button>
+        <button class="action-btn secondary" type="button" data-guide-action="resume" disabled>続きから再開</button>
+        <button class="action-btn green" type="button" data-guide-action="replay" disabled>もう一度見る</button>
       </div>
       <div class="status-grid" aria-live="polite">
         <div class="status-item"><small>状態</small><b id="guideState">確認中</b></div>
         <div class="status-item"><small>現在位置</small><b id="guideStep">-</b></div>
-        <div class="status-item"><small>保存キー</small><b id="guideStorage">Tutorial専用</b></div>
+        <div class="status-item"><small>進行情報</small><b id="guideStorage">操作ガイド専用</b></div>
       </div>
-      <div class="ready" id="guideReady" data-guide-ready="false">Tutorial runtimeを確認しています。</div>
+      <div class="ready" id="guideReady" data-guide-ready="false">操作ガイドを準備しています。</div>
     </section>
 
     <section class="panel" aria-labelledby="first10Title">
-      <h2 id="first10Title">First10</h2>
-      <p class="panel-note">Guide Centerの10項目はR3 runtimeのcanonical First10と1対1で照合されます。</p>
+      <h2 id="first10Title">最初の10項目</h2>
+      <p class="panel-note">操作ガイドの10項目を安全に確認します。</p>
       <div class="steps" id="guideSteps">
         <article class="guide-step" data-guide-step data-step-key="school.first10.01" data-route="/index.html" data-primary=".hero h1" data-fallback=".hero"><span class="step-no">1</span><div><h3>全体像を確認</h3><p>保護者・生徒画面の役割を確認します。</p><span class="route">/index.html</span></div></article>
         <article class="guide-step" data-guide-step data-step-key="school.first10.02" data-route="/index.html" data-primary="#trialBlock" data-fallback="[data-switch-mode=&quot;trial&quot;]"><span class="step-no">2</span><div><h3>体験予約の入口</h3><p>体験授業の入力領域の位置を確認します。</p><span class="route">/index.html</span></div></article>
@@ -138,7 +138,7 @@
       <h2 id="linksTitle">関連画面</h2>
       <p class="panel-note">通常画面へ戻るリンクです。ここから業務操作を自動実行することはありません。</p>
       <div data-dpro-chat-b-owner-return hidden style="margin-bottom:10px">
-        <a class="link-btn" href="./owner.html">Owner PCへ戻る</a>
+        <a class="link-btn" href="./owner.html">オーナーPCへ戻る</a>
       </div>
       <div class="links">
         <a class="link-btn" href="./index.html">保護者・生徒画面</a>
@@ -147,7 +147,7 @@
       </div>
     </section>
 
-    <div class="foot">DPRO TUTORIAL / SCHOOL / GUIDE CENTER / R4 / business mutation 0</div>
+    <div class="foot">DPRO 学習塾・習い事 LINE / 操作ガイド</div>
   </main>
 
   <script>
@@ -173,19 +173,19 @@
       return 'resume';
     }
     function labelForState(s,mode){
-      if(mode==='start')return '未開始 / Start可能';
-      if(s.complete)return '完了 / Replay可能';
-      if(s.skipped)return 'スキップ / Replay可能';
-      if(s.closed)return '中断 / Resume可能';
-      return '進行中 / Resume可能';
+      if(mode==='start')return '未開始 / 開始できます';
+      if(s.complete)return '完了 / もう一度確認できます';
+      if(s.skipped)return 'スキップ / もう一度確認できます';
+      if(s.closed)return '中断 / 続きから再開できます';
+      return '進行中 / 続きから再開できます';
     }
     function refreshStatus(api){
       const s=api.readState();
       const mode=modeForState(api,s);
       stateEl.textContent=labelForState(s,mode);
-      stepEl.textContent=s.currentStepKey||'school.first10.01';
-      storageEl.textContent=api.stateKey();
-      first10Meta.textContent=`${api.first10Count} steps`;
+      const pos=(api.steps||[]).findIndex(x=>x.key===s.currentStepKey); stepEl.textContent=pos>=0?`${pos+1} / ${api.first10Count}`:'1 / 10';
+      storageEl.textContent='操作ガイド専用';
+      first10Meta.textContent=`${api.first10Count}項目`;
       buttons.forEach(b=>b.disabled=b.dataset.guideAction!==mode);
       window.DPRO_SCHOOL_GUIDE_CENTER.stateMode=mode;
     }
@@ -204,7 +204,7 @@
       window.DPRO_SCHOOL_GUIDE_CENTER.apiVersion=api.version;
       ready.dataset.guideReady=aligned?'true':'false';
       ready.className='ready '+(aligned?'ok':'err');
-      ready.textContent=aligned?'Guide Centerはcanonical First10（10件）と一致しています。':'Guide CenterとTutorial runtimeのFirst10が一致しません。';
+      ready.textContent=aligned?'操作ガイドの10項目を確認しました。':'操作ガイドの項目を確認できませんでした。';
       buttons.forEach(b=>b.disabled=true);
       buttons.forEach(b=>b.addEventListener('click',()=>{
         const action=b.dataset.guideAction;
@@ -218,7 +218,7 @@
     const timer=setInterval(()=>{
       const api=window.DPRO_TUTORIAL_SCHOOL;
       if(api&&api.first10Count===10){clearInterval(timer);bind(api);return;}
-      if(Date.now()-started>15000){clearInterval(timer);ready.className='ready err';ready.textContent='Tutorial runtimeを確認できませんでした。';}
+      if(Date.now()-started>15000){clearInterval(timer);ready.className='ready err';ready.textContent='操作ガイドを確認できませんでした。';}
     },50);
     window.addEventListener('pageshow',()=>{const api=window.DPRO_TUTORIAL_SCHOOL;if(api)refreshStatus(api);});
     window.addEventListener('storage',()=>{const api=window.DPRO_TUTORIAL_SCHOOL;if(api)refreshStatus(api);});
